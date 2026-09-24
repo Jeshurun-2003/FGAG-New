@@ -55,12 +55,16 @@ const AboutPage = () => {
           <h2 className="fw-bold heading_2 border-bottom pb-3 mb-4">
             Friends Garden AG Church
           </h2>
-          <div className="image-zoom-card float-md-end ms-md-4 mb-4 shadow-sm rounded-4" style={{ maxWidth: '420px', width: '100%' }}>
+          <div className="image-zoom-card float-md-end ms-md-4 mb-4 shadow-sm rounded-4 overflow-hidden" style={{ maxWidth: '420px', width: '100%', aspectRatio: '16 / 10', backgroundColor: '#e2e8f0' }}>
             <img
               src="/images/Church_img.jpg"
               alt="Friends Garden AG Church Building"
-              className="img-fluid rounded-4"
-              style={{ maxHeight: '290px', objectFit: 'cover', width: '100%' }}
+              className="w-100 h-100 rounded-4"
+              style={{ objectFit: 'cover' }}
+              loading="lazy"
+              onError={(e) => {
+                e.target.src = '/images/church_inside_2.jpg';
+              }}
             />
           </div>
           <div className="paragraph text-secondary" style={{ whiteSpace: 'pre-line', lineHeight: '1.9' }}>
@@ -88,12 +92,16 @@ const AboutPage = () => {
         <div className="card border-0 shadow-sm rounded-4 overflow-hidden bg-white hover-lift">
           <div className="row g-0 align-items-center">
             <div className="col-md-5 d-flex justify-content-center align-items-center bg-light p-4">
-              <div className="image-zoom-card rounded-4 shadow-sm">
+              <div className="image-zoom-card rounded-4 shadow-sm overflow-hidden w-100" style={{ maxWidth: '380px', aspectRatio: '4 / 3', backgroundColor: '#e2e8f0' }}>
                 <img
                   src={pastorFamilyImg}
                   alt="Pastor Amal and Family"
-                  className="img-fluid rounded-4"
-                  style={{ maxHeight: '390px', width: 'auto', maxWidth: '100%', objectFit: 'contain' }}
+                  className="w-100 h-100 rounded-4"
+                  style={{ objectFit: 'cover', objectPosition: 'center top' }}
+                  loading="lazy"
+                  onError={(e) => {
+                    e.target.src = "/images/Pastor's_Family_Pic.jpg";
+                  }}
                 />
               </div>
             </div>
@@ -135,12 +143,16 @@ const AboutPage = () => {
           </ul>
         </div>
         <div className="col-md-6 text-center p-3">
-          <div className="image-zoom-card shadow-sm rounded-4 d-inline-block">
+          <div className="image-zoom-card shadow-sm rounded-4 d-inline-block overflow-hidden w-100" style={{ maxWidth: '420px', aspectRatio: '16 / 10', backgroundColor: '#e2e8f0' }}>
             <img
               src="/images/mission_vision.png"
               alt="Mission and Vision Banner"
-              className="img-fluid rounded-4"
-              style={{ maxHeight: '320px', width: 'auto', maxWidth: '100%', objectFit: 'contain' }}
+              className="w-100 h-100 rounded-4"
+              style={{ objectFit: 'cover' }}
+              loading="lazy"
+              onError={(e) => {
+                e.target.src = '/images/church_inside_2.jpg';
+              }}
             />
           </div>
         </div>

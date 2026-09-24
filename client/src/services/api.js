@@ -130,5 +130,14 @@ export const sermonService = {
   delete: (id) => api.delete(`/sermons/${id}`)
 };
 
+// Promise Verses Service
+export const verseService = {
+  getCurrentMonthly: () => api.get('/verses/monthly/current'),
+  getAllMonthly: () => api.get('/verses/monthly'),
+  createMonthly: (data) => api.post('/verses/monthly', data),
+  updateMonthly: (id, data) => api.put(`/verses/monthly/${id}`, data),
+  deleteMonthly: (id) => api.delete(`/verses/monthly/${id}`)
+};
+
 export default api;
 

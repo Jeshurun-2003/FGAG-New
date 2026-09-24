@@ -276,6 +276,46 @@ async function main() {
     console.log(`✅ Seeded ${sermonsData.length} sermons.`);
   }
 
+  // 9. Seed Monthly Promise Verses
+  const now = new Date();
+  const currentMonth = now.getMonth() + 1;
+  const currentYear = now.getFullYear();
+
+  const monthlyVersesData = [
+    {
+      month: currentMonth,
+      year: currentYear,
+      verseText: '“The Lord will guide you always; he will satisfy your needs in a sun-scorched land and will strengthen your frame.”',
+      reference: 'Isaiah 58:11',
+      isActive: true
+    },
+    {
+      month: currentMonth === 1 ? 12 : currentMonth - 1,
+      year: currentMonth === 1 ? currentYear - 1 : currentYear,
+      verseText: '“Trust in the Lord with all your heart and lean not on your own understanding; in all your ways submit to him, and he will make your paths straight.”',
+      reference: 'Proverbs 3:5-6',
+      isActive: true
+    }
+  ];
+
+  for (const mv of monthlyVersesData) {
+    await prisma.monthlyVerse.upsert({
+      where: {
+        month_year: {
+          month: mv.month,
+          year: mv.year
+        }
+      },
+      update: {
+        verseText: mv.verseText,
+        reference: mv.reference,
+        isActive: mv.isActive
+      },
+      create: mv
+    });
+  }
+  console.log(`✅ Seeded ${monthlyVersesData.length} monthly promise verses.`);
+
   console.log('🎉 Database seeding complete!');
 }
 

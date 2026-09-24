@@ -163,21 +163,23 @@ const MinistriesPage = () => {
 
               return (
                 <motion.div className="col" key={m.id} variants={fadeInUp}>
-                  <div className="card h-100 rounded-4 shadow-sm border-0 bg-white hover-lift overflow-hidden">
-                    <div className="image-zoom-card">
+                  <div className="card h-100 rounded-4 shadow-sm border-0 bg-white hover-lift overflow-hidden d-flex flex-column">
+                    <div className="image-zoom-card" style={{ aspectRatio: '16 / 10', overflow: 'hidden', backgroundColor: '#e2e8f0' }}>
                       <img
                         src={m.imageUrl || '/images/coming_soon.png'}
-                        className="card-img-top"
+                        className="card-img-top w-100 h-100"
                         style={{
-                          height: '250px',
                           objectFit: 'cover',
                           objectPosition: objPos
                         }}
                         alt={m.title}
                         loading="lazy"
+                        onError={(e) => {
+                          e.target.src = '/images/coming_soon.png';
+                        }}
                       />
                     </div>
-                    <div className="card-body p-4 d-flex flex-column">
+                    <div className="card-body p-4 d-flex flex-column flex-grow-1">
                       <h4 className="heading fw-bold mb-2">{m.title}</h4>
                       <p className="paragraph text-muted small mb-3">
                         {m.description}

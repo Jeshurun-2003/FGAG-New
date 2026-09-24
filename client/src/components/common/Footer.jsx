@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Logo from './Logo';
 
 const Footer = ({ settings = {} }) => {
   const currentYear = new Date().getFullYear();
@@ -24,18 +25,8 @@ const Footer = ({ settings = {} }) => {
           {/* Column 1: About */}
           <div className="col-12 col-md-6 col-lg-4 text-center text-md-start">
             <div className="d-flex flex-column align-items-center align-items-md-start mb-3">
-              <div
-                className="d-inline-flex align-items-center justify-content-center p-2 mb-2 rounded-3"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.06)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)'
-                }}
-              >
-                <img
-                  src="/images/Church_logo.png"
-                  alt="Friends Garden AG Church"
-                  style={{ height: '96px', maxWidth: '240px', objectFit: 'contain' }}
-                />
+              <div className="mb-2">
+                <Logo variant="light" size={90} alt="Friends Garden AG Church" />
               </div>
               <h4
                 className="text-white fw-bold mb-1"

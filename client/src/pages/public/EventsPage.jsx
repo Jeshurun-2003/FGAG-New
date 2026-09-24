@@ -168,12 +168,16 @@ const EventsPage = () => {
                     <div className="row align-items-center g-4">
                       {featuredEvent.imageUrl && (
                         <div className="col-lg-5 text-center">
-                          <div className="image-zoom-card rounded-4 shadow-sm">
+                          <div className="image-zoom-card rounded-4 shadow-sm overflow-hidden w-100" style={{ aspectRatio: '16 / 10', backgroundColor: '#e2e8f0' }}>
                             <img
                               src={featuredEvent.imageUrl}
                               alt={featuredEvent.title}
-                              className="img-fluid rounded-4"
-                              style={{ maxHeight: '380px', width: '100%', objectFit: 'cover' }}
+                              className="w-100 h-100 rounded-4"
+                              style={{ objectFit: 'cover' }}
+                              loading="lazy"
+                              onError={(e) => {
+                                e.target.src = '/images/church_inside_2.jpg';
+                              }}
                             />
                           </div>
                         </div>
@@ -225,17 +229,20 @@ const EventsPage = () => {
         >
           {weeklySchedule.map((item, idx) => (
             <motion.div className="col" key={idx} variants={fadeInUp}>
-              <div className="card h-100 rounded-4 shadow-sm border-0 bg-white hover-lift overflow-hidden">
-                <div className="image-zoom-card">
+              <div className="card h-100 rounded-4 shadow-sm border-0 bg-white hover-lift overflow-hidden d-flex flex-column">
+                <div className="image-zoom-card" style={{ aspectRatio: '16 / 10', overflow: 'hidden', backgroundColor: '#e2e8f0' }}>
                   <img
                     src={item.image}
-                    className="card-img-top"
-                    style={{ height: '220px', objectFit: 'cover' }}
+                    className="card-img-top w-100 h-100"
+                    style={{ objectFit: 'cover' }}
                     alt={item.title}
                     loading="lazy"
+                    onError={(e) => {
+                      e.target.src = '/images/Sunday_service.png';
+                    }}
                   />
                 </div>
-                <div className="card-body p-4 d-flex flex-column">
+                <div className="card-body p-4 d-flex flex-column flex-grow-1">
                   <div className="mb-2">
                     <span className="badge px-3 py-1 rounded-pill bg-primary-subtle text-primary fw-bold text-uppercase small">
                       {item.day}

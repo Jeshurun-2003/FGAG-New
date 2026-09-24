@@ -31,6 +31,7 @@ const AdminMinistriesPage = lazy(() => import('../pages/admin/AdminMinistriesPag
 const AdminGalleryPage = lazy(() => import('../pages/admin/AdminGalleryPage'));
 const AdminPrayerPage = lazy(() => import('../pages/admin/AdminPrayerPage'));
 const AdminVolunteersPage = lazy(() => import('../pages/admin/AdminVolunteersPage'));
+const AdminPromiseVersesPage = lazy(() => import('../pages/admin/AdminPromiseVersesPage'));
 const AdminSettingsPage = lazy(() => import('../pages/admin/AdminSettingsPage'));
 const AdminProfilePage = lazy(() => import('../pages/admin/AdminProfilePage'));
 
@@ -69,6 +70,7 @@ const AppRoutes = () => {
               <Route path="/admin/gallery" element={<PageTransition><AdminGalleryPage /></PageTransition>} />
               <Route path="/admin/prayers" element={<PageTransition><AdminPrayerPage /></PageTransition>} />
               <Route path="/admin/volunteers" element={<PageTransition><AdminVolunteersPage /></PageTransition>} />
+              <Route path="/admin/promises" element={<PageTransition><AdminPromiseVersesPage /></PageTransition>} />
               <Route path="/admin/settings" element={<PageTransition><AdminSettingsPage /></PageTransition>} />
               <Route path="/admin/profile" element={<PageTransition><AdminProfilePage /></PageTransition>} />
             </Route>

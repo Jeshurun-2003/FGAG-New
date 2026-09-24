@@ -19,8 +19,8 @@ FGAG-Church/
 │   │   ├── layouts/            # PublicLayout & AdminLayout
 │   │   ├── pages/
 │   │   │   ├── public/         # Home, About, Events, Ministries, Gallery, Get Involved, Contact, Donate
-│   │   │   └── admin/          # Dashboard, Hero/About CMS, Events CRUD, Ministries CRUD, Gallery CMS,
-│   │   │                       # Prayer Requests, Volunteers, Settings, Profile
+│   │   │   └── admin/          # Dashboard, Hero/About CMS, Promise Verses CMS, Events CRUD, Ministries CRUD,
+│   │   │                       # Sermons CRUD, Gallery CMS, Prayer Requests, Volunteers, Settings, Profile
 │   │   ├── services/           # Modular Axios API services (configured via VITE_API_URL)
 │   │   ├── styles/             # Preserved Lora & Playfair typography, navy palette (#0A3D62)
 │   │   ├── routes/             # AppRoutes (lazy-loaded with Suspense) & ProtectedRoute
@@ -37,7 +37,7 @@ FGAG-Church/
 │   │   └── seed.js             # Initial database seeder (reads ADMIN_EMAIL & ADMIN_PASSWORD from .env)
 │   ├── src/
 │   │   ├── config/             # Database connection & environment configuration
-│   │   ├── controllers/        # Auth, Settings, Events, Ministries, Leadership, Gallery, Prayer, Volunteer, Analytics
+│   │   ├── controllers/        # Auth, Settings, Verses, Events, Ministries, Sermons, Gallery, Prayer, Volunteer, Analytics
 │   │   ├── middleware/         # JWT Auth, Memory Multer (Base64), Centralized Error Handling
 │   │   ├── routes/             # Express API endpoints (/api/*)
 │   │   ├── utils/              # Bcrypt hashing, JWT tokens
@@ -193,13 +193,20 @@ Use this checklist to test each module in the admin portal:
    - [ ] Update church phone helpline, email, or Google Maps embed
    - [ ] Update bank account details (account number, IFSC code)
    - [ ] Verify updated bank details reflect on the public Donate page (`/donate`)
-10. **Sermons & Media CMS (`/admin/sermons`):**
+10. **Promise Verses CMS (`/admin/promises`):**
+    - [ ] Navigate to `/admin/promises`
+    - [ ] Update the Yearly Promise Verse (Year, Scripture, Reference) and verify toast notification
+    - [ ] Click "Add Monthly Verse", select current/upcoming month and year, enter scripture and reference, then submit
+    - [ ] Toggle active/inactive status switch in the verses table
+    - [ ] Test edit modal and delete confirmation dialog
+    - [ ] Open public Home page (`/`) and verify the Yearly and Monthly promises render side-by-side (or centered if only one is active)
+11. **Sermons & Media CMS (`/admin/sermons`):**
     - [ ] Navigate to `/admin/sermons`
     - [ ] Create a new sermon with YouTube URL (e.g. `https://www.youtube.com/watch?v=...`)
     - [ ] Verify live YouTube player preview appears instantly
     - [ ] Save sermon and verify automatic thumbnail generation from YouTube
     - [ ] Check public `/sermons` and `/sermons/:id` pages for video playback, sharing, and related sermons
-11. **Profile & Security (`/admin/profile`):**
+12. **Profile & Security (`/admin/profile`):**
     - [ ] Update admin display name or email
     - [ ] Test password change form with validation and visibility toggle
 
@@ -209,12 +216,19 @@ Use this checklist to test each module in the admin portal:
 
 The public site has been enhanced with modern styling and micro-interactions while preserving 100% of the church's brand identity:
 
-- **Logo Visibility & Sizing**:
-  - Restored high visibility for the church logo across the entire site.
-  - Navbar: responsive 56–64px desktop / 44–48px mobile / 48px scrolled with a glass badge and Playfair Display title.
-  - Footer: prominent 96px logo in a dedicated brand column.
-  - Admin Portal: 96px centered badge on login screen and 40px in the sidebar.
-  - Hero Section: regal logo emblem badge with frosted glass backdrop.
+- **Vector Church Emblem & Logo System**:
+  - Handcrafted SVG emblem with radiant cross, Holy Spirit dove, gold accents, and olive wreath.
+  - High-contrast variants: `church-logo-light.svg` (white/gold/cyan) for dark navbars/footers/heroes, and `church-logo-new.svg` (navy/blue/gold) for light surfaces.
+  - Reusable `<Logo variant="light|dark" size={...} />` component with a single-line switch (`USE_LEGACY_LOGO = false`) to instantly fall back to legacy PNG if desired.
+  - Razor-sharp SVG favicon integrated in `index.html`.
+- **Card Images & Aspect Ratio Polish**:
+  - Fixed-ratio image containers across all pages (`16:10` for events and ministries, `4:3` for family and gallery, `4:5` for portraits, `1:1` for app features).
+  - Standardized `object-fit: cover` with `object-position: center top` for people photos to prevent awkward crops.
+  - Built-in `loading="lazy"` performance attributes and graceful `onError` fallback handling.
+- **Dual Promise Scripture Cards (Annual & Monthly)**:
+  - Responsive side-by-side glassmorphism cards on the homepage for the Yearly Church Theme and Monthly God's Word.
+  - Seamless fallback to a single centered card when only one promise is active, and automatic omission if none are configured.
+  - Managed via dedicated Admin CMS (`/admin/promises`).
 - **Color Palette**: Deep Navy (`#0A3D62`), Accent Blue (`#38A1DB`), Deep Heading (`#3C6382`), Ice Blue (`#E9F1F7`), and Soft Light (`#F8F9FA`).
 - **Typography**: Google Fonts `Playfair Display` for headings and `Lora` for body copy.
 - **Sermons & Media Module**:
@@ -222,7 +236,7 @@ The public site has been enhanced with modern styling and micro-interactions whi
   - Dynamic sermon detail page (`/sermons/:id`) with 16:9 responsive player (`youtube-nocookie.com`), metadata, WhatsApp/Facebook/Twitter sharing, and related sermons.
   - Homepage "Latest Sermons" section displaying top 3 published messages.
   - Admin CMS (`/admin/sermons`) with full CRUD, automatic YouTube thumbnail derivation (`img.youtube.com/vi/<id>/hqdefault.jpg`), live video preview, and custom upload dropzone.
-- **Hero Section**: Full-height hero with soft dual-gradient overlay on the sanctuary background, animated headline (fade + slide up with Framer Motion), and enhanced call-to-action buttons.
+- **Hero Section**: 92vh regal hero with slow Ken Burns background zoom, multi-stop navy gradient overlay (`rgba(7,42,68,0.94)` to `rgba(10,61,98,0.62)`), frosted glass emblem, responsive CTAs, and bouncing scroll-down indicator.
 - **Navigation**:
   - Sticky navbar that transitions from transparent to solid navy with backdrop blur upon scroll.
   - Active route indicator with smooth accent bar.
@@ -259,6 +273,9 @@ The public site has been enhanced with modern styling and micro-interactions whi
 | `/api/auth/change-password` | PUT | Protected | Update admin password |
 | `/api/settings/public` | GET | Public | Fetch public site settings |
 | `/api/settings` | POST | Protected | Update site settings |
+| `/api/verses/monthly/current` | GET | Public | Fetch active monthly promise verse |
+| `/api/verses/monthly` | GET / POST | Protected | List all or create monthly promise verse |
+| `/api/verses/monthly/:id` | PUT / DELETE | Protected | Update or delete monthly promise verse |
 | `/api/events` | GET / POST | Public / Protected | List or create events |
 | `/api/events/:id` | PUT / DELETE | Protected | Update or delete an event |
 | `/api/ministries` | GET / POST | Public / Protected | List or create ministries |

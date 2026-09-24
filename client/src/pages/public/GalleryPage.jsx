@@ -146,8 +146,17 @@ const GalleryPage = () => {
                 onKeyDown={(e) => e.key === 'Enter' && setActivePhotoIndex(idx)}
                 aria-label={`View photo: ${img.title || img.category}`}
               >
-                <div className="position-relative overflow-hidden">
-                  <img src={img.imageUrl} alt={img.title || 'Church photo'} loading="lazy" />
+                <div className="position-relative overflow-hidden" style={{ aspectRatio: '4 / 3', backgroundColor: '#e2e8f0' }}>
+                  <img
+                    src={img.imageUrl}
+                    alt={img.title || 'Church photo'}
+                    className="w-100 h-100"
+                    style={{ objectFit: 'cover' }}
+                    loading="lazy"
+                    onError={(e) => {
+                      e.target.src = '/images/church_inside_2.jpg';
+                    }}
+                  />
                   {/* Subtle hover overlay */}
                   <div className="gallery-overlay">
                     <div className="text-white w-100">

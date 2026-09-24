@@ -15,6 +15,7 @@ const prayerRoutes = require('./routes/prayer.routes');
 const volunteerRoutes = require('./routes/volunteer.routes');
 const analyticsRoutes = require('./routes/analytics.routes');
 const sermonsRoutes = require('./routes/sermons.routes');
+const versesRoutes = require('./routes/verses.routes');
 
 const app = express();
 
@@ -79,6 +80,7 @@ app.use('/api/prayer', prayerRoutes);
 app.use('/api/volunteer', volunteerRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/sermons', sermonsRoutes);
+app.use('/api/verses', versesRoutes);
 
 // Centralized error handling
 app.use(errorHandler);

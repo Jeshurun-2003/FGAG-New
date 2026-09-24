@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import Logo from './Logo';
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -63,12 +64,8 @@ const Navbar = () => {
         >
           <div className="container">
             <Link className="navbar-brand py-0 d-flex align-items-center gap-2" to="/" onClick={closeMenu}>
-              <div className="navbar-logo-badge">
-                <img
-                  src="/images/Church_logo.png"
-                  alt="Friends Garden AG Church Logo"
-                  className="navbar-logo-img"
-                />
+              <div className="d-flex align-items-center">
+                <Logo variant="light" size={scrolled ? 48 : 56} className="navbar-logo-img" />
               </div>
               <div className="d-flex flex-column text-start">
                 <span className="navbar-brand-name">Friends Garden AG</span>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { NavLink, Link, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import Logo from '../components/common/Logo';
 
 const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -21,6 +22,7 @@ const AdminLayout = () => {
   const navItems = [
     { to: '/admin', end: true, label: 'Dashboard', icon: 'bi-speedometer2' },
     { to: '/admin/hero-about', label: 'Hero & About CMS', icon: 'bi-pencil-square' },
+    { to: '/admin/promises', label: 'Promise Verses', icon: 'bi-quote' },
     { to: '/admin/events', label: 'Events CRUD', icon: 'bi-calendar-event' },
     { to: '/admin/sermons', label: 'Sermons / Media', icon: 'bi-play-btn' },
     { to: '/admin/ministries', label: 'Ministries CRUD', icon: 'bi-people' },
@@ -43,7 +45,7 @@ const AdminLayout = () => {
           <i className="bi bi-list"></i>
         </button>
         <span className="fw-bold fs-6 d-flex align-items-center gap-2">
-          <img src="/images/Church_logo.png" alt="FGAG" height="32" />
+          <Logo variant="light" size={32} alt="FGAG" />
           <span>FGAG Admin</span>
         </span>
         <button
@@ -70,7 +72,7 @@ const AdminLayout = () => {
       <aside className={`admin-sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-heading d-flex align-items-center justify-content-between px-3 py-3">
           <div className="d-flex align-items-center gap-2">
-            <img src="/images/Church_logo.png" alt="FGAG Logo" height="40" style={{ objectFit: 'contain' }} />
+            <Logo variant="light" size={40} alt="FGAG Logo" />
             <div>
               <span className="fw-bold d-block text-white" style={{ fontSize: '1.05rem' }}>FGAG Church</span>
               <span className="text-info small" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>ADMIN PORTAL</span>
