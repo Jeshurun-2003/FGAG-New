@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import SEO from '../../components/common/SEO';
 import { sermonService, verseService } from '../../services/api';
 import Logo from '../../components/common/Logo';
+import WeeklySchedule from '../../components/common/WeeklySchedule';
 
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -20,15 +21,83 @@ const staggerContainer = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.15
+      staggerChildren: 0.12
     }
   }
 };
+
+const exploreLinks = [
+  {
+    to: '/about',
+    icon: 'bi-bank2',
+    iconBg: 'rgba(10, 61, 98, 0.1)',
+    iconColor: '#0A3D62',
+    title: 'About Our Church',
+    desc: 'Our journey of faith, pastoral leadership, and Christ-centered mission in Kollidam.'
+  },
+  {
+    to: '/events',
+    icon: 'bi-calendar3-event',
+    iconBg: 'rgba(56, 161, 219, 0.12)',
+    iconColor: '#38A1DB',
+    title: 'Events & Gatherings',
+    desc: 'Upcoming special meetings, spiritual conventions, and church gatherings.'
+  },
+  {
+    to: '/ministries',
+    icon: 'bi-people-fill',
+    iconBg: 'rgba(25, 135, 84, 0.1)',
+    iconColor: '#198754',
+    title: 'Our Ministries',
+    desc: 'Vibrant fellowships serving kids, youth, women, men, and outreach missions.'
+  },
+  {
+    to: '/gallery',
+    icon: 'bi-images',
+    iconBg: 'rgba(243, 156, 18, 0.12)',
+    iconColor: '#F39C12',
+    title: 'Photo Gallery',
+    desc: 'Moments of joyful celebration, youth camps, and spiritual fellowship.'
+  },
+  {
+    to: '/sermons',
+    icon: 'bi-play-circle-fill',
+    iconBg: 'rgba(220, 53, 69, 0.1)',
+    iconColor: '#DC3545',
+    title: 'Sermons & Media',
+    desc: 'Watch and listen to inspiring Sunday sermons and uplifting biblical teachings.'
+  },
+  {
+    to: '/get-involved',
+    icon: 'bi-heart-fill',
+    iconBg: 'rgba(111, 66, 193, 0.1)',
+    iconColor: '#6f42c1',
+    title: 'Get Involved',
+    desc: 'Submit your prayer requests or volunteer your gifts to serve in God’s house.'
+  },
+  {
+    to: '/donate',
+    icon: 'bi-gift-fill',
+    iconBg: 'rgba(13, 110, 253, 0.1)',
+    iconColor: '#0d6efd',
+    title: 'Give & Support',
+    desc: 'Partner with our mission through faithful online tithes and church offerings.'
+  },
+  {
+    to: '/contact',
+    icon: 'bi-geo-alt-fill',
+    iconBg: 'rgba(32, 201, 151, 0.12)',
+    iconColor: '#20c997',
+    title: 'Contact & Visit',
+    desc: 'Find directions to our church, meeting hours, and pastoral helpline details.'
+  }
+];
 
 const HomePage = () => {
   const { settings = {} } = useOutletContext() || {};
   const [latestSermons, setLatestSermons] = useState([]);
   const [monthlyVerse, setMonthlyVerse] = useState(null);
+  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
     const fetchLatestSermons = async () => {
@@ -104,13 +173,13 @@ const HomePage = () => {
         }}
         aria-label="Welcome banner"
       >
-        {/* Background Image Container with Slow Ken Burns Scale */}
+        {/* Background Image Container with Subtle Ken Burns Scale */}
         <motion.div
           className="position-absolute top-0 start-0 w-100 h-100"
-          initial={{ scale: 1 }}
-          animate={{ scale: 1.06 }}
+          initial={shouldReduceMotion ? { scale: 1 } : { scale: 1 }}
+          animate={shouldReduceMotion ? { scale: 1 } : { scale: 1.04 }}
           transition={{
-            duration: 18,
+            duration: 20,
             repeat: Infinity,
             repeatType: 'reverse',
             ease: 'easeInOut'
@@ -118,32 +187,22 @@ const HomePage = () => {
           style={{
             backgroundImage: `url('${heroBg}')`,
             backgroundSize: 'cover',
-            backgroundPosition: 'center 35%',
+            backgroundPosition: 'center 40%',
             zIndex: 0
           }}
         />
 
-        {/* Clean, Non-Muddy Deep Navy Gradient Overlay (WCAG AA Compliant) */}
+        {/* Soft, Natural Ambient Overlay (25-35% feel, preserving sanctuary photo clarity) */}
         <div
           className="position-absolute top-0 start-0 w-100 h-100"
           style={{
-            background: 'linear-gradient(135deg, rgba(7, 42, 68, 0.94) 0%, rgba(10, 61, 98, 0.88) 45%, rgba(10, 61, 98, 0.62) 80%, rgba(7, 42, 68, 0.82) 100%)',
-            zIndex: 1
-          }}
-        />
-
-        {/* Soft Bottom Fade & Ambient Glow */}
-        <div
-          className="position-absolute bottom-0 start-0 w-100"
-          style={{
-            height: '180px',
-            background: 'linear-gradient(to top, rgba(7, 42, 68, 0.95) 0%, transparent 100%)',
+            background: 'linear-gradient(180deg, rgba(7, 30, 48, 0.38) 0%, rgba(10, 61, 98, 0.18) 45%, rgba(7, 30, 48, 0.40) 100%)',
             zIndex: 1,
             pointerEvents: 'none'
           }}
         />
 
-        {/* Hero Content */}
+        {/* Hero Content on Soft Frosted-Glass Panel for WCAG AA Contrast */}
         <div className="container position-relative py-4" style={{ zIndex: 2 }}>
           <div className="row justify-content-center">
             <motion.div
@@ -152,93 +211,105 @@ const HomePage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
             >
-              {/* Emblem Logo */}
-              <motion.div
-                className="mb-3 d-inline-block"
-                initial={{ opacity: 0, scale: 0.85 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-              >
-                <div
-                  className="d-inline-flex align-items-center justify-content-center p-2 rounded-circle shadow-lg"
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.08)',
-                    backdropFilter: 'blur(12px)',
-                    border: '1.5px solid rgba(56, 161, 219, 0.35)'
-                  }}
-                >
-                  <Logo variant="light" size={72} alt="Friends Garden AG Church Emblem" />
-                </div>
-              </motion.div>
-
-              {/* Eyebrow Pill */}
-              <div>
-                <span
-                  className="badge px-3 py-2 mb-3 rounded-pill text-uppercase fw-semibold"
-                  style={{
-                    backgroundColor: 'rgba(56, 161, 219, 0.2)',
-                    border: '1px solid rgba(56, 161, 219, 0.45)',
-                    color: '#e9f1f7',
-                    letterSpacing: '0.1em',
-                    fontSize: '0.82rem'
-                  }}
-                >
-                  Assemblies of God • Kollidam
-                </span>
-              </div>
-
-              {/* Main Headline */}
-              <h1
-                className="display-3 fw-bold mb-4 text-white"
+              <div
+                className="mx-auto rounded-4 p-4 p-md-5"
                 style={{
-                  fontFamily: "'Playfair Display', serif",
-                  lineHeight: '1.2',
-                  textShadow: '0 4px 24px rgba(0, 0, 0, 0.5)'
+                  background: 'rgba(7, 32, 52, 0.62)',
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
+                  border: '1px solid rgba(255, 255, 255, 0.18)',
+                  boxShadow: '0 20px 50px rgba(0, 0, 0, 0.35)',
+                  maxWidth: '920px'
                 }}
               >
-                {heroTitle}
-              </h1>
-
-              {/* Subtitle */}
-              <p
-                className="lead fs-3 mb-5 fw-medium text-light opacity-95 mx-auto"
-                style={{
-                  maxWidth: '720px',
-                  lineHeight: '1.65',
-                  fontFamily: "'Lora', serif",
-                  textShadow: '0 2px 12px rgba(0, 0, 0, 0.4)'
-                }}
-              >
-                {heroSubtitle}
-              </p>
-
-              {/* Call to Action Buttons */}
-              <div className="d-flex flex-wrap gap-3 justify-content-center align-items-center">
-                <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.98 }}>
-                  <Link
-                    to="/contact"
-                    className="btn btn-primary btn-enhanced d-inline-flex align-items-center gap-2"
+                {/* Emblem Logo */}
+                <motion.div
+                  className="mb-3 d-inline-block"
+                  initial={{ opacity: 0, scale: 0.85 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.6, delay: 0.1 }}
+                >
+                  <div
+                    className="d-inline-flex align-items-center justify-content-center p-2 rounded-circle shadow-lg"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.08)',
+                      backdropFilter: 'blur(12px)',
+                      border: '1.5px solid rgba(56, 161, 219, 0.35)'
+                    }}
                   >
-                    <i className="bi bi-envelope-fill fs-5"></i>
-                    <span>Contact Us</span>
-                  </Link>
+                    <Logo variant="light" size={72} alt="Friends Garden AG Church Emblem" />
+                  </div>
                 </motion.div>
 
-                <motion.a
-                  href={heroYoutube}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-outline-light btn-enhanced d-inline-flex align-items-center gap-2"
+                {/* Eyebrow Pill */}
+                <div>
+                  <span
+                    className="badge px-3 py-2 mb-3 rounded-pill text-uppercase fw-semibold"
+                    style={{
+                      backgroundColor: 'rgba(56, 161, 219, 0.2)',
+                      border: '1px solid rgba(56, 161, 219, 0.45)',
+                      color: '#e9f1f7',
+                      letterSpacing: '0.1em',
+                      fontSize: '0.82rem'
+                    }}
+                  >
+                    Assemblies of God • Kollidam
+                  </span>
+                </div>
+
+                {/* Main Headline */}
+                <h1
+                  className="display-3 fw-bold mb-4 text-white"
                   style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                    borderColor: 'rgba(255, 255, 255, 0.45)'
+                    fontFamily: "'Playfair Display', serif",
+                    lineHeight: '1.2',
+                    textShadow: '0 4px 20px rgba(0, 0, 0, 0.6)'
                   }}
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.98 }}
                 >
-                  <i className="bi bi-youtube text-danger fs-5"></i>
-                  <span>Visit YouTube</span>
-                </motion.a>
+                  {heroTitle}
+                </h1>
+
+                {/* Subtitle */}
+                <p
+                  className="lead fs-3 mb-5 fw-medium text-light opacity-95 mx-auto"
+                  style={{
+                    maxWidth: '720px',
+                    lineHeight: '1.65',
+                    fontFamily: "'Lora', serif",
+                    textShadow: '0 2px 10px rgba(0, 0, 0, 0.5)'
+                  }}
+                >
+                  {heroSubtitle}
+                </p>
+
+                {/* Call to Action Buttons */}
+                <div className="d-flex flex-wrap gap-3 justify-content-center align-items-center">
+                  <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.98 }}>
+                    <Link
+                      to="/contact"
+                      className="btn btn-primary btn-enhanced d-inline-flex align-items-center gap-2"
+                    >
+                      <i className="bi bi-envelope-fill fs-5"></i>
+                      <span>Contact Us</span>
+                    </Link>
+                  </motion.div>
+
+                  <motion.a
+                    href={heroYoutube}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-outline-light btn-enhanced d-inline-flex align-items-center gap-2"
+                    style={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                      borderColor: 'rgba(255, 255, 255, 0.45)'
+                    }}
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <i className="bi bi-youtube text-danger fs-5"></i>
+                    <span>Visit YouTube</span>
+                  </motion.a>
+                </div>
               </div>
             </motion.div>
           </div>
@@ -247,7 +318,7 @@ const HomePage = () => {
         {/* Scroll-down Floating Indicator */}
         <motion.div
           className="position-absolute bottom-0 start-50 translate-middle-x mb-3 text-center"
-          animate={{ y: [0, 8, 0] }}
+          animate={shouldReduceMotion ? { y: 0 } : { y: [0, 8, 0] }}
           transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
           style={{ zIndex: 3, cursor: 'pointer' }}
           onClick={() => {
@@ -260,11 +331,11 @@ const HomePage = () => {
         >
           <span
             className="small text-uppercase d-block mb-1 text-light opacity-75"
-            style={{ fontSize: '0.68rem', letterSpacing: '0.16em' }}
+            style={{ fontSize: '0.68rem', letterSpacing: '0.16em', textShadow: '0 1px 4px rgba(0,0,0,0.8)' }}
           >
             Scroll Down
           </span>
-          <i className="bi bi-chevron-down fs-5 text-info"></i>
+          <i className="bi bi-chevron-down fs-5 text-info" style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.8))' }}></i>
         </motion.div>
       </section>
 
@@ -346,133 +417,143 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Church Promise Section (Yearly & Monthly) */}
+      {/* Church Promise Section (Yearly & Monthly - Stacked Vertically as Distinct Cards) */}
       {(hasYearly || hasMonthly) && (
-        <section className="py-5 promise-section text-white text-center position-relative overflow-hidden">
-          <div className="container py-5 position-relative" style={{ zIndex: 2 }}>
-            <div className="row g-4 justify-content-center align-items-stretch">
-              {/* Yearly Promise Card */}
+        <section className="py-5" style={{ backgroundColor: 'var(--fgag-surface, #F8F9FA)' }}>
+          <div className="container py-3">
+            <div className="d-flex flex-column align-items-center gap-4">
+              {/* 1. Yearly Promise Card: Large, Prominent, Deep Navy with Gold Accent */}
               {hasYearly && (
                 <motion.div
-                  className={hasMonthly ? 'col-12 col-lg-6 d-flex' : 'col-12 col-lg-8 mx-auto d-flex'}
+                  className="w-100"
+                  style={{ maxWidth: '980px' }}
                   initial={{ opacity: 0, y: 24 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
+                  viewport={{ once: true, margin: '-40px' }}
                   transition={{ duration: 0.55 }}
                 >
                   <div
-                    className="card border-0 rounded-4 p-4 p-md-5 w-100 text-center d-flex flex-column justify-content-between position-relative overflow-hidden"
+                    className="card border-0 rounded-4 text-center position-relative overflow-hidden p-4 p-md-5"
                     style={{
-                      background: 'rgba(255, 255, 255, 0.08)',
-                      backdropFilter: 'blur(16px)',
-                      WebkitBackdropFilter: 'blur(16px)',
-                      border: '1px solid rgba(255, 255, 255, 0.16)',
-                      boxShadow: '0 20px 40px rgba(0, 0, 0, 0.22)'
+                      background: 'linear-gradient(135deg, #0A3D62 0%, #07253D 100%)',
+                      boxShadow: '0 16px 36px rgba(10, 61, 98, 0.22)',
+                      border: '1.5px solid rgba(243, 156, 18, 0.35)'
                     }}
                   >
+                    {/* Top Gold Accent Line */}
+                    <div
+                      className="position-absolute top-0 start-0 w-100"
+                      style={{ height: '4px', background: 'linear-gradient(90deg, #F39C12, #F7DC6F, #F39C12)' }}
+                    />
+
                     <div>
                       <span
-                        className="badge px-3 py-2 mb-3 rounded-pill text-uppercase"
+                        className="badge px-3 py-2 mb-3 rounded-pill text-uppercase fw-semibold"
                         style={{
-                          backgroundColor: 'rgba(56, 161, 219, 0.25)',
-                          color: '#74c0fc',
+                          backgroundColor: 'rgba(243, 156, 18, 0.18)',
+                          color: '#F7DC6F',
+                          border: '1px solid rgba(243, 156, 18, 0.4)',
                           letterSpacing: '0.08em',
-                          fontSize: '0.75rem',
-                          fontWeight: 600
+                          fontSize: '0.78rem'
                         }}
                       >
-                        Scripture for the Year
+                        Promise for {promiseYear}
                       </span>
-                      <h2
-                        className="fw-bold mb-3 text-white"
-                        style={{ fontSize: 'clamp(1.35rem, 2.4vw, 1.85rem)' }}
-                      >
-                        Church Promise {promiseYear}
-                      </h2>
-                      <div className="d-flex justify-content-center mb-3">
-                        <i className="bi bi-quote fs-1 text-info opacity-50"></i>
+
+                      <div className="d-flex justify-content-center my-2">
+                        <i className="bi bi-quote fs-1" style={{ color: '#F7DC6F', opacity: 0.85 }}></i>
                       </div>
+
                       <blockquote
                         className="fw-normal mx-auto mb-4 text-white lh-base fst-italic"
                         style={{
-                          fontFamily: "'Playfair Display', serif",
-                          fontSize: 'clamp(1.15rem, 2vw, 1.45rem)',
-                          maxWidth: '640px'
+                          fontFamily: "'Lora', serif",
+                          fontSize: 'clamp(1.2rem, 2.4vw, 1.6rem)',
+                          maxWidth: '820px'
                         }}
                       >
                         "{promiseVerse.replace(/^["“”]|["“”]$/g, '')}"
                       </blockquote>
-                    </div>
-                    <div
-                      className="text-info fw-semibold fs-5 mt-auto pt-2"
-                      style={{ letterSpacing: '0.04em', color: '#5DADE2' }}
-                    >
-                      {promiseRef}
+
+                      <div
+                        className="fw-bold fs-5 pt-1"
+                        style={{
+                          fontFamily: "'Playfair Display', serif",
+                          letterSpacing: '0.04em',
+                          color: '#F7DC6F'
+                        }}
+                      >
+                        {promiseRef}
+                      </div>
                     </div>
                   </div>
                 </motion.div>
               )}
 
-              {/* Monthly Promise Card */}
+              {/* 2. Monthly Promise Card: Separate, Distinct, Ice-Blue with Blue Accent */}
               {hasMonthly && (
                 <motion.div
-                  className={hasYearly ? 'col-12 col-lg-6 d-flex' : 'col-12 col-lg-8 mx-auto d-flex'}
+                  className="w-100"
+                  style={{ maxWidth: '880px' }}
                   initial={{ opacity: 0, y: 24 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.55, delay: hasYearly ? 0.15 : 0 }}
+                  viewport={{ once: true, margin: '-40px' }}
+                  transition={{ duration: 0.55, delay: hasYearly ? 0.12 : 0 }}
                 >
                   <div
-                    className="card border-0 rounded-4 p-4 p-md-5 w-100 text-center d-flex flex-column justify-content-between position-relative overflow-hidden"
+                    className="card border-0 rounded-4 text-center position-relative overflow-hidden mt-4 p-4 p-md-5"
                     style={{
-                      background: 'rgba(255, 255, 255, 0.08)',
-                      backdropFilter: 'blur(16px)',
-                      WebkitBackdropFilter: 'blur(16px)',
-                      border: '1px solid rgba(255, 255, 255, 0.16)',
-                      boxShadow: '0 20px 40px rgba(0, 0, 0, 0.22)'
+                      background: 'linear-gradient(135deg, #E9F1F7 0%, #D8E7F3 100%)',
+                      boxShadow: '0 10px 28px rgba(10, 61, 98, 0.08)',
+                      border: '1.5px solid rgba(56, 161, 219, 0.35)'
                     }}
                   >
+                    {/* Top Sky Blue Accent Line */}
+                    <div
+                      className="position-absolute top-0 start-0 w-100"
+                      style={{ height: '4px', background: 'linear-gradient(90deg, #38A1DB, #5DADE2, #38A1DB)' }}
+                    />
+
                     <div>
                       <span
-                        className="badge px-3 py-2 mb-3 rounded-pill text-uppercase"
+                        className="badge px-3 py-2 mb-3 rounded-pill text-uppercase fw-semibold"
                         style={{
-                          backgroundColor: 'rgba(243, 156, 18, 0.25)',
-                          color: '#F7DC6F',
+                          backgroundColor: 'rgba(56, 161, 219, 0.2)',
+                          color: '#0A3D62',
+                          border: '1px solid rgba(56, 161, 219, 0.45)',
                           letterSpacing: '0.08em',
-                          fontSize: '0.75rem',
-                          fontWeight: 600
+                          fontSize: '0.78rem'
                         }}
                       >
-                        Word for the Month
+                        Promise for {monthlyMonthName}
                       </span>
-                      <h2
-                        className="fw-bold mb-3 text-white"
-                        style={{ fontSize: 'clamp(1.35rem, 2.4vw, 1.85rem)' }}
-                      >
-                        {monthlyMonthName} Promise {monthlyVerse.year}
-                      </h2>
-                      <div className="d-flex justify-content-center mb-3">
-                        <i
-                          className="bi bi-quote fs-1 opacity-50"
-                          style={{ color: '#F7DC6F' }}
-                        ></i>
+
+                      <div className="d-flex justify-content-center my-2">
+                        <i className="bi bi-quote fs-1" style={{ color: '#38A1DB', opacity: 0.9 }}></i>
                       </div>
+
                       <blockquote
-                        className="fw-normal mx-auto mb-4 text-white lh-base fst-italic"
+                        className="fw-normal mx-auto mb-4 lh-base fst-italic"
                         style={{
-                          fontFamily: "'Playfair Display', serif",
-                          fontSize: 'clamp(1.15rem, 2vw, 1.45rem)',
-                          maxWidth: '640px'
+                          color: '#0A3D62',
+                          fontFamily: "'Lora', serif",
+                          fontSize: 'clamp(1.1rem, 2.1vw, 1.4rem)',
+                          maxWidth: '740px'
                         }}
                       >
                         "{monthlyVerse.verseText.replace(/^["“”]|["“”]$/g, '')}"
                       </blockquote>
-                    </div>
-                    <div
-                      className="fw-semibold fs-5 mt-auto pt-2"
-                      style={{ letterSpacing: '0.04em', color: '#F7DC6F' }}
-                    >
-                      {monthlyVerse.reference}
+
+                      <div
+                        className="fw-bold fs-5 pt-1"
+                        style={{
+                          fontFamily: "'Playfair Display', serif",
+                          letterSpacing: '0.04em',
+                          color: '#38A1DB'
+                        }}
+                      >
+                        {monthlyVerse.reference}
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -481,6 +562,9 @@ const HomePage = () => {
           </div>
         </section>
       )}
+
+      {/* Weekly Church Schedule Section */}
+      <WeeklySchedule />
 
       {/* Pastor's Welcome Message */}
       <section className="py-5 px-2 bg-light">
@@ -662,6 +746,72 @@ const HomePage = () => {
                 </motion.a>
               </div>
             </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Explore Our Church Navigation Section */}
+      <section className="py-5" style={{ backgroundColor: 'var(--fgag-surface, #F8F9FA)' }}>
+        <div className="container py-4">
+          <motion.div
+            className="text-center mb-5"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-40px' }}
+            variants={fadeInUp}
+          >
+            <div className="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-primary-subtle text-primary fw-semibold small mb-2">
+              <i className="bi bi-compass"></i>
+              <span>Discover Our Community</span>
+            </div>
+            <h2 className="heading display-6 fw-bold mb-2" style={{ color: 'var(--fgag-primary, #0A3D62)' }}>
+              Explore Our Church
+            </h2>
+            <div className="section-divider">
+              <i className="bi bi-diamond-fill section-divider-icon"></i>
+            </div>
+            <p className="lead paragraph text-muted mx-auto mb-0" style={{ maxWidth: '640px' }}>
+              Connect with our church ministries, upcoming gatherings, spiritual sermons, and mission outreach.
+            </p>
+          </motion.div>
+
+          <motion.div
+            className="row g-4"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-40px' }}
+            variants={staggerContainer}
+          >
+            {exploreLinks.map((item, idx) => (
+              <motion.div className="col-12 col-sm-6 col-lg-3 d-flex" key={idx} variants={fadeInUp}>
+                <div className="card h-100 w-100 rounded-4 shadow-sm border-0 bg-white hover-lift p-4 d-flex flex-column justify-content-between">
+                  <div>
+                    <div
+                      className="d-inline-flex align-items-center justify-content-center p-3 rounded-circle mb-3"
+                      style={{ backgroundColor: item.iconBg }}
+                    >
+                      <i className={`bi ${item.icon} fs-4`} style={{ color: item.iconColor }}></i>
+                    </div>
+                    <h5 className="heading fw-bold mb-2 text-dark fs-6">
+                      {item.title}
+                    </h5>
+                    <p className="paragraph small text-muted mb-3" style={{ lineHeight: '1.6' }}>
+                      {item.desc}
+                    </p>
+                  </div>
+                  <div className="pt-2 border-top border-light-subtle">
+                    <Link
+                      to={item.to}
+                      className="text-decoration-none fw-semibold small d-inline-flex align-items-center gap-1"
+                      style={{ color: 'var(--fgag-sky, #38A1DB)' }}
+                    >
+                      <span>Explore</span>
+                      <i className="bi bi-arrow-right"></i>
+                    </Link>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </motion.div>
         </div>
       </section>

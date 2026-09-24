@@ -216,6 +216,25 @@ Use this checklist to test each module in the admin portal:
 
 The public site has been enhanced with modern styling and micro-interactions while preserving 100% of the church's brand identity:
 
+- **Hero Section**: 92vh regal hero with natural ambient overlay (25-35% feel) ensuring the sanctuary photo is clearly visible, subtle Ken Burns zoom (respects `prefers-reduced-motion`), soft frosted-glass text panel for WCAG AA readability, responsive CTAs, and a bouncing scroll-down indicator.
+- **Stacked Promise Scripture Cards (Annual & Monthly)**:
+  - Vertically stacked, distinct cards on the Home page.
+  - Yearly Promise first: large prominent card with Deep Navy gradient (`#0A3D62`), warm gold accent (`#F39C12`), quote icon, *Lora* italic verse, and *Playfair Display* reference.
+  - Monthly Promise second: separate card below with Ice-Blue gradient (`#E9F1F7`), sky blue accent (`#38A1DB`), and dynamic month-year label.
+  - Fully decoupled containers with individual shadows, borders, and animations.
+- **Enhanced Church Timing Cards (Home Page)**:
+  - Relocated from Events to the Home page for instant access by newcomers and visitors.
+  - Interactive filter tabs (`All Gatherings`, `Worship`, `Prayer`, `Fellowship`, `Youth`).
+  - Responsive card grid layout across desktop and mobile with dedicated Service Time and Venue badge blocks.
+  - Dynamic `"Today"` live badge with an animated pulsing dot and highlight border for services happening today.
+- **Premium Church Events Structure (`/events`)**:
+  - Grand Spotlight Banner for the featured/signature church convention with poster, date chip, time/location blocks, and instant WhatsApp sharing.
+  - Full Events Grid with calendar ribbon date blocks (`MMM DD`), 16:10 aspect ratio posters, category tags, and summary excerpts.
+  - Live search bar and filter tabs (`All`, `Featured`).
+  - Interactive Event Details Modal displaying complete schedules, descriptions, and one-click WhatsApp sharing.
+- **Explore Our Church Navigation Grid**:
+  - 8-card responsive glimpse grid on the Home page providing direct access to every page (About, Events, Ministries, Gallery, Sermons, Get Involved, Donate, Contact).
+  - Clean equal-height cards with icons, a single concise description line, and arrow links.
 - **Vector Church Emblem & Logo System**:
   - Handcrafted SVG emblem with radiant cross, Holy Spirit dove, gold accents, and olive wreath.
   - High-contrast variants: `church-logo-light.svg` (white/gold/cyan) for dark navbars/footers/heroes, and `church-logo-new.svg` (navy/blue/gold) for light surfaces.
@@ -225,18 +244,6 @@ The public site has been enhanced with modern styling and micro-interactions whi
   - Fixed-ratio image containers across all pages (`16:10` for events and ministries, `4:3` for family and gallery, `4:5` for portraits, `1:1` for app features).
   - Standardized `object-fit: cover` with `object-position: center top` for people photos to prevent awkward crops.
   - Built-in `loading="lazy"` performance attributes and graceful `onError` fallback handling.
-- **Dual Promise Scripture Cards (Annual & Monthly)**:
-  - Responsive side-by-side glassmorphism cards on the homepage for the Yearly Church Theme and Monthly God's Word.
-  - Seamless fallback to a single centered card when only one promise is active, and automatic omission if none are configured.
-  - Managed via dedicated Admin CMS (`/admin/promises`).
-- **Color Palette**: Deep Navy (`#0A3D62`), Accent Blue (`#38A1DB`), Deep Heading (`#3C6382`), Ice Blue (`#E9F1F7`), and Soft Light (`#F8F9FA`).
-- **Typography**: Google Fonts `Playfair Display` for headings and `Lora` for body copy.
-- **Sermons & Media Module**:
-  - Public sermon library (`/sermons`) with category filter pills, keyword search, and pagination.
-  - Dynamic sermon detail page (`/sermons/:id`) with 16:9 responsive player (`youtube-nocookie.com`), metadata, WhatsApp/Facebook/Twitter sharing, and related sermons.
-  - Homepage "Latest Sermons" section displaying top 3 published messages.
-  - Admin CMS (`/admin/sermons`) with full CRUD, automatic YouTube thumbnail derivation (`img.youtube.com/vi/<id>/hqdefault.jpg`), live video preview, and custom upload dropzone.
-- **Hero Section**: 92vh regal hero with slow Ken Burns background zoom, multi-stop navy gradient overlay (`rgba(7,42,68,0.94)` to `rgba(10,61,98,0.62)`), frosted glass emblem, responsive CTAs, and bouncing scroll-down indicator.
 - **Navigation**:
   - Sticky navbar that transitions from transparent to solid navy with backdrop blur upon scroll.
   - Active route indicator with smooth accent bar.

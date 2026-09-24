@@ -276,7 +276,62 @@ async function main() {
     console.log(`✅ Seeded ${sermonsData.length} sermons.`);
   }
 
-  // 9. Seed Monthly Promise Verses
+  // 9. Seed Church Events
+  const eventsCount = await prisma.event.count();
+  if (eventsCount < 4) {
+    const eventsData = [
+      {
+        title: 'Annual Thanksgiving & Revival Convention',
+        summary: 'A powerful spiritual breakthrough convention featuring guest ministers, anointed worship, and family blessing prayers.',
+        time: '6:30 PM – 9:30 PM',
+        location: 'Church Main Sanctuary & Grounds',
+        details: 'Join us for our signature annual spiritual convention. Over three powerful sessions, believers from across the region gather to celebrate God’s goodness, receive prophetic teaching, and seek revival for our land. Special sessions for youth and children will also be conducted.',
+        imageUrl: '/images/Church_img.jpg',
+        isFeatured: true,
+        date: new Date('2026-11-15T18:30:00Z')
+      },
+      {
+        title: 'Youth Awakening & Leadership Summit',
+        summary: 'Empowering young people with biblical truth, energetic praise, interactive breakout sessions, and career guidance.',
+        time: '5:00 PM – 8:30 PM',
+        location: 'Youth Hall, FGAG Kollidam',
+        details: 'An engaging full-evening gathering tailored for students, college youth, and young professionals. Topics include living out pure faith in a secular society, spiritual leadership, and building godly character.',
+        imageUrl: '/images/youth_service.jpg',
+        isFeatured: false,
+        date: new Date('2026-10-24T17:00:00Z')
+      },
+      {
+        title: 'Special Night of Miracles & Healing Intercession',
+        summary: 'A dedicated night of fervent prayer, believing God for miraculous physical and emotional healings and breakthroughs.',
+        time: '7:00 PM – 10:00 PM',
+        location: 'Main Sanctuary',
+        details: 'Come with expectant hearts. Pastor Amal and the pastoral team will lay hands on the sick and pray specific prayers of intercession for difficult life challenges, deliverance, and divine peace.',
+        imageUrl: '/images/healing_service.png',
+        isFeatured: false,
+        date: new Date('2026-10-31T19:00:00Z')
+      },
+      {
+        title: 'Women of Grace Annual Fellowship Meet',
+        summary: 'A joyful morning of spiritual empowerment, testimonies, scripture study, and prayer for mothers and daughters.',
+        time: '10:00 AM – 1:00 PM',
+        location: 'Fellowship Hall',
+        details: 'A special time for women to connect deeply in prayer and biblical sisterhood. Includes shared refreshments, uplifting personal testimonies, and intercession for families and church ministries.',
+        imageUrl: '/images/women_fellowship.jpeg',
+        isFeatured: false,
+        date: new Date('2026-11-07T10:00:00Z')
+      }
+    ];
+
+    for (const event of eventsData) {
+      const exists = await prisma.event.findFirst({ where: { title: event.title } });
+      if (!exists) {
+        await prisma.event.create({ data: event });
+      }
+    }
+    console.log(`✅ Seeded church events.`);
+  }
+
+  // 10. Seed Monthly Promise Verses
   const now = new Date();
   const currentMonth = now.getMonth() + 1;
   const currentYear = now.getFullYear();
