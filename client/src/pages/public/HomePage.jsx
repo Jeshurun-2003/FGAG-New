@@ -1,5 +1,22 @@
 import React from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import SEO from '../../components/common/SEO';
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 28 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] } }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15
+    }
+  }
+};
 
 const HomePage = () => {
   const { settings = {} } = useOutletContext() || {};
@@ -31,52 +48,81 @@ const HomePage = () => {
 
   return (
     <div>
+      <SEO
+        title="Home"
+        description="Welcome to Friends Garden AG Church, Kollidam. A Place to Belong, Believe, and Become."
+      />
+
       {/* Hero Section */}
       <section
-        className="px-3 position-relative d-flex align-items-center justify-content-center text-center text-white"
+        className="position-relative d-flex align-items-center justify-content-center text-center text-white overflow-hidden"
         style={{
           backgroundImage: `url('${heroBg}')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          minHeight: '75vh',
-          padding: '80px 0'
+          minHeight: '88vh',
+          padding: '120px 20px 80px'
         }}
       >
-        {/* Dark Overlay */}
+        {/* Soft Radial & Linear Gradient Overlay */}
         <div
           className="position-absolute top-0 start-0 w-100 h-100"
-          style={{ backgroundColor: 'rgba(0, 0, 0, 0.72)', zIndex: 1 }}
+          style={{
+            background: 'linear-gradient(180deg, rgba(7, 42, 68, 0.82) 0%, rgba(10, 61, 98, 0.88) 60%, rgba(5, 20, 35, 0.94) 100%)',
+            zIndex: 1
+          }}
         />
 
-        {/* Content */}
+        {/* Hero Content with Fade + Slide Up Animation */}
         <div className="container position-relative py-5" style={{ zIndex: 2 }}>
           <div className="row justify-content-center">
-            <div className="col-12 col-md-11 col-lg-9 col-xl-8">
-              <h1 className="display-3 fw-bold mb-4 text-white" style={{ fontFamily: "'Playfair Display', serif" }}>
+            <motion.div
+              className="col-12 col-md-11 col-lg-9 col-xl-8"
+              initial={{ opacity: 0, y: 35 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <span className="badge px-3 py-2 mb-3 rounded-pill text-uppercase tracking-wide" style={{ backgroundColor: 'rgba(56, 161, 219, 0.25)', border: '1px solid rgba(56, 161, 219, 0.5)', color: '#ffffff', letterSpacing: '0.08em' }}>
+                Assemblies of God • Kollidam
+              </span>
+              <h1
+                className="display-3 fw-bold mb-4 text-white"
+                style={{
+                  fontFamily: "'Playfair Display', serif",
+                  textShadow: '0 4px 20px rgba(0, 0, 0, 0.4)'
+                }}
+              >
                 {heroTitle}
               </h1>
-              <p className="lead fs-3 mb-5 fw-medium text-light opacity-90">
+              <p
+                className="lead fs-3 mb-5 fw-medium text-light opacity-90 mx-auto"
+                style={{ maxWidth: '680px', lineHeight: '1.6' }}
+              >
                 {heroSubtitle}
               </p>
               <div className="d-flex flex-wrap gap-3 justify-content-center">
-                <a
+                <motion.a
                   href={heroYoutube}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn-enhanced btn-outline-light d-inline-flex align-items-center gap-2"
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   <i className="bi bi-youtube text-danger fs-5"></i>
                   Visit YouTube
-                </a>
-                <Link
-                  to="/contact"
-                  className="btn btn-enhanced btn-outline-light d-inline-flex align-items-center gap-2"
-                >
-                  <i className="bi bi-envelope fs-5"></i>
-                  Contact Us
-                </Link>
+                </motion.a>
+                <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.98 }}>
+                  <Link
+                    to="/contact"
+                    className="btn btn-enhanced btn-primary d-inline-flex align-items-center gap-2"
+                  >
+                    <i className="bi bi-envelope fs-5"></i>
+                    Contact Us
+                  </Link>
+                </motion.div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -84,128 +130,197 @@ const HomePage = () => {
       {/* Welcome Section */}
       <section className="py-5 bg-light">
         <div className="container py-4">
-          <div className="text-center mb-5">
+          <motion.div
+            className="text-center mb-5"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-40px' }}
+            variants={fadeInUp}
+          >
             <h2 className="heading_1 display-5 fw-bold mb-2">
               Welcome to Friends Garden A.G Church
             </h2>
-            <p className="lead fst-italic paragraph mb-0">
+            <div className="section-divider">
+              <i className="bi bi-diamond-fill section-divider-icon"></i>
+            </div>
+            <p className="lead fst-italic paragraph mb-0 fs-4">
               A Place to Belong, Believe, and Become.
             </p>
-          </div>
+          </motion.div>
 
-          <div className="row justify-content-center g-4">
-            <div className="col-md-4">
-              <div className="card border-0 shadow-sm h-100 rounded-4 hover-lift p-3 bg-white">
-                <div className="card-body text-center">
-                  <i className="bi bi-heart-fill display-5 text-danger mb-3 d-block"></i>
+          <motion.div
+            className="row justify-content-center g-4"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-40px' }}
+            variants={staggerContainer}
+          >
+            <motion.div className="col-md-4" variants={fadeInUp}>
+              <div className="card border-0 shadow-sm h-100 rounded-4 hover-lift p-4 bg-white text-center">
+                <div className="card-body p-0">
+                  <div className="d-inline-flex p-3 rounded-circle mb-3" style={{ backgroundColor: 'rgba(220, 53, 69, 0.1)' }}>
+                    <i className="bi bi-heart-fill fs-2 text-danger"></i>
+                  </div>
                   <h4 className="heading fw-bold mb-3">Celebrate with Gratitude</h4>
-                  <p className="paragraph mb-0">{celebrateDesc}</p>
+                  <p className="paragraph mb-0 text-muted">{celebrateDesc}</p>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="col-md-4">
-              <div className="card border-0 shadow-sm h-100 rounded-4 hover-lift p-3 bg-white">
-                <div className="card-body text-center">
-                  <i className="bi bi-people-fill display-5 text-success mb-3 d-block"></i>
+            <motion.div className="col-md-4" variants={fadeInUp}>
+              <div className="card border-0 shadow-sm h-100 rounded-4 hover-lift p-4 bg-white text-center">
+                <div className="card-body p-0">
+                  <div className="d-inline-flex p-3 rounded-circle mb-3" style={{ backgroundColor: 'rgba(25, 135, 84, 0.1)' }}>
+                    <i className="bi bi-people-fill fs-2 text-success"></i>
+                  </div>
                   <h4 className="heading fw-bold mb-3">Grow in His Kingdom</h4>
-                  <p className="paragraph mb-0">{growDesc}</p>
+                  <p className="paragraph mb-0 text-muted">{growDesc}</p>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="col-md-4">
-              <div className="card border-0 shadow-sm h-100 rounded-4 hover-lift p-3 bg-white">
-                <div className="card-body text-center">
-                  <i className="bi bi-chat-dots-fill display-5 text-primary mb-3 d-block"></i>
+            <motion.div className="col-md-4" variants={fadeInUp}>
+              <div className="card border-0 shadow-sm h-100 rounded-4 hover-lift p-4 bg-white text-center">
+                <div className="card-body p-0">
+                  <div className="d-inline-flex p-3 rounded-circle mb-3" style={{ backgroundColor: 'rgba(56, 161, 219, 0.12)' }}>
+                    <i className="bi bi-chat-dots-fill fs-2 text-primary"></i>
+                  </div>
                   <h4 className="heading fw-bold mb-3">Encourage & Uplift</h4>
-                  <p className="paragraph mb-0">{upliftDesc}</p>
+                  <p className="paragraph mb-0 text-muted">{upliftDesc}</p>
                 </div>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
-          <p className="text-center fs-5 text-muted mt-5 mx-auto" style={{ maxWidth: '820px' }}>
+          <motion.p
+            className="text-center fs-5 text-muted mt-5 mx-auto"
+            style={{ maxWidth: '820px', lineHeight: '1.9' }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
             {welcomeFooter}
-          </p>
+          </motion.p>
         </div>
       </section>
 
       {/* Church Promise Section */}
       <section className="py-5 promise-section text-white text-center">
-        <div className="container py-4">
-          <h2 className="fw-bold mb-4 text-white">Our Church Promise {promiseYear}</h2>
-          <h4 className="fw-bold mx-auto mb-3 text-white lh-base" style={{ maxWidth: '900px', fontStyle: 'italic' }}>
-            {promiseVerse}
-          </h4>
-          <p className="text-light fw-semibold fs-5 mb-0">{promiseRef}</p>
+        <div className="container py-5 position-relative" style={{ zIndex: 2 }}>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.55 }}
+          >
+            <span className="badge px-3 py-2 mb-3 rounded-pill text-uppercase" style={{ backgroundColor: 'rgba(255, 255, 255, 0.15)', letterSpacing: '0.05em' }}>
+              Scripture for the Year
+            </span>
+            <h2 className="fw-bold mb-4 text-white display-6">Our Church Promise {promiseYear}</h2>
+            <h3
+              className="fw-bold mx-auto mb-4 text-white lh-base"
+              style={{
+                maxWidth: '920px',
+                fontStyle: 'italic',
+                fontFamily: "'Playfair Display', serif",
+                fontSize: 'clamp(1.35rem, 2.8vw, 1.85rem)'
+              }}
+            >
+              {promiseVerse}
+            </h3>
+            <p className="text-info fw-semibold fs-5 mb-0" style={{ letterSpacing: '0.05em' }}>
+              {promiseRef}
+            </p>
+          </motion.div>
         </div>
       </section>
 
       {/* Pastor's Welcome Message */}
       <section className="py-5 px-2 bg-light">
         <div className="container py-4">
-          <div className="card border-0 shadow-sm rounded-4 overflow-hidden">
+          <motion.div
+            className="card border-0 shadow-sm rounded-4 overflow-hidden bg-white hover-lift"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-40px' }}
+            variants={fadeInUp}
+          >
             <div className="row g-0 align-items-center section-bg">
               {/* Pastor Image */}
-              <div className="col-md-5 d-flex justify-content-center align-items-center p-3 p-md-4">
-                <img
-                  src={pastorImg}
-                  alt={pastorName}
-                  className="img-fluid rounded-4 shadow-sm"
-                  style={{
-                    maxHeight: '420px',
-                    width: 'auto',
-                    maxWidth: '100%',
-                    objectFit: 'contain',
-                    borderRadius: '20px'
-                  }}
-                />
+              <div className="col-md-5 d-flex justify-content-center align-items-center p-4 p-md-5">
+                <div className="position-relative">
+                  <img
+                    src={pastorImg}
+                    alt={pastorName}
+                    className="img-fluid rounded-4 shadow"
+                    style={{
+                      maxHeight: '440px',
+                      width: 'auto',
+                      maxWidth: '100%',
+                      objectFit: 'contain'
+                    }}
+                  />
+                </div>
               </div>
 
               {/* Message Content */}
-              <div className="col-md-7 p-4 p-md-5">
-                <h2 className="fw-bold heading text-start mb-4">{pastorTitle}</h2>
+              <div className="col-md-7 p-4 p-md-5 bg-white">
+                <h2 className="fw-bold heading text-start mb-3">{pastorTitle}</h2>
                 <div className="paragraph mb-4 text-muted" style={{ whiteSpace: 'pre-line' }}>
                   {pastorMsg}
                 </div>
-                <h5 className="fw-bold text-dark mb-1">– {pastorName}</h5>
-                <p className="text-secondary mb-0">{pastorRole}</p>
+                <div className="pt-3 border-top border-light-subtle">
+                  <h5 className="fw-bold text-dark mb-1">– {pastorName}</h5>
+                  <p className="text-secondary small mb-0">{pastorRole}</p>
+                </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Uvamaigal App Section */}
       <section className="py-5 bg-white">
         <div className="container py-4">
-          <div className="row align-items-center gy-4">
-            <div className="col-md-5 text-center p-3">
-              <img
-                src={appImg}
-                alt="Uvamaigal Bible Stories App"
-                className="img-fluid rounded-4 shadow-sm"
-                style={{ maxHeight: '380px', width: 'auto', maxWidth: '100%', objectFit: 'contain' }}
-              />
-            </div>
-
-            <div className="col-md-7 text-center text-md-start">
-              <h2 className="fw-bold heading mb-3">{appTitle}</h2>
-              <div className="paragraph text-muted fs-5 mb-4" style={{ whiteSpace: 'pre-line' }}>
-                {appDesc}
+          <motion.div
+            className="card border-0 shadow-sm rounded-4 p-4 p-md-5 section-bg"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-40px' }}
+            variants={fadeInUp}
+          >
+            <div className="row align-items-center gy-4">
+              <div className="col-md-5 text-center p-3">
+                <div className="image-zoom-card shadow-sm d-inline-block rounded-4">
+                  <img
+                    src={appImg}
+                    alt="Uvamaigal Bible Stories App"
+                    className="img-fluid rounded-4"
+                    style={{ maxHeight: '380px', width: 'auto', maxWidth: '100%', objectFit: 'contain' }}
+                  />
+                </div>
               </div>
-              <a
-                href={appPlaystore}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-success rounded-pill px-4 py-2 shadow-sm d-inline-flex align-items-center gap-2"
-              >
-                <i className="bi bi-google-play fs-5"></i>
-                Download Uvamaigal
-              </a>
+
+              <div className="col-md-7 text-center text-md-start">
+                <h2 className="fw-bold heading mb-3">{appTitle}</h2>
+                <div className="paragraph text-muted fs-5 mb-4" style={{ whiteSpace: 'pre-line' }}>
+                  {appDesc}
+                </div>
+                <motion.a
+                  href={appPlaystore}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-success rounded-pill px-4 py-3 shadow d-inline-flex align-items-center gap-2 fw-semibold"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <i className="bi bi-google-play fs-5"></i>
+                  Download Uvamaigal
+                </motion.a>
+              </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
     </div>

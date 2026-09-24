@@ -1,15 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { ministriesService } from '../../services/api';
-import LoadingSpinner from '../../components/common/LoadingSpinner';
+import { TableSkeleton } from '../../components/common/SkeletonLoader';
+import ImageUploadDropzone from '../../components/admin/ImageUploadDropzone';
+import ConfirmDeleteModal from '../../components/admin/ConfirmDeleteModal';
+import { useToast } from '../../context/ToastContext';
+import SEO from '../../components/common/SEO';
 
 const AdminMinistriesPage = () => {
+  const { addToast } = useToast();
   const [ministries, setMinistries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [statusMsg, setStatusMsg] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingMinistry, setEditingMinistry] = useState(null);
+  const [deleteId, setDeleteId] = useState(null);
+  const [deleting, setDeleting] = useState(false);
+
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -28,7 +36,7 @@ const AdminMinistriesPage = () => {
       }
     } catch (err) {
       console.error(err);
-      setStatusMsg({ type: 'danger', text: 'Failed to fetch ministries.' });
+      addToast('Failed to fetch ministries.', 'danger');
     } finally {
       setLoading(false);
     }
@@ -64,24 +72,27 @@ const AdminMinistriesPage = () => {
     setModalOpen(true);
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Delete this ministry?')) return;
+  const confirmDelete = async () => {
+    if (!deleteId) return;
+    setDeleting(true);
     try {
-      const res = await ministriesService.delete(id);
+      const res = await ministriesService.delete(deleteId);
       if (res.data.success) {
-        setStatusMsg({ type: 'success', text: 'Ministry deleted successfully.' });
+        addToast('Ministry deleted successfully.', 'success');
+        setDeleteId(null);
         fetchMinistries();
       }
     } catch (err) {
       console.error(err);
-      setStatusMsg({ type: 'danger', text: 'Failed to delete ministry.' });
+      addToast('Failed to delete ministry.', 'danger');
+    } finally {
+      setDeleting(false);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
-    setStatusMsg(null);
 
     const payload = new FormData();
     payload.append('title', formData.title);
@@ -96,47 +107,76 @@ const AdminMinistriesPage = () => {
     try {
       if (editingMinistry) {
         await ministriesService.update(editingMinistry.id, payload);
-        setStatusMsg({ type: 'success', text: 'Ministry updated successfully.' });
+        addToast('Ministry updated successfully.', 'success');
       } else {
         await ministriesService.create(payload);
-        setStatusMsg({ type: 'success', text: 'New ministry created.' });
+        addToast('Ministry created successfully.', 'success');
       }
       setModalOpen(false);
       fetchMinistries();
     } catch (err) {
       console.error(err);
-      setStatusMsg({ type: 'danger', text: 'Error saving ministry.' });
+      addToast(err.response?.data?.message || 'Error saving ministry.', 'danger');
     } finally {
       setSaving(false);
     }
   };
 
+  const filteredMinistries = ministries.filter((m) => {
+    const q = searchQuery.toLowerCase();
+    return (
+      m.title?.toLowerCase().includes(q) ||
+      m.description?.toLowerCase().includes(q)
+    );
+  });
+
   return (
     <div>
+      <SEO title="Manage Ministries" />
+
       <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
         <div>
           <h2 className="heading fw-bold mb-1">Ministries Management</h2>
-          <p className="text-muted small mb-0">Manage church departments and serving opportunities</p>
+          <p className="text-muted small mb-0">Create, edit, reorder, and activate church ministries</p>
         </div>
-        <button className="btn btn-primary" onClick={openCreateModal}>
-          <i className="bi bi-plus-circle me-1"></i> Add New Ministry
+        <button className="btn btn-primary rounded-pill px-3 py-2 d-flex align-items-center gap-1 shadow-sm" onClick={openCreateModal}>
+          <i className="bi bi-plus-circle"></i> Add Ministry
         </button>
       </div>
 
-      {statusMsg && (
-        <div className={`alert alert-${statusMsg.type} alert-dismissible fade show mb-4`} role="alert">
-          {statusMsg.text}
-          <button type="button" className="btn-close" onClick={() => setStatusMsg(null)}></button>
+      {/* Search Bar */}
+      <div className="card border-0 shadow-sm rounded-4 p-3 bg-white mb-4">
+        <div className="input-group">
+          <span className="input-group-text bg-light border-end-0">
+            <i className="bi bi-search text-muted"></i>
+          </span>
+          <input
+            type="text"
+            className="form-control border-start-0"
+            placeholder="Search ministries by title or description..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          {searchQuery && (
+            <button
+              className="btn btn-outline-secondary"
+              onClick={() => setSearchQuery('')}
+            >
+              Clear
+            </button>
+          )}
         </div>
-      )}
+      </div>
 
       {loading ? (
-        <LoadingSpinner message="Loading ministries..." />
-      ) : ministries.length === 0 ? (
+        <TableSkeleton rows={5} cols={5} />
+      ) : filteredMinistries.length === 0 ? (
         <div className="card border-0 shadow-sm rounded-4 p-5 text-center bg-white">
           <i className="bi bi-people display-3 text-muted mb-3"></i>
-          <h4>No Ministries Listed</h4>
-          <p className="text-muted">Click the button above to add a ministry department.</p>
+          <h4>No Ministries Found</h4>
+          <p className="text-muted">
+            {searchQuery ? 'No ministries match your search criteria.' : 'Click Add Ministry to create your first ministry.'}
+          </p>
         </div>
       ) : (
         <div className="card border-0 shadow-sm rounded-4 bg-white overflow-hidden">
@@ -144,16 +184,15 @@ const AdminMinistriesPage = () => {
             <table className="table table-hover align-middle mb-0">
               <thead className="table-light">
                 <tr>
-                  <th style={{ width: '80px' }}>Photo</th>
-                  <th>Ministry Name</th>
-                  <th>Description</th>
-                  <th>Sort Order</th>
-                  <th>Status</th>
+                  <th style={{ width: '80px' }}>Image</th>
+                  <th>Title & Description</th>
+                  <th style={{ width: '100px' }}>Order</th>
+                  <th style={{ width: '120px' }}>Status</th>
                   <th className="text-end" style={{ width: '130px' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {ministries.map((m) => (
+                {filteredMinistries.map((m) => (
                   <tr key={m.id}>
                     <td>
                       <img
@@ -164,36 +203,38 @@ const AdminMinistriesPage = () => {
                       />
                     </td>
                     <td>
-                      <strong className="text-dark">{m.title}</strong>
+                      <strong className="d-block text-dark">{m.title}</strong>
+                      <span className="text-muted small text-truncate d-inline-block" style={{ maxWidth: '350px' }}>
+                        {m.description || 'No description'}
+                      </span>
                     </td>
                     <td>
-                      <p className="text-muted small mb-0 text-truncate" style={{ maxWidth: '350px' }}>
-                        {m.description}
-                      </p>
+                      <span className="badge bg-light text-dark border px-2 py-1">#{m.order}</span>
                     </td>
-                    <td>{m.order}</td>
                     <td>
                       {m.isActive ? (
-                        <span className="badge bg-success-subtle text-success border border-success-subtle">
+                        <span className="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1">
                           Active
                         </span>
                       ) : (
-                        <span className="badge bg-secondary-subtle text-secondary border">
-                          Hidden
+                        <span className="badge bg-secondary-subtle text-secondary rounded-pill px-3 py-1">
+                          Inactive
                         </span>
                       )}
                     </td>
                     <td className="text-end">
                       <button
-                        className="btn btn-sm btn-outline-secondary me-2"
+                        className="btn btn-sm btn-outline-secondary me-2 rounded-circle"
+                        style={{ width: '34px', height: '34px', padding: 0 }}
                         onClick={() => openEditModal(m)}
                         title="Edit ministry"
                       >
                         <i className="bi bi-pencil"></i>
                       </button>
                       <button
-                        className="btn btn-sm btn-outline-danger"
-                        onClick={() => handleDelete(m.id)}
+                        className="btn btn-sm btn-outline-danger rounded-circle"
+                        style={{ width: '34px', height: '34px', padding: 0 }}
+                        onClick={() => setDeleteId(m.id)}
                         title="Delete ministry"
                       >
                         <i className="bi bi-trash"></i>
@@ -207,98 +248,106 @@ const AdminMinistriesPage = () => {
         </div>
       )}
 
-      {/* Ministry Modal */}
+      {/* Modal with Drag-and-Drop Image Upload */}
       {modalOpen && (
-        <div className="modal fade show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 1055 }}>
+        <div className="modal fade show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(10,25,41,0.65)', zIndex: 1055 }}>
           <div className="modal-dialog modal-dialog-centered modal-lg">
-            <div className="modal-content border-0 rounded-4 shadow">
+            <div className="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
               <form onSubmit={handleSubmit}>
-                <div className="modal-header border-bottom">
-                  <h5 className="modal-title fw-bold heading">
-                    {editingMinistry ? 'Edit Ministry' : 'Add New Ministry'}
+                <div className="modal-header border-bottom py-3">
+                  <h5 className="modal-title fw-bold heading mb-0">
+                    {editingMinistry ? 'Edit Ministry' : 'Add Ministry'}
                   </h5>
-                  <button type="button" className="btn-close" onClick={() => setModalOpen(false)}></button>
+                  <button type="button" className="btn-close" onClick={() => setModalOpen(false)} aria-label="Close"></button>
                 </div>
 
                 <div className="modal-body p-4">
                   <div className="row g-3">
                     <div className="col-md-8">
-                      <label className="form-label fw-medium">Ministry Title *</label>
+                      <label className="form-label fw-medium text-dark">Ministry Title *</label>
                       <input
                         type="text"
                         className="form-control"
                         required
                         value={formData.title}
                         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                        placeholder="e.g. Media & Sound Ministry"
+                        placeholder="e.g. Youth Ministry, Choir"
                       />
                     </div>
 
                     <div className="col-md-4">
-                      <label className="form-label fw-medium">Display Order</label>
+                      <label className="form-label fw-medium text-dark">Display Order</label>
                       <input
                         type="number"
                         className="form-control"
                         value={formData.order}
-                        onChange={(e) => setFormData({ ...formData, order: e.target.value })}
+                        onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value, 10) || 0 })}
                       />
                     </div>
 
                     <div className="col-12">
-                      <label className="form-label fw-medium">Brief Description</label>
-                      <textarea
+                      <label className="form-label fw-medium text-dark">Short Description</label>
+                      <input
+                        type="text"
                         className="form-control"
-                        rows="2"
                         value={formData.description}
                         onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                        placeholder="Short summary shown on the card"
-                      ></textarea>
-                    </div>
-
-                    <div className="col-12">
-                      <label className="form-label fw-medium">Detailed Overview (More Info Collapse)</label>
-                      <textarea
-                        className="form-control"
-                        rows="4"
-                        value={formData.details}
-                        onChange={(e) => setFormData({ ...formData, details: e.target.value })}
-                        placeholder="In-depth details about responsibilities, meeting times..."
-                      ></textarea>
-                    </div>
-
-                    <div className="col-md-8">
-                      <label className="form-label fw-medium">Cover Photo</label>
-                      <input
-                        type="file"
-                        className="form-control"
-                        accept="image/*"
-                        onChange={(e) => setFormData({ ...formData, image: e.target.files[0] })}
+                        placeholder="Brief 1-2 sentence overview"
                       />
                     </div>
 
-                    <div className="col-md-4 d-flex align-items-end pb-2">
-                      <div className="form-check form-switch">
+                    <div className="col-12">
+                      <label className="form-label fw-medium text-dark">Full Details</label>
+                      <textarea
+                        className="form-control"
+                        rows="3"
+                        value={formData.details}
+                        onChange={(e) => setFormData({ ...formData, details: e.target.value })}
+                        placeholder="Detailed ministry vision, activities, leaders, etc."
+                      ></textarea>
+                    </div>
+
+                    {/* Drag and Drop Image Box */}
+                    <div className="col-12">
+                      <ImageUploadDropzone
+                        currentImage={editingMinistry?.imageUrl}
+                        onImageSelected={(file) => setFormData({ ...formData, image: file })}
+                        onImageCleared={() => setFormData({ ...formData, image: null })}
+                        label="Ministry Photo"
+                      />
+                    </div>
+
+                    <div className="col-12">
+                      <div className="form-check form-switch p-3 bg-light rounded-3 d-flex align-items-center gap-3">
                         <input
-                          className="form-check-input"
+                          className="form-check-input ms-0 mt-0"
                           type="checkbox"
                           id="isActiveSwitch"
                           checked={formData.isActive}
                           onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
+                          style={{ width: '2.5rem', height: '1.4rem' }}
                         />
-                        <label className="form-check-label fw-medium" htmlFor="isActiveSwitch">
-                          Visible on Website
+                        <label className="form-check-label fw-medium text-dark user-select-none" htmlFor="isActiveSwitch">
+                          Active (Visible on public ministries page)
                         </label>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="modal-footer border-top">
-                  <button type="button" className="btn btn-light" onClick={() => setModalOpen(false)}>
+                <div className="modal-footer border-top py-3 bg-light">
+                  <button type="button" className="btn btn-outline-secondary px-3" onClick={() => setModalOpen(false)}>
                     Cancel
                   </button>
-                  <button type="submit" className="btn btn-primary" disabled={saving}>
-                    {saving ? 'Saving...' : editingMinistry ? 'Update Ministry' : 'Add Ministry'}
+                  <button type="submit" className="btn btn-primary px-4 d-flex align-items-center gap-2" disabled={saving}>
+                    {saving ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm" role="status"></span>
+                        Saving...
+                      </>
+                    ) : (
+                      editingMinistry ? 'Update Ministry' : 'Create Ministry'
+                    )}
                   </button>
                 </div>
               </form>
@@ -306,6 +355,16 @@ const AdminMinistriesPage = () => {
           </div>
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmDeleteModal
+        isOpen={!!deleteId}
+        onClose={() => setDeleteId(null)}
+        onConfirm={confirmDelete}
+        loading={deleting}
+        title="Delete Ministry"
+        message="Are you sure you want to delete this ministry from the database?"
+      />
     </div>
   );
 };

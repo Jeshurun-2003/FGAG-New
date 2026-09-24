@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { prayerService } from '../../services/api';
+import { useToast } from '../../context/ToastContext';
+import SEO from '../../components/common/SEO';
 
 const ContactPage = () => {
   const { settings = {} } = useOutletContext() || {};
+  const { addToast } = useToast();
 
   const address = settings.contact_address || 'Friends Garden A.G church, Near Keezhvallam Railway Gate, Thaikal Via.Kollidam - 609102, Mayiladuthurai District';
   const email = settings.contact_email || 'kollidamag@gmail.com';
@@ -34,18 +38,22 @@ const ContactPage = () => {
     try {
       const res = await prayerService.submit(formData);
       if (res.data.success) {
+        const successMsg = 'Your prayer request has been received. Our prayer team will faithfully lift your request before the Lord.';
         setResponseMsg({
           type: 'success',
-          text: 'Your prayer request has been received. Our prayer team will faithfully lift your request before the Lord.'
+          text: successMsg
         });
+        addToast(successMsg, 'success');
         setFormData({ name: '', email: '', phone: '', message: '' });
       }
     } catch (err) {
       console.error(err);
+      const errMsg = err.response?.data?.message || 'Something went wrong. Please try again.';
       setResponseMsg({
         type: 'danger',
-        text: err.response?.data?.message || 'Something went wrong. Please try again.'
+        text: errMsg
       });
+      addToast(errMsg, 'danger');
     } finally {
       setSubmitting(false);
     }
@@ -53,53 +61,80 @@ const ContactPage = () => {
 
   return (
     <div className="container my-5 pt-3">
+      <SEO
+        title="Contact Us & Prayer Request"
+        description="Get in touch with Friends Garden AG Church, Kollidam. Send your prayer request, view service location and office contact details."
+      />
+
       {/* Map Header */}
-      <div className="mb-5">
-        <h2 className="heading_2 display-6 fw-bold mb-4">Find Us on the Map</h2>
-        <div className="rounded-4 overflow-hidden shadow-sm border">
+      <motion.div
+        className="mb-5"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="text-center mb-4">
+          <h1 className="heading_2 display-6 fw-bold mb-2">Find Us on the Map</h1>
+          <div className="section-divider">
+            <i className="bi bi-diamond-fill section-divider-icon"></i>
+          </div>
+        </div>
+
+        <div className="rounded-4 overflow-hidden shadow border" style={{ maxHeight: '420px' }}>
           <iframe
             src={mapEmbed}
             width="100%"
             height="400"
-            style={{ border: 0 }}
+            style={{ border: 0, display: 'block' }}
             allowFullScreen=""
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
             title="Friends Garden AG Church Location"
           ></iframe>
         </div>
-        <div className="mt-3">
-          <a
+        <div className="mt-3 text-end">
+          <motion.a
             href={mapLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn btn-outline-primary btn-sm"
+            className="btn btn-outline-primary btn-sm rounded-pill px-3 py-2"
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.98 }}
           >
-            <i className="bi bi-geo-alt me-1"></i> Open in Google Maps
-          </a>
+            <i className="bi bi-geo-alt me-1 text-danger"></i> Open in Google Maps
+          </motion.a>
         </div>
-      </div>
+      </motion.div>
 
       <div className="row g-5">
         {/* Contact Info */}
-        <div className="col-lg-6">
+        <motion.div
+          className="col-lg-6"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        >
           <h2 className="heading fw-bold display-6 mb-4">Get in Touch</h2>
 
-          <div className="card border-0 shadow-sm rounded-3 p-3 mb-3 bg-white border-start border-4 border-primary">
+          <div className="card border-0 shadow-sm rounded-4 p-4 mb-3 bg-white border-start border-4 border-primary hover-lift">
             <div className="d-flex align-items-start gap-3">
-              <i className="bi bi-geo-alt-fill fs-3 text-primary"></i>
+              <div className="p-3 rounded-circle bg-primary-subtle text-primary">
+                <i className="bi bi-geo-alt-fill fs-4"></i>
+              </div>
               <div>
-                <strong className="heading d-block mb-1">Address:</strong>
+                <strong className="heading d-block mb-1 fs-5">Address:</strong>
                 <span className="paragraph text-secondary">{address}</span>
               </div>
             </div>
           </div>
 
-          <div className="card border-0 shadow-sm rounded-3 p-3 mb-3 bg-white border-start border-4 border-primary">
+          <div className="card border-0 shadow-sm rounded-4 p-4 mb-3 bg-white border-start border-4 border-primary hover-lift">
             <div className="d-flex align-items-center gap-3">
-              <i className="bi bi-envelope-fill fs-3 text-primary"></i>
+              <div className="p-3 rounded-circle bg-primary-subtle text-primary">
+                <i className="bi bi-envelope-fill fs-4"></i>
+              </div>
               <div>
-                <strong className="heading d-block mb-1">Email:</strong>
+                <strong className="heading d-block mb-1 fs-5">Email:</strong>
                 <a href={`mailto:${email}`} className="text-secondary text-decoration-none paragraph">
                   {email}
                 </a>
@@ -107,11 +142,13 @@ const ContactPage = () => {
             </div>
           </div>
 
-          <div className="card border-0 shadow-sm rounded-3 p-3 mb-3 bg-white border-start border-4 border-primary">
+          <div className="card border-0 shadow-sm rounded-4 p-4 mb-3 bg-white border-start border-4 border-primary hover-lift">
             <div className="d-flex align-items-center gap-3">
-              <i className="bi bi-telephone-fill fs-3 text-primary"></i>
+              <div className="p-3 rounded-circle bg-primary-subtle text-primary">
+                <i className="bi bi-telephone-fill fs-4"></i>
+              </div>
               <div>
-                <strong className="heading d-block mb-1">Phone:</strong>
+                <strong className="heading d-block mb-1 fs-5">Phone:</strong>
                 <a href={`tel:${phone.replace(/\s+/g, '')}`} className="text-secondary text-decoration-none paragraph">
                   {phone}
                 </a>
@@ -119,20 +156,27 @@ const ContactPage = () => {
             </div>
           </div>
 
-          <div className="card border-0 shadow-sm rounded-3 p-3 mb-4 bg-white border-start border-4 border-primary">
+          <div className="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white border-start border-4 border-primary hover-lift">
             <div className="d-flex align-items-center gap-3">
-              <i className="bi bi-clock-fill fs-3 text-primary"></i>
+              <div className="p-3 rounded-circle bg-primary-subtle text-primary">
+                <i className="bi bi-clock-fill fs-4"></i>
+              </div>
               <div>
-                <strong className="heading d-block mb-1">Office Hours:</strong>
+                <strong className="heading d-block mb-1 fs-5">Office Hours:</strong>
                 <span className="paragraph text-secondary">{officeHours}</span>
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Prayer Request Form */}
-        <div className="col-lg-6">
-          <div className="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+        <motion.div
+          className="col-lg-6"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+        >
+          <div className="card border-0 shadow rounded-4 p-4 p-md-5 bg-white hover-lift">
             <h2 className="heading fw-bold display-6 mb-4">Prayer Request Form</h2>
 
             {responseMsg && (
@@ -150,7 +194,7 @@ const ContactPage = () => {
 
             <form onSubmit={handleSubmit}>
               <div className="mb-3">
-                <label htmlFor="name" className="form-label fw-medium">
+                <label htmlFor="name" className="form-label fw-medium text-dark">
                   Your Name <span className="text-danger">*</span>
                 </label>
                 <input
@@ -165,7 +209,7 @@ const ContactPage = () => {
               </div>
 
               <div className="mb-3">
-                <label htmlFor="email" className="form-label fw-medium">
+                <label htmlFor="email" className="form-label fw-medium text-dark">
                   Your Email <span className="text-danger">*</span>
                 </label>
                 <input
@@ -180,7 +224,7 @@ const ContactPage = () => {
               </div>
 
               <div className="mb-3">
-                <label htmlFor="phone" className="form-label fw-medium">
+                <label htmlFor="phone" className="form-label fw-medium text-dark">
                   Your Phone (Optional)
                 </label>
                 <input
@@ -194,7 +238,7 @@ const ContactPage = () => {
               </div>
 
               <div className="mb-4">
-                <label htmlFor="message" className="form-label fw-medium">
+                <label htmlFor="message" className="form-label fw-medium text-dark">
                   Prayer Message <span className="text-danger">*</span>
                 </label>
                 <textarea
@@ -209,10 +253,12 @@ const ContactPage = () => {
               </div>
 
               <div className="text-end">
-                <button
+                <motion.button
                   type="submit"
-                  className="btn btn-primary px-4 py-2"
+                  className="btn btn-primary px-5 py-3 rounded-pill shadow fw-semibold"
                   disabled={submitting}
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   {submitting ? (
                     <>
@@ -222,11 +268,11 @@ const ContactPage = () => {
                   ) : (
                     'Send Request'
                   )}
-                </button>
+                </motion.button>
               </div>
             </form>
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { settingsService } from '../../services/api';
-import LoadingSpinner from '../../components/common/LoadingSpinner';
+import { CardSkeleton } from '../../components/common/SkeletonLoader';
+import { useToast } from '../../context/ToastContext';
+import SEO from '../../components/common/SEO';
 
 const AdminSettingsPage = () => {
+  const { addToast } = useToast();
   const [settings, setSettings] = useState({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [statusMsg, setStatusMsg] = useState(null);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -17,6 +19,7 @@ const AdminSettingsPage = () => {
         }
       } catch (err) {
         console.error('Failed to load settings', err);
+        addToast('Failed to load website settings.', 'danger');
       } finally {
         setLoading(false);
       }
@@ -31,53 +34,66 @@ const AdminSettingsPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
-    setStatusMsg(null);
 
     try {
       const res = await settingsService.update(settings);
       if (res.data.success) {
-        setStatusMsg({ type: 'success', text: 'Website settings saved successfully!' });
+        addToast('Website settings saved successfully!', 'success');
       }
     } catch (err) {
       console.error(err);
-      setStatusMsg({ type: 'danger', text: 'Error saving settings. Please try again.' });
+      addToast('Error saving settings. Please try again.', 'danger');
     } finally {
       setSaving(false);
     }
   };
 
   if (loading) {
-    return <LoadingSpinner message="Loading website settings..." />;
+    return (
+      <div className="py-4">
+        <div className="skeleton-box rounded-3 w-25 mb-4" style={{ height: '32px' }} />
+        <CardSkeleton count={3} />
+      </div>
+    );
   }
 
   return (
     <div>
+      <SEO title="Website Settings" />
+
       <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
         <div>
           <h2 className="heading fw-bold mb-1">Website Settings</h2>
           <p className="text-muted small mb-0">Contact coordinates, social media, and banking details</p>
         </div>
-        <button type="button" className="btn btn-primary" onClick={handleSubmit} disabled={saving}>
-          {saving ? 'Saving...' : 'Save Settings'}
+        <button
+          type="button"
+          className="btn btn-primary rounded-pill px-4 py-2 shadow-sm d-flex align-items-center gap-2"
+          onClick={handleSubmit}
+          disabled={saving}
+        >
+          {saving ? (
+            <>
+              <span className="spinner-border spinner-border-sm" role="status"></span>
+              Saving...
+            </>
+          ) : (
+            <>
+              <i className="bi bi-check2-circle"></i> Save Settings
+            </>
+          )}
         </button>
       </div>
 
-      {statusMsg && (
-        <div className={`alert alert-${statusMsg.type} alert-dismissible fade show mb-4`} role="alert">
-          {statusMsg.text}
-          <button type="button" className="btn-close" onClick={() => setStatusMsg(null)}></button>
-        </div>
-      )}
-
       <form onSubmit={handleSubmit}>
         {/* Contact Coordinates */}
-        <div className="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
-          <h4 className="fw-bold heading mb-3 pb-2 border-bottom">
-            <i className="bi bi-geo-alt text-primary me-2"></i> Church Contact Details
+        <div className="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-4 hover-lift">
+          <h4 className="fw-bold heading mb-3 pb-2 border-bottom d-flex align-items-center gap-2">
+            <i className="bi bi-geo-alt text-primary"></i> Church Contact Details
           </h4>
           <div className="row g-3">
             <div className="col-12">
-              <label className="form-label fw-medium">Physical Address</label>
+              <label className="form-label fw-medium text-dark">Physical Address</label>
               <input
                 type="text"
                 className="form-control"
@@ -86,7 +102,7 @@ const AdminSettingsPage = () => {
               />
             </div>
             <div className="col-md-4">
-              <label className="form-label fw-medium">Official Email</label>
+              <label className="form-label fw-medium text-dark">Official Email</label>
               <input
                 type="email"
                 className="form-control"
@@ -95,7 +111,7 @@ const AdminSettingsPage = () => {
               />
             </div>
             <div className="col-md-4">
-              <label className="form-label fw-medium">Phone / WhatsApp Helpline</label>
+              <label className="form-label fw-medium text-dark">Phone / WhatsApp Helpline</label>
               <input
                 type="text"
                 className="form-control"
@@ -104,7 +120,7 @@ const AdminSettingsPage = () => {
               />
             </div>
             <div className="col-md-4">
-              <label className="form-label fw-medium">Office Hours</label>
+              <label className="form-label fw-medium text-dark">Office Hours</label>
               <input
                 type="text"
                 className="form-control"
@@ -113,7 +129,7 @@ const AdminSettingsPage = () => {
               />
             </div>
             <div className="col-12">
-              <label className="form-label fw-medium">Google Maps Embed URL</label>
+              <label className="form-label fw-medium text-dark">Google Maps Embed URL</label>
               <input
                 type="text"
                 className="form-control"
@@ -122,7 +138,7 @@ const AdminSettingsPage = () => {
               />
             </div>
             <div className="col-12">
-              <label className="form-label fw-medium">Google Maps Direct Link</label>
+              <label className="form-label fw-medium text-dark">Google Maps Direct Link</label>
               <input
                 type="url"
                 className="form-control"
@@ -134,13 +150,13 @@ const AdminSettingsPage = () => {
         </div>
 
         {/* Social Media Links */}
-        <div className="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
-          <h4 className="fw-bold heading mb-3 pb-2 border-bottom">
-            <i className="bi bi-share text-primary me-2"></i> Social Media Links
+        <div className="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-4 hover-lift">
+          <h4 className="fw-bold heading mb-3 pb-2 border-bottom d-flex align-items-center gap-2">
+            <i className="bi bi-share text-primary"></i> Social Media Links
           </h4>
           <div className="row g-3">
             <div className="col-md-6">
-              <label className="form-label fw-medium">Instagram URL</label>
+              <label className="form-label fw-medium text-dark">Instagram URL</label>
               <input
                 type="url"
                 className="form-control"
@@ -149,7 +165,7 @@ const AdminSettingsPage = () => {
               />
             </div>
             <div className="col-md-6">
-              <label className="form-label fw-medium">Facebook URL</label>
+              <label className="form-label fw-medium text-dark">Facebook URL</label>
               <input
                 type="url"
                 className="form-control"
@@ -158,7 +174,7 @@ const AdminSettingsPage = () => {
               />
             </div>
             <div className="col-md-6">
-              <label className="form-label fw-medium">Twitter / X URL</label>
+              <label className="form-label fw-medium text-dark">Twitter / X URL</label>
               <input
                 type="url"
                 className="form-control"
@@ -167,7 +183,7 @@ const AdminSettingsPage = () => {
               />
             </div>
             <div className="col-md-6">
-              <label className="form-label fw-medium">WhatsApp Link</label>
+              <label className="form-label fw-medium text-dark">WhatsApp Link</label>
               <input
                 type="url"
                 className="form-control"
@@ -179,13 +195,13 @@ const AdminSettingsPage = () => {
         </div>
 
         {/* Banking Details */}
-        <div className="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
-          <h4 className="fw-bold heading mb-3 pb-2 border-bottom">
-            <i className="bi bi-bank text-primary me-2"></i> Bank Details for Offerings & Giving
+        <div className="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-4 hover-lift">
+          <h4 className="fw-bold heading mb-3 pb-2 border-bottom d-flex align-items-center gap-2">
+            <i className="bi bi-bank text-primary"></i> Bank Details for Offerings & Giving
           </h4>
           <div className="row g-3">
             <div className="col-md-6">
-              <label className="form-label fw-medium">Account Name</label>
+              <label className="form-label fw-medium text-dark">Account Name</label>
               <input
                 type="text"
                 className="form-control"
@@ -194,7 +210,7 @@ const AdminSettingsPage = () => {
               />
             </div>
             <div className="col-md-6">
-              <label className="form-label fw-medium">Account Number</label>
+              <label className="form-label fw-medium text-dark">Account Number</label>
               <input
                 type="text"
                 className="form-control"
@@ -203,7 +219,7 @@ const AdminSettingsPage = () => {
               />
             </div>
             <div className="col-md-4">
-              <label className="form-label fw-medium">IFSC Code</label>
+              <label className="form-label fw-medium text-dark">IFSC Code</label>
               <input
                 type="text"
                 className="form-control"
@@ -212,7 +228,7 @@ const AdminSettingsPage = () => {
               />
             </div>
             <div className="col-md-4">
-              <label className="form-label fw-medium">MICR Code</label>
+              <label className="form-label fw-medium text-dark">MICR Code</label>
               <input
                 type="text"
                 className="form-control"
@@ -221,7 +237,7 @@ const AdminSettingsPage = () => {
               />
             </div>
             <div className="col-md-4">
-              <label className="form-label fw-medium">SWIFT Code</label>
+              <label className="form-label fw-medium text-dark">SWIFT Code</label>
               <input
                 type="text"
                 className="form-control"
@@ -233,8 +249,15 @@ const AdminSettingsPage = () => {
         </div>
 
         <div className="text-end mb-5">
-          <button type="submit" className="btn btn-primary px-5 py-2" disabled={saving}>
-            {saving ? 'Saving...' : 'Save Settings'}
+          <button type="submit" className="btn btn-primary px-5 py-3 rounded-pill shadow fw-semibold" disabled={saving}>
+            {saving ? (
+              <>
+                <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                Saving...
+              </>
+            ) : (
+              'Save Settings'
+            )}
           </button>
         </div>
       </form>

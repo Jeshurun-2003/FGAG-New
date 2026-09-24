@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { settingsService } from '../../services/api';
-import LoadingSpinner from '../../components/common/LoadingSpinner';
+import { CardSkeleton } from '../../components/common/SkeletonLoader';
+import { useToast } from '../../context/ToastContext';
+import SEO from '../../components/common/SEO';
 
 const AdminHeroAboutPage = () => {
+  const { addToast } = useToast();
   const [settings, setSettings] = useState({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [statusMsg, setStatusMsg] = useState(null);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -17,6 +19,7 @@ const AdminHeroAboutPage = () => {
         }
       } catch (err) {
         console.error('Failed to load settings', err);
+        addToast('Failed to load content settings.', 'danger');
       } finally {
         setLoading(false);
       }
@@ -31,27 +34,33 @@ const AdminHeroAboutPage = () => {
   const handleSave = async (e) => {
     e.preventDefault();
     setSaving(true);
-    setStatusMsg(null);
 
     try {
       const res = await settingsService.update(settings);
       if (res.data.success) {
-        setStatusMsg({ type: 'success', text: 'All content settings saved successfully!' });
+        addToast('All content settings saved successfully!', 'success');
       }
     } catch (err) {
       console.error(err);
-      setStatusMsg({ type: 'danger', text: 'Failed to update settings. Please try again.' });
+      addToast('Failed to update settings. Please try again.', 'danger');
     } finally {
       setSaving(false);
     }
   };
 
   if (loading) {
-    return <LoadingSpinner message="Loading content settings..." />;
+    return (
+      <div className="py-4">
+        <div className="skeleton-box rounded-3 w-25 mb-4" style={{ height: '32px' }} />
+        <CardSkeleton count={3} />
+      </div>
+    );
   }
 
   return (
     <div>
+      <SEO title="Hero & About CMS" />
+
       <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
         <div>
           <h2 className="heading fw-bold mb-1">Hero & Content CMS</h2>
@@ -62,38 +71,31 @@ const AdminHeroAboutPage = () => {
         <button
           type="button"
           onClick={handleSave}
-          className="btn btn-primary"
+          className="btn btn-primary rounded-pill px-4 py-2 shadow-sm d-flex align-items-center gap-2"
           disabled={saving}
         >
           {saving ? (
             <>
-              <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+              <span className="spinner-border spinner-border-sm" role="status"></span>
               Saving...
             </>
           ) : (
             <>
-              <i className="bi bi-check2-circle me-1"></i> Save Changes
+              <i className="bi bi-check2-circle"></i> Save Changes
             </>
           )}
         </button>
       </div>
 
-      {statusMsg && (
-        <div className={`alert alert-${statusMsg.type} alert-dismissible fade show mb-4`} role="alert">
-          {statusMsg.text}
-          <button type="button" className="btn-close" onClick={() => setStatusMsg(null)}></button>
-        </div>
-      )}
-
       <form onSubmit={handleSave}>
         {/* 1. Hero Section */}
-        <div className="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
-          <h4 className="fw-bold heading mb-3 pb-2 border-bottom">
-            <i className="bi bi-window-fullscreen text-primary me-2"></i> Hero Banner Section
+        <div className="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-4 hover-lift">
+          <h4 className="fw-bold heading mb-3 pb-2 border-bottom d-flex align-items-center gap-2">
+            <i className="bi bi-window-fullscreen text-primary"></i> Hero Banner Section
           </h4>
           <div className="row g-3">
             <div className="col-md-6">
-              <label className="form-label fw-medium">Church Name / Hero Title</label>
+              <label className="form-label fw-medium text-dark">Church Name / Hero Title</label>
               <input
                 type="text"
                 className="form-control"
@@ -102,7 +104,7 @@ const AdminHeroAboutPage = () => {
               />
             </div>
             <div className="col-md-6">
-              <label className="form-label fw-medium">Hero Subtitle / Tagline</label>
+              <label className="form-label fw-medium text-dark">Hero Subtitle / Tagline</label>
               <input
                 type="text"
                 className="form-control"
@@ -111,7 +113,7 @@ const AdminHeroAboutPage = () => {
               />
             </div>
             <div className="col-md-6">
-              <label className="form-label fw-medium">YouTube Channel URL</label>
+              <label className="form-label fw-medium text-dark">YouTube Channel URL</label>
               <input
                 type="url"
                 className="form-control"
@@ -120,7 +122,7 @@ const AdminHeroAboutPage = () => {
               />
             </div>
             <div className="col-md-6">
-              <label className="form-label fw-medium">Hero Background Image Path</label>
+              <label className="form-label fw-medium text-dark">Hero Background Image Path</label>
               <input
                 type="text"
                 className="form-control"
@@ -132,13 +134,13 @@ const AdminHeroAboutPage = () => {
         </div>
 
         {/* 2. Church Promise Section */}
-        <div className="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
-          <h4 className="fw-bold heading mb-3 pb-2 border-bottom">
-            <i className="bi bi-bookmark-star text-primary me-2"></i> Church Promise Verse
+        <div className="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-4 hover-lift">
+          <h4 className="fw-bold heading mb-3 pb-2 border-bottom d-flex align-items-center gap-2">
+            <i className="bi bi-bookmark-star text-primary"></i> Church Promise Verse
           </h4>
           <div className="row g-3">
             <div className="col-md-4">
-              <label className="form-label fw-medium">Promise Year</label>
+              <label className="form-label fw-medium text-dark">Promise Year</label>
               <input
                 type="text"
                 className="form-control"
@@ -147,7 +149,7 @@ const AdminHeroAboutPage = () => {
               />
             </div>
             <div className="col-md-8">
-              <label className="form-label fw-medium">Scripture Reference</label>
+              <label className="form-label fw-medium text-dark">Scripture Reference</label>
               <input
                 type="text"
                 className="form-control"
@@ -156,7 +158,7 @@ const AdminHeroAboutPage = () => {
               />
             </div>
             <div className="col-12">
-              <label className="form-label fw-medium">Promise Scripture Text</label>
+              <label className="form-label fw-medium text-dark">Promise Scripture Text</label>
               <textarea
                 className="form-control"
                 rows="3"
@@ -168,13 +170,13 @@ const AdminHeroAboutPage = () => {
         </div>
 
         {/* 3. Pastor Welcome Message */}
-        <div className="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
-          <h4 className="fw-bold heading mb-3 pb-2 border-bottom">
-            <i className="bi bi-person-lines-fill text-primary me-2"></i> Pastor's Welcome Section (Home Page)
+        <div className="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-4 hover-lift">
+          <h4 className="fw-bold heading mb-3 pb-2 border-bottom d-flex align-items-center gap-2">
+            <i className="bi bi-person-lines-fill text-primary"></i> Pastor's Welcome Section (Home Page)
           </h4>
           <div className="row g-3">
             <div className="col-md-6">
-              <label className="form-label fw-medium">Section Title</label>
+              <label className="form-label fw-medium text-dark">Section Title</label>
               <input
                 type="text"
                 className="form-control"
@@ -183,7 +185,7 @@ const AdminHeroAboutPage = () => {
               />
             </div>
             <div className="col-md-3">
-              <label className="form-label fw-medium">Pastor's Name</label>
+              <label className="form-label fw-medium text-dark">Pastor's Name</label>
               <input
                 type="text"
                 className="form-control"
@@ -192,7 +194,7 @@ const AdminHeroAboutPage = () => {
               />
             </div>
             <div className="col-md-3">
-              <label className="form-label fw-medium">Pastor's Designation</label>
+              <label className="form-label fw-medium text-dark">Pastor's Designation</label>
               <input
                 type="text"
                 className="form-control"
@@ -201,7 +203,7 @@ const AdminHeroAboutPage = () => {
               />
             </div>
             <div className="col-md-6">
-              <label className="form-label fw-medium">Pastor Image Path</label>
+              <label className="form-label fw-medium text-dark">Pastor Image Path</label>
               <input
                 type="text"
                 className="form-control"
@@ -210,7 +212,7 @@ const AdminHeroAboutPage = () => {
               />
             </div>
             <div className="col-12">
-              <label className="form-label fw-medium">Welcome Message Content</label>
+              <label className="form-label fw-medium text-dark">Welcome Message Content</label>
               <textarea
                 className="form-control"
                 rows="6"
@@ -222,13 +224,13 @@ const AdminHeroAboutPage = () => {
         </div>
 
         {/* 4. Uvamaigal App Section */}
-        <div className="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
-          <h4 className="fw-bold heading mb-3 pb-2 border-bottom">
-            <i className="bi bi-phone text-primary me-2"></i> Uvamaigal App Promotion
+        <div className="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-4 hover-lift">
+          <h4 className="fw-bold heading mb-3 pb-2 border-bottom d-flex align-items-center gap-2">
+            <i className="bi bi-phone text-primary"></i> Uvamaigal App Promotion
           </h4>
           <div className="row g-3">
             <div className="col-md-6">
-              <label className="form-label fw-medium">App Heading</label>
+              <label className="form-label fw-medium text-dark">App Heading</label>
               <input
                 type="text"
                 className="form-control"
@@ -237,7 +239,7 @@ const AdminHeroAboutPage = () => {
               />
             </div>
             <div className="col-md-6">
-              <label className="form-label fw-medium">Google Play Store Link</label>
+              <label className="form-label fw-medium text-dark">Google Play Store Link</label>
               <input
                 type="url"
                 className="form-control"
@@ -246,7 +248,7 @@ const AdminHeroAboutPage = () => {
               />
             </div>
             <div className="col-12">
-              <label className="form-label fw-medium">App Description</label>
+              <label className="form-label fw-medium text-dark">App Description</label>
               <textarea
                 className="form-control"
                 rows="4"
@@ -258,13 +260,13 @@ const AdminHeroAboutPage = () => {
         </div>
 
         {/* 5. About Page Content */}
-        <div className="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
-          <h4 className="fw-bold heading mb-3 pb-2 border-bottom">
-            <i className="bi bi-info-circle text-primary me-2"></i> About Us Page Content
+        <div className="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-4 hover-lift">
+          <h4 className="fw-bold heading mb-3 pb-2 border-bottom d-flex align-items-center gap-2">
+            <i className="bi bi-info-circle text-primary"></i> About Us Page Content
           </h4>
           <div className="row g-3">
             <div className="col-md-6">
-              <label className="form-label fw-medium">Pastor Family Image Path</label>
+              <label className="form-label fw-medium text-dark">Pastor Family Image Path</label>
               <input
                 type="text"
                 className="form-control"
@@ -273,7 +275,7 @@ const AdminHeroAboutPage = () => {
               />
             </div>
             <div className="col-12">
-              <label className="form-label fw-medium">Church Story & Description</label>
+              <label className="form-label fw-medium text-dark">Church Story & Description</label>
               <textarea
                 className="form-control"
                 rows="6"
@@ -282,7 +284,7 @@ const AdminHeroAboutPage = () => {
               ></textarea>
             </div>
             <div className="col-12">
-              <label className="form-label fw-medium">Senior Pastor Biography</label>
+              <label className="form-label fw-medium text-dark">Senior Pastor Biography</label>
               <textarea
                 className="form-control"
                 rows="5"
@@ -294,8 +296,15 @@ const AdminHeroAboutPage = () => {
         </div>
 
         <div className="text-end mb-5">
-          <button type="submit" className="btn btn-primary px-5 py-2" disabled={saving}>
-            {saving ? 'Saving...' : 'Save All Settings'}
+          <button type="submit" className="btn btn-primary px-5 py-3 rounded-pill shadow fw-semibold" disabled={saving}>
+            {saving ? (
+              <>
+                <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                Saving...
+              </>
+            ) : (
+              'Save All Settings'
+            )}
           </button>
         </div>
       </form>

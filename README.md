@@ -1,6 +1,6 @@
 # ⛪ Friends Garden AG Church (FGAG) — Full-Stack Web Platform & Admin CMS
 
-A production-ready, full-stack website and content management system for **Friends Garden Assemblies of God Church, Kollidam**. Built with a modern decoupled SaaS architecture, completely replacing legacy static scripts and Firebase with a secure, scalable **React + Vite** frontend and a **Node.js + Express + Prisma + PostgreSQL** backend.
+A production-ready, full-stack website and content management system for **Friends Garden Assemblies of God Church, Kollidam**. Built with a modern decoupled SaaS architecture, featuring a premium **React 18 + Vite** frontend with smooth Framer Motion animations and responsive Bootstrap 5 styling, and a secure **Node.js + Express + Prisma + PostgreSQL** backend.
 
 ---
 
@@ -9,12 +9,13 @@ A production-ready, full-stack website and content management system for **Frien
 ```text
 FGAG-Church/
 ├── client/                     # React 18 + Vite + Bootstrap 5 Frontend (Cloudflare Pages)
-│   ├── public/                 # Static branding assets & _redirects routing
+│   ├── public/                 # Static branding assets, images & _redirects routing
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── common/         # Navbar, Footer, LoadingSpinner, LightboxModal
-│   │   │   └── admin/          # Admin navigation, stats cards, data modals
-│   │   ├── context/            # AuthContext (JWT session management)
+│   │   │   ├── common/         # Navbar, Footer, LoadingSpinner, LightboxModal, SEO,
+│   │   │   │                   # ScrollToTop, SkeletonLoader, AnimatedCounter, PageTransition
+│   │   │   └── admin/          # ImageUploadDropzone, ConfirmDeleteModal
+│   │   ├── context/            # AuthContext (JWT session), ToastContext (notifications)
 │   │   ├── layouts/            # PublicLayout & AdminLayout
 │   │   ├── pages/
 │   │   │   ├── public/         # Home, About, Events, Ministries, Gallery, Get Involved, Contact, Donate
@@ -22,7 +23,7 @@ FGAG-Church/
 │   │   │                       # Prayer Requests, Volunteers, Settings, Profile
 │   │   ├── services/           # Modular Axios API services (configured via VITE_API_URL)
 │   │   ├── styles/             # Preserved Lora & Playfair typography, navy palette (#0A3D62)
-│   │   ├── routes/             # AppRoutes & ProtectedRoute definition
+│   │   ├── routes/             # AppRoutes (lazy-loaded with Suspense) & ProtectedRoute
 │   │   ├── App.jsx
 │   │   └── main.jsx
 │   ├── index.html
@@ -45,6 +46,8 @@ FGAG-Church/
 │   ├── .env.example
 │   └── package.json
 │
+├── images/                     # Static high-res church photography served by server
+├── Gallery_images/             # Categorized gallery photos
 └── README.md
 ```
 
@@ -52,9 +55,9 @@ FGAG-Church/
 
 | Layer | Technologies |
 |---|---|
-| **Frontend** | React 18, Vite 5, Bootstrap 5.3, Bootstrap Icons, Axios, React Router 6 |
+| **Frontend** | React 18, Vite 5, Bootstrap 5.3, Bootstrap Icons, Framer Motion, Axios, React Router 6 |
 | **Backend** | Node.js, Express.js, Prisma ORM, JWT Authentication, Multer (Memory Storage) |
-| **Database** | PostgreSQL (Neon Serverless) |
+| **Database** | PostgreSQL (Neon Serverless / Local PostgreSQL) |
 | **Image Storage** | Database-persisted Base64 Data URIs & Static Asset URLs |
 | **Styling** | Google Fonts (*Lora* & *Playfair Display*), Custom CSS (#0A3D62, #38A1DB, #E9F1F7) |
 | **Firebase** | **0% Remaining** (Completely removed and replaced) |
@@ -67,36 +70,164 @@ FGAG-Church/
 Copy `server/.env.example` to `server/.env` and configure:
 ```env
 PORT=5000
-NODE_ENV=production
-DATABASE_URL="postgresql://user:password@ep-sample.us-east-2.aws.neon.tech/fgag_church?sslmode=require"
+NODE_ENV=development
+DATABASE_URL="postgresql://user:password@ep-sample.us-east-2.aws.neon.tech/neondb?sslmode=require"
 JWT_SECRET="your_strong_random_jwt_secret_key"
 JWT_EXPIRES_IN="7d"
-CLIENT_URL="https://your-app.pages.dev,http://localhost:3000"
-ADMIN_EMAIL="admin@yourdomain.com"
-ADMIN_PASSWORD="YourSecurePasswordHere123!"
+CLIENT_URL="http://localhost:3000,http://localhost:5173"
+ADMIN_EMAIL="admin@fgag.test"
+ADMIN_PASSWORD="Admin@12345"
 ```
 
 ### Frontend (`client/.env`)
 Copy `client/.env.example` to `client/.env` and configure:
 ```env
-VITE_API_URL=https://your-api.onrender.com/api
+VITE_API_URL=http://localhost:5000/api
 ```
 
 ---
 
-## 🎛️ Admin CMS Features
+## 🔑 Admin Panel Access & Testing
 
-Every section of the website can be managed directly through the admin panel:
+The church platform contains a Content Management System (CMS) designed for church administrators and pastors to manage all website content.
 
-1. **Dashboard Analytics**: Real-time counters for events, ministries, gallery photos, pending prayer requests, and volunteer signups.
-2. **Hero & Content CMS**: Live editor for the Home Hero title, subtitle, YouTube link, background banner, annual Promise verse, Pastor's welcome message, Uvamaigal app showcase, and About Us story.
-3. **Events CRUD**: Create, update, feature, and delete upcoming church gatherings with image uploads.
-4. **Ministries CRUD**: Manage church ministries (Youth, Children, Outreach, Men's, Women's, Volunteers) with photo uploads and detailed descriptions.
-5. **Gallery Upload & CMS**: Categorized photo uploads (Sunday Service, Kids, Youth, Outreach, Christmas, Special Events) with database Base64 storage and image deletions.
-6. **Prayer Requests**: Manage incoming prayer petitions, mark requests as prayed for, and view contact details.
-7. **Volunteer Submissions**: Review applications from believers indicating their preferred areas of service (Choir, Music, Hospitality, Media, etc.).
-8. **Website Settings**: Update church address, email, phone helpline, office hours, Google Maps embed, social media links, and bank transfer account details.
-9. **Profile & Security**: Update admin name, email, and securely change passwords with bcrypt hashing.
+### Admin Login URL
+- **Local Dev URL:** [http://localhost:3000/admin/login](http://localhost:3000/admin/login) *(or `http://localhost:5173/admin/login` depending on Vite port)*
+- **Dashboard URL (Once logged in):** [http://localhost:3000/admin](http://localhost:3000/admin)
+
+### Local Development Test Credentials
+> **DEVELOPMENT-ONLY CREDENTIALS:**
+> - **Email:** `admin@fgag.test`
+> - **Password:** `Admin@12345`
+
+> [!CAUTION]
+> **These credentials are for local development only. On production, set your own strong ADMIN_EMAIL and ADMIN_PASSWORD in the Render environment variables, run the seed once, and change the password from Admin → Profile.**
+
+---
+
+### Step-by-Step Setup & Seeding Commands
+
+Run these exact commands in order:
+
+#### 1. Install Dependencies
+```bash
+# In server directory:
+cd server
+npm install
+
+# In client directory:
+cd ../client
+npm install
+```
+
+#### 2. Generate Prisma Client & Sync Database
+```bash
+# In server directory:
+cd ../server
+npm run prisma:generate
+npm run prisma:push
+```
+
+#### 3. Seed Database with Admin User & Initial Content
+```bash
+# Safe to run multiple times (idempotent upsert):
+npm run seed
+```
+*Output will confirm: `✅ Admin user created/verified: admin@fgag.test` along with site settings, ministries, leadership, and gallery photos.*
+
+#### 4. Start the Backend API Server
+```bash
+npm run dev
+# Server runs on: http://localhost:5000
+# Health check: http://localhost:5000/api/health
+```
+
+#### 5. Start the Frontend Client
+```bash
+# In client directory:
+cd ../client
+npm run dev
+# Client runs on: http://localhost:3000 (or http://localhost:5173)
+```
+
+---
+
+### 📋 Admin Module Testing Checklist
+
+Use this checklist to test each module in the admin portal:
+
+1. **Authentication & Session:**
+   - [ ] Navigate to `/admin/login`
+   - [ ] Enter `admin@fgag.test` and `Admin@12345`
+   - [ ] Confirm login redirects to `/admin` dashboard
+   - [ ] Confirm protected routes redirect unauthenticated users to `/admin/login`
+2. **Dashboard Analytics (`/admin`):**
+   - [ ] View real-time metric counters (Events, Ministries, Gallery Photos, Pending Requests)
+   - [ ] Verify recent prayer requests and volunteer signups cards
+3. **Hero & About CMS (`/admin/hero-about`):**
+   - [ ] Edit the Home Hero title, subtitle, or Promise verse
+   - [ ] Click "Save Changes" and observe the success toast
+   - [ ] Verify the change appears immediately on the public Home page (`/`)
+4. **Events CRUD (`/admin/events`):**
+   - [ ] Search events by title or location
+   - [ ] Create a new event with a poster image using the drag-and-drop uploader
+   - [ ] Edit an existing event, toggle "Featured", and save
+   - [ ] Click delete on an event and confirm the custom confirmation modal appears before deletion
+5. **Ministries CRUD (`/admin/ministries`):**
+   - [ ] Search ministries list
+   - [ ] Edit ministry description or reorder display order
+   - [ ] Toggle active/inactive status and test delete confirmation modal
+6. **Gallery CMS (`/admin/gallery`):**
+   - [ ] Filter photos by category tabs
+   - [ ] Upload a photo via drag-and-drop (under 10MB) with caption and category
+   - [ ] Delete a photo and confirm instant removal
+7. **Prayer Requests (`/admin/prayers`):**
+   - [ ] Filter by All, Pending, and Prayed For
+   - [ ] Search requests by name, email, or keywords
+   - [ ] Click "Mark Prayed" and verify badge changes to green `PRAYED`
+8. **Volunteer Submissions (`/admin/volunteers`):**
+   - [ ] Filter submissions by All, Pending, Reviewed
+   - [ ] Search by town, profession, or ministry area
+   - [ ] Mark submission as `REVIEWED`
+9. **Website Settings (`/admin/settings`):**
+   - [ ] Update church phone helpline, email, or Google Maps embed
+   - [ ] Update bank account details (account number, IFSC code)
+   - [ ] Verify updated bank details reflect on the public Donate page (`/donate`)
+10. **Profile & Security (`/admin/profile`):**
+    - [ ] Update admin display name or email
+    - [ ] Test password change form with validation and visibility toggle
+
+---
+
+## 🎨 UI/UX Redesign & Modern Features
+
+The public site has been enhanced with modern styling and micro-interactions while preserving 100% of the church's brand identity:
+
+- **Color Palette**: Deep Navy (`#0A3D62`), Accent Blue (`#38A1DB`), Deep Heading (`#3C6382`), Ice Blue (`#E9F1F7`), and Soft Light (`#F8F9FA`).
+- **Typography**: Google Fonts `Playfair Display` for headings and `Lora` for body copy.
+- **Hero Section**: Full-height hero with soft dual-gradient overlay on the sanctuary background, animated headline (fade + slide up with Framer Motion), and enhanced call-to-action buttons.
+- **Navigation**:
+  - Sticky navbar that transitions from transparent to solid navy with backdrop blur upon scroll.
+  - Active route indicator with smooth accent bar.
+  - Off-canvas mobile slide drawer with spring animation and backdrop blur.
+- **Micro-Interactions**:
+  - Hover-lift cards with subtle elevation shadows.
+  - Image zoom effect on card hover.
+  - Button hover and active tap micro-animations.
+  - Modern focus rings on all inputs (WCAG AA accessible).
+- **Gallery**:
+  - Category filter pills with active state indicators.
+  - Responsive photo cards with gradient overlays and caption badges.
+  - Full-featured lightbox modal with keyboard navigation (Esc, Arrow Left, Arrow Right) and touch swipe gestures.
+- **Route Transitions & Performance**:
+  - `React.lazy` code splitting for every route.
+  - `Suspense` with skeleton loaders (cards, tables, galleries) instead of generic spinners.
+  - `AnimatePresence` route transitions.
+  - Full support for `prefers-reduced-motion`.
+- **Interactive Forms**:
+  - Multi-select ministry chips on Get Involved page.
+  - Toast notifications system with smooth enter/exit animations for form submissions.
+  - One-click copy buttons for bank account number and IFSC code on the Donate page.
 
 ---
 
@@ -123,15 +254,7 @@ Every section of the website can be managed directly through the admin panel:
 
 ---
 
-## 🎨 Visual Identity Preservation
+## 🛡️ Git & Security Policy
 
-- **Color Scheme**:
-  - Primary Navy: `#0A3D62`
-  - Accent / Primary Blue: `#38A1DB`
-  - Deep Heading: `#3C6382`
-  - Section Ice Blue: `#E9F1F7`
-  - Background Light: `#F8F9FA`
-- **Typography**:
-  - Body Text: Google Fonts `Lora` (serif)
-  - Headings: Google Fonts `Playfair Display` (serif)
-- **Responsive Layout**: Designed and tested for mobile phones (320px+), tablets, laptops, and desktop screens.
+- Environment files (`.env`, `client/.env`, `server/.env`) are strictly ignored by `.gitignore` and never committed to version control.
+- Only `.env.example` templates with documentation are committed.

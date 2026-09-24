@@ -1,6 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { eventsService } from '../../services/api';
-import LoadingSpinner from '../../components/common/LoadingSpinner';
+import { CardSkeleton } from '../../components/common/SkeletonLoader';
+import SEO from '../../components/common/SEO';
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.12 }
+  }
+};
 
 const EventsPage = () => {
   const [featuredEvent, setFeaturedEvent] = useState(null);
@@ -77,118 +92,168 @@ const EventsPage = () => {
 
   return (
     <div className="container my-5 pt-3">
-      <div className="text-center mb-5">
-        <h1 className="heading display-5 fw-bold">Church Events & Gatherings</h1>
-        <p className="paragraph lead text-muted">
+      <SEO
+        title="Events & Gatherings"
+        description="Join us for Sunday worship, weekly prayer meetings, and special church gatherings at Friends Garden AG Church, Kollidam."
+      />
+
+      <motion.div
+        className="text-center mb-5"
+        initial={{ opacity: 0, y: -15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <h1 className="heading display-5 fw-bold mb-2">Church Events & Gatherings</h1>
+        <div className="section-divider">
+          <i className="bi bi-diamond-fill section-divider-icon"></i>
+        </div>
+        <p className="paragraph lead text-muted mx-auto" style={{ maxWidth: '680px' }}>
           Stay updated with our upcoming services, special events, and spiritual gatherings.
         </p>
-      </div>
+      </motion.div>
 
       {/* Featured / Dynamic Event */}
       {loading ? (
-        <LoadingSpinner message="Checking for upcoming events..." />
+        <CardSkeleton count={1} />
       ) : (
         featuredEvent && (
-          <div className="card event-card mb-5 p-4 border-0 shadow-sm rounded-4 bg-white">
-            <div className="d-flex flex-wrap justify-content-between align-items-start gap-2">
+          <motion.div
+            className="card event-card mb-5 p-4 border-0 shadow-sm rounded-4 bg-white hover-lift"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeInUp}
+          >
+            <div className="d-flex flex-wrap justify-content-between align-items-start gap-3">
               <div>
-                <span className="badge bg-primary mb-2 text-uppercase">Featured Event</span>
+                <span className="badge px-3 py-2 rounded-pill text-uppercase mb-3" style={{ backgroundColor: '#38a1db' }}>
+                  <i className="bi bi-star-fill me-1"></i> Featured Event
+                </span>
                 <h3 className="heading fw-bold mb-2">{featuredEvent.title}</h3>
-                {featuredEvent.summary && <p className="paragraph mb-2 fs-5">{featuredEvent.summary}</p>}
+                {featuredEvent.summary && <p className="paragraph mb-2 fs-5 text-muted">{featuredEvent.summary}</p>}
                 <p className="paragraph text-secondary mb-3">
                   {featuredEvent.time && (
-                    <span className="me-3">
+                    <span className="me-3 d-inline-block">
                       <strong>🕒 Time:</strong> {featuredEvent.time}
                     </span>
                   )}
                   {featuredEvent.location && (
-                    <span>
+                    <span className="d-inline-block">
                       <strong>📍 Location:</strong> {featuredEvent.location}
                     </span>
                   )}
                 </p>
               </div>
-              <button
+              <motion.button
                 className="btn btn-outline-primary"
                 onClick={() => setShowDetail(!showDetail)}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
               >
                 {showDetail ? 'Hide Details' : 'Learn More'}
-              </button>
+              </motion.button>
             </div>
 
-            {/* Collapsible Details */}
-            {showDetail && (
-              <div className="card shadow-sm border-0 rounded-4 bg-light mt-3 p-4">
-                <div className="row align-items-center g-4">
-                  {featuredEvent.imageUrl && (
-                    <div className="col-lg-5 text-center">
-                      <img
-                        src={featuredEvent.imageUrl}
-                        alt={featuredEvent.title}
-                        className="img-fluid rounded-4 shadow-sm"
-                        style={{ maxHeight: '400px', width: '100%', objectFit: 'cover' }}
-                      />
-                    </div>
-                  )}
-                  <div className={featuredEvent.imageUrl ? 'col-lg-7' : 'col-12'}>
-                    <h4 className="fw-bold heading mb-3">{featuredEvent.title}</h4>
-                    {featuredEvent.time && (
-                      <p className="paragraph mb-1">
-                        <strong>🕒 Time:</strong> {featuredEvent.time}
-                      </p>
-                    )}
-                    {featuredEvent.location && (
-                      <p className="paragraph mb-1">
-                        <strong>📍 Location:</strong> {featuredEvent.location}
-                      </p>
-                    )}
-                    {featuredEvent.details && (
-                      <div className="paragraph text-muted mt-3" style={{ whiteSpace: 'pre-line' }}>
-                        {featuredEvent.details}
+            {/* Animated Collapsible Details */}
+            <AnimatePresence>
+              {showDetail && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                  className="overflow-hidden"
+                >
+                  <div className="card shadow-sm border-0 rounded-4 bg-light mt-4 p-4">
+                    <div className="row align-items-center g-4">
+                      {featuredEvent.imageUrl && (
+                        <div className="col-lg-5 text-center">
+                          <div className="image-zoom-card rounded-4 shadow-sm">
+                            <img
+                              src={featuredEvent.imageUrl}
+                              alt={featuredEvent.title}
+                              className="img-fluid rounded-4"
+                              style={{ maxHeight: '380px', width: '100%', objectFit: 'cover' }}
+                            />
+                          </div>
+                        </div>
+                      )}
+                      <div className={featuredEvent.imageUrl ? 'col-lg-7' : 'col-12'}>
+                        <h4 className="fw-bold heading mb-3">{featuredEvent.title}</h4>
+                        {featuredEvent.time && (
+                          <p className="paragraph mb-1">
+                            <strong>🕒 Time:</strong> {featuredEvent.time}
+                          </p>
+                        )}
+                        {featuredEvent.location && (
+                          <p className="paragraph mb-1">
+                            <strong>📍 Location:</strong> {featuredEvent.location}
+                          </p>
+                        )}
+                        {featuredEvent.details && (
+                          <div className="paragraph text-muted mt-3" style={{ whiteSpace: 'pre-line' }}>
+                            {featuredEvent.details}
+                          </div>
+                        )}
                       </div>
-                    )}
+                    </div>
                   </div>
-                </div>
-              </div>
-            )}
-          </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
         )
       )}
 
       {/* Weekly Church Schedule */}
       <div className="mb-5">
-        <h2 className="heading mt-5 mb-4 fw-bold display-6 text-center">
-          ⛪ Weekly Church Schedule
-        </h2>
-        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <div className="text-center mt-5 mb-4">
+          <h2 className="heading fw-bold display-6 mb-2">
+            ⛪ Weekly Church Schedule
+          </h2>
+          <div className="section-divider">
+            <i className="bi bi-diamond-fill section-divider-icon"></i>
+          </div>
+        </div>
+
+        <motion.div
+          className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-40px' }}
+          variants={staggerContainer}
+        >
           {weeklySchedule.map((item, idx) => (
-            <div className="col" key={idx}>
+            <motion.div className="col" key={idx} variants={fadeInUp}>
               <div className="card h-100 rounded-4 shadow-sm border-0 bg-white hover-lift overflow-hidden">
-                <img
-                  src={item.image}
-                  className="card-img-top"
-                  style={{ height: '220px', objectFit: 'cover' }}
-                  alt={item.title}
-                />
+                <div className="image-zoom-card">
+                  <img
+                    src={item.image}
+                    className="card-img-top"
+                    style={{ height: '220px', objectFit: 'cover' }}
+                    alt={item.title}
+                    loading="lazy"
+                  />
+                </div>
                 <div className="card-body p-4 d-flex flex-column">
                   <div className="mb-2">
-                    <span className="badge bg-secondary-subtle text-primary fw-bold text-uppercase">
+                    <span className="badge px-3 py-1 rounded-pill bg-primary-subtle text-primary fw-bold text-uppercase small">
                       {item.day}
                     </span>
                   </div>
                   <h4 className="heading fw-bold mb-2">{item.title}</h4>
                   <p className="text-secondary small mb-2">
-                    <i className="bi bi-clock me-1"></i> {item.time}
+                    <i className="bi bi-clock text-primary me-2"></i> {item.time}
                   </p>
                   <p className="text-secondary small mb-3">
-                    <i className="bi bi-geo-alt me-1"></i> {item.location}
+                    <i className="bi bi-geo-alt text-danger me-2"></i> {item.location}
                   </p>
                   <p className="paragraph small text-muted mt-auto mb-0">{item.desc}</p>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </div>
   );

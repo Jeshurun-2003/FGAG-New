@@ -1,69 +1,78 @@
-import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import React, { lazy, Suspense } from 'react';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 
 // Layouts
 import PublicLayout from '../layouts/PublicLayout';
 import AdminLayout from '../layouts/AdminLayout';
 import ProtectedRoute from './ProtectedRoute';
+import { PageSkeleton } from '../components/common/SkeletonLoader';
+import PageTransition from '../components/common/PageTransition';
 
-// Public Pages
-import HomePage from '../pages/public/HomePage';
-import AboutPage from '../pages/public/AboutPage';
-import EventsPage from '../pages/public/EventsPage';
-import MinistriesPage from '../pages/public/MinistriesPage';
-import GalleryPage from '../pages/public/GalleryPage';
-import GetInvolvedPage from '../pages/public/GetInvolvedPage';
-import ContactPage from '../pages/public/ContactPage';
-import DonatePage from '../pages/public/DonatePage';
+// Lazy-loaded Public Pages
+const HomePage = lazy(() => import('../pages/public/HomePage'));
+const AboutPage = lazy(() => import('../pages/public/AboutPage'));
+const EventsPage = lazy(() => import('../pages/public/EventsPage'));
+const MinistriesPage = lazy(() => import('../pages/public/MinistriesPage'));
+const GalleryPage = lazy(() => import('../pages/public/GalleryPage'));
+const GetInvolvedPage = lazy(() => import('../pages/public/GetInvolvedPage'));
+const ContactPage = lazy(() => import('../pages/public/ContactPage'));
+const DonatePage = lazy(() => import('../pages/public/DonatePage'));
 
-// Admin Pages
-import AdminLoginPage from '../pages/admin/AdminLoginPage';
-import AdminDashboardPage from '../pages/admin/AdminDashboardPage';
-import AdminHeroAboutPage from '../pages/admin/AdminHeroAboutPage';
-import AdminEventsPage from '../pages/admin/AdminEventsPage';
-import AdminMinistriesPage from '../pages/admin/AdminMinistriesPage';
-import AdminGalleryPage from '../pages/admin/AdminGalleryPage';
-import AdminPrayerPage from '../pages/admin/AdminPrayerPage';
-import AdminVolunteersPage from '../pages/admin/AdminVolunteersPage';
-import AdminSettingsPage from '../pages/admin/AdminSettingsPage';
-import AdminProfilePage from '../pages/admin/AdminProfilePage';
+// Lazy-loaded Admin Pages
+const AdminLoginPage = lazy(() => import('../pages/admin/AdminLoginPage'));
+const AdminDashboardPage = lazy(() => import('../pages/admin/AdminDashboardPage'));
+const AdminHeroAboutPage = lazy(() => import('../pages/admin/AdminHeroAboutPage'));
+const AdminEventsPage = lazy(() => import('../pages/admin/AdminEventsPage'));
+const AdminMinistriesPage = lazy(() => import('../pages/admin/AdminMinistriesPage'));
+const AdminGalleryPage = lazy(() => import('../pages/admin/AdminGalleryPage'));
+const AdminPrayerPage = lazy(() => import('../pages/admin/AdminPrayerPage'));
+const AdminVolunteersPage = lazy(() => import('../pages/admin/AdminVolunteersPage'));
+const AdminSettingsPage = lazy(() => import('../pages/admin/AdminSettingsPage'));
+const AdminProfilePage = lazy(() => import('../pages/admin/AdminProfilePage'));
 
 const AppRoutes = () => {
+  const location = useLocation();
+
   return (
-    <Routes>
-      {/* Public Church Website Routes */}
-      <Route element={<PublicLayout />}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/events" element={<EventsPage />} />
-        <Route path="/ministries" element={<MinistriesPage />} />
-        <Route path="/gallery" element={<GalleryPage />} />
-        <Route path="/get-involved" element={<GetInvolvedPage />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/donate" element={<DonatePage />} />
-      </Route>
+    <Suspense fallback={<PageSkeleton />}>
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          {/* Public Church Website Routes */}
+          <Route element={<PublicLayout />}>
+            <Route path="/" element={<PageTransition><HomePage /></PageTransition>} />
+            <Route path="/about" element={<PageTransition><AboutPage /></PageTransition>} />
+            <Route path="/events" element={<PageTransition><EventsPage /></PageTransition>} />
+            <Route path="/ministries" element={<PageTransition><MinistriesPage /></PageTransition>} />
+            <Route path="/gallery" element={<PageTransition><GalleryPage /></PageTransition>} />
+            <Route path="/get-involved" element={<PageTransition><GetInvolvedPage /></PageTransition>} />
+            <Route path="/contact" element={<PageTransition><ContactPage /></PageTransition>} />
+            <Route path="/donate" element={<PageTransition><DonatePage /></PageTransition>} />
+          </Route>
 
-      {/* Admin Authentication */}
-      <Route path="/admin/login" element={<AdminLoginPage />} />
+          {/* Admin Authentication */}
+          <Route path="/admin/login" element={<PageTransition><AdminLoginPage /></PageTransition>} />
 
-      {/* Protected Admin CMS Dashboard Routes */}
-      <Route element={<ProtectedRoute />}>
-        <Route element={<AdminLayout />}>
-          <Route path="/admin" element={<AdminDashboardPage />} />
-          <Route path="/admin/hero-about" element={<AdminHeroAboutPage />} />
-          <Route path="/admin/events" element={<AdminEventsPage />} />
-          <Route path="/admin/ministries" element={<AdminMinistriesPage />} />
-          <Route path="/admin/gallery" element={<AdminGalleryPage />} />
-          <Route path="/admin/prayers" element={<AdminPrayerPage />} />
-          <Route path="/admin/volunteers" element={<AdminVolunteersPage />} />
-          <Route path="/admin/settings" element={<AdminSettingsPage />} />
-          <Route path="/admin/profile" element={<AdminProfilePage />} />
-        </Route>
-      </Route>
+          {/* Protected Admin CMS Dashboard Routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route element={<AdminLayout />}>
+              <Route path="/admin" element={<PageTransition><AdminDashboardPage /></PageTransition>} />
+              <Route path="/admin/hero-about" element={<PageTransition><AdminHeroAboutPage /></PageTransition>} />
+              <Route path="/admin/events" element={<PageTransition><AdminEventsPage /></PageTransition>} />
+              <Route path="/admin/ministries" element={<PageTransition><AdminMinistriesPage /></PageTransition>} />
+              <Route path="/admin/gallery" element={<PageTransition><AdminGalleryPage /></PageTransition>} />
+              <Route path="/admin/prayers" element={<PageTransition><AdminPrayerPage /></PageTransition>} />
+              <Route path="/admin/volunteers" element={<PageTransition><AdminVolunteersPage /></PageTransition>} />
+              <Route path="/admin/settings" element={<PageTransition><AdminSettingsPage /></PageTransition>} />
+              <Route path="/admin/profile" element={<PageTransition><AdminProfilePage /></PageTransition>} />
+            </Route>
+          </Route>
 
-      {/* Fallback to Home */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+          {/* Fallback to Home */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </AnimatePresence>
+    </Suspense>
   );
 };
 

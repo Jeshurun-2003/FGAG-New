@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { volunteerService } from '../../services/api';
+import { useToast } from '../../context/ToastContext';
+import SEO from '../../components/common/SEO';
 
 const GetInvolvedPage = () => {
+  const { addToast } = useToast();
+
   const [formData, setFormData] = useState({
     name: '',
     age: '',
@@ -48,10 +53,12 @@ const GetInvolvedPage = () => {
     try {
       const res = await volunteerService.submit(formData);
       if (res.data.success) {
+        const successText = 'Thank you for stepping up to serve! Your submission has been received. God bless you!';
         setStatusMsg({
           type: 'success',
-          text: 'Thank you for stepping up to serve! Your submission has been received. God bless you!'
+          text: successText
         });
+        addToast(successText, 'success');
         setFormData({
           name: '',
           age: '',
@@ -65,10 +72,12 @@ const GetInvolvedPage = () => {
       }
     } catch (err) {
       console.error(err);
+      const errorText = err.response?.data?.message || 'Something went wrong. Please check your information and try again.';
       setStatusMsg({
         type: 'danger',
-        text: err.response?.data?.message || 'Something went wrong. Please check your information and try again.'
+        text: errorText
       });
+      addToast(errorText, 'danger');
     } finally {
       setSubmitting(false);
     }
@@ -76,10 +85,27 @@ const GetInvolvedPage = () => {
 
   return (
     <div className="container my-5 pt-3">
-      <div className="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mx-auto" style={{ maxWidth: '850px' }}>
+      <SEO
+        title="Get Involved"
+        description="Volunteer your talents and gifts in choir, media, cleaning, children, and hospitality ministries at Friends Garden AG Church."
+      />
+
+      <motion.div
+        className="card border-0 shadow rounded-4 p-4 p-md-5 bg-white mx-auto hover-lift"
+        style={{ maxWidth: '860px' }}
+        initial={{ opacity: 0, y: 25 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      >
         <div className="text-center mb-5">
+          <span className="badge px-3 py-2 rounded-pill text-uppercase mb-3" style={{ backgroundColor: 'rgba(56, 161, 219, 0.15)', color: '#0a3d62', fontWeight: 600 }}>
+            Join the Ministry Team
+          </span>
           <h1 className="heading_1 display-5 fw-bold mb-2">Serve With Us</h1>
-          <p className="lead text-muted paragraph mb-0">
+          <div className="section-divider">
+            <i className="bi bi-diamond-fill section-divider-icon"></i>
+          </div>
+          <p className="lead text-muted paragraph mb-0 fs-5">
             Be the hands and feet of Christ. Use your gifts for His glory.
           </p>
         </div>
@@ -102,7 +128,7 @@ const GetInvolvedPage = () => {
         <form onSubmit={handleSubmit}>
           <div className="row g-3">
             <div className="col-md-6">
-              <label htmlFor="name" className="form-label fw-medium">
+              <label htmlFor="name" className="form-label fw-medium text-dark">
                 Full Name <span className="text-danger">*</span>
               </label>
               <input
@@ -117,7 +143,7 @@ const GetInvolvedPage = () => {
             </div>
 
             <div className="col-md-3">
-              <label htmlFor="age" className="form-label fw-medium">
+              <label htmlFor="age" className="form-label fw-medium text-dark">
                 Age <span className="text-danger">*</span>
               </label>
               <input
@@ -134,7 +160,7 @@ const GetInvolvedPage = () => {
             </div>
 
             <div className="col-md-3">
-              <label htmlFor="gender" className="form-label fw-medium">
+              <label htmlFor="gender" className="form-label fw-medium text-dark">
                 Gender <span className="text-danger">*</span>
               </label>
               <select
@@ -154,7 +180,7 @@ const GetInvolvedPage = () => {
             </div>
 
             <div className="col-md-6">
-              <label htmlFor="comingFrom" className="form-label fw-medium">
+              <label htmlFor="comingFrom" className="form-label fw-medium text-dark">
                 Coming From (City/Town) <span className="text-danger">*</span>
               </label>
               <input
@@ -169,7 +195,7 @@ const GetInvolvedPage = () => {
             </div>
 
             <div className="col-md-6">
-              <label htmlFor="profession" className="form-label fw-medium">
+              <label htmlFor="profession" className="form-label fw-medium text-dark">
                 Profession <span className="text-danger">*</span>
               </label>
               <input
@@ -184,7 +210,7 @@ const GetInvolvedPage = () => {
             </div>
 
             <div className="col-md-6">
-              <label htmlFor="phone" className="form-label fw-medium">
+              <label htmlFor="phone" className="form-label fw-medium text-dark">
                 Phone Number <span className="text-danger">*</span>
               </label>
               <input
@@ -199,31 +225,40 @@ const GetInvolvedPage = () => {
             </div>
 
             <div className="col-12 mt-4">
-              <label className="form-label fw-medium d-block mb-2">
+              <label className="form-label fw-medium d-block mb-3 text-dark">
                 How would you like to contribute?
               </label>
               <div className="row g-2">
-                {ministryOptions.map((opt) => (
-                  <div className="col-sm-6" key={opt}>
-                    <div className="form-check p-2 border rounded-3 bg-light-subtle">
-                      <input
-                        className="form-check-input ms-1"
-                        type="checkbox"
-                        id={`check-${opt}`}
-                        checked={formData.ministries.includes(opt)}
-                        onChange={() => handleCheckboxChange(opt)}
-                      />
-                      <label className="form-check-label ms-2" htmlFor={`check-${opt}`}>
-                        {opt}
-                      </label>
+                {ministryOptions.map((opt) => {
+                  const isChecked = formData.ministries.includes(opt);
+                  return (
+                    <div className="col-sm-6" key={opt}>
+                      <div
+                        className={`p-3 border rounded-3 transition-base cursor-pointer d-flex align-items-center gap-2 ${
+                          isChecked ? 'bg-primary-subtle border-primary' : 'bg-light border-light-subtle'
+                        }`}
+                        onClick={() => handleCheckboxChange(opt)}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <input
+                          className="form-check-input mt-0"
+                          type="checkbox"
+                          id={`check-${opt}`}
+                          checked={isChecked}
+                          onChange={() => {}}
+                        />
+                        <label className="form-check-label ms-1 fw-medium user-select-none" style={{ cursor: 'pointer' }}>
+                          {opt}
+                        </label>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
             <div className="col-12 mt-4">
-              <label htmlFor="message" className="form-label fw-medium">
+              <label htmlFor="message" className="form-label fw-medium text-dark">
                 Tell us more (optional, max 300 characters)
               </label>
               <textarea
@@ -238,10 +273,12 @@ const GetInvolvedPage = () => {
             </div>
 
             <div className="col-12 text-end mt-4">
-              <button
+              <motion.button
                 type="submit"
-                className="btn btn-primary px-5 py-2"
+                className="btn btn-primary px-5 py-3 rounded-pill shadow fw-semibold"
                 disabled={submitting}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
               >
                 {submitting ? (
                   <>
@@ -251,11 +288,11 @@ const GetInvolvedPage = () => {
                 ) : (
                   'Submit Registration'
                 )}
-              </button>
+              </motion.button>
             </div>
           </div>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 };

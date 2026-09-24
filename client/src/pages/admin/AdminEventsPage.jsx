@@ -1,15 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { eventsService } from '../../services/api';
-import LoadingSpinner from '../../components/common/LoadingSpinner';
+import { TableSkeleton } from '../../components/common/SkeletonLoader';
+import ImageUploadDropzone from '../../components/admin/ImageUploadDropzone';
+import ConfirmDeleteModal from '../../components/admin/ConfirmDeleteModal';
+import { useToast } from '../../context/ToastContext';
+import SEO from '../../components/common/SEO';
 
 const AdminEventsPage = () => {
+  const { addToast } = useToast();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [statusMsg, setStatusMsg] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
+  const [deleteId, setDeleteId] = useState(null);
+  const [deleting, setDeleting] = useState(false);
+
   const [formData, setFormData] = useState({
     title: '',
     summary: '',
@@ -29,7 +37,7 @@ const AdminEventsPage = () => {
       }
     } catch (err) {
       console.error(err);
-      setStatusMsg({ type: 'danger', text: 'Could not fetch events.' });
+      addToast('Could not fetch events.', 'danger');
     } finally {
       setLoading(false);
     }
@@ -67,24 +75,27 @@ const AdminEventsPage = () => {
     setModalOpen(true);
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this event?')) return;
+  const confirmDelete = async () => {
+    if (!deleteId) return;
+    setDeleting(true);
     try {
-      const res = await eventsService.delete(id);
+      const res = await eventsService.delete(deleteId);
       if (res.data.success) {
-        setStatusMsg({ type: 'success', text: 'Event deleted successfully.' });
+        addToast('Event deleted successfully.', 'success');
+        setDeleteId(null);
         fetchEvents();
       }
     } catch (err) {
       console.error(err);
-      setStatusMsg({ type: 'danger', text: 'Failed to delete event.' });
+      addToast('Failed to delete event.', 'danger');
+    } finally {
+      setDeleting(false);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
-    setStatusMsg(null);
 
     const payload = new FormData();
     payload.append('title', formData.title);
@@ -100,47 +111,77 @@ const AdminEventsPage = () => {
     try {
       if (editingEvent) {
         await eventsService.update(editingEvent.id, payload);
-        setStatusMsg({ type: 'success', text: 'Event updated successfully.' });
+        addToast('Event updated successfully.', 'success');
       } else {
         await eventsService.create(payload);
-        setStatusMsg({ type: 'success', text: 'New event created successfully.' });
+        addToast('New event created successfully.', 'success');
       }
       setModalOpen(false);
       fetchEvents();
     } catch (err) {
       console.error(err);
-      setStatusMsg({ type: 'danger', text: err.response?.data?.message || 'Error saving event.' });
+      addToast(err.response?.data?.message || 'Error saving event.', 'danger');
     } finally {
       setSaving(false);
     }
   };
 
+  const filteredEvents = events.filter((ev) => {
+    const q = searchQuery.toLowerCase();
+    return (
+      ev.title?.toLowerCase().includes(q) ||
+      ev.location?.toLowerCase().includes(q) ||
+      ev.summary?.toLowerCase().includes(q)
+    );
+  });
+
   return (
     <div>
+      <SEO title="Manage Events" />
+
       <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
         <div>
           <h2 className="heading fw-bold mb-1">Events Management</h2>
           <p className="text-muted small mb-0">Create, edit, feature, and delete church events</p>
         </div>
-        <button className="btn btn-primary" onClick={openCreateModal}>
-          <i className="bi bi-plus-circle me-1"></i> Add New Event
+        <button className="btn btn-primary rounded-pill px-3 py-2 d-flex align-items-center gap-1 shadow-sm" onClick={openCreateModal}>
+          <i className="bi bi-plus-circle"></i> Add New Event
         </button>
       </div>
 
-      {statusMsg && (
-        <div className={`alert alert-${statusMsg.type} alert-dismissible fade show mb-4`} role="alert">
-          {statusMsg.text}
-          <button type="button" className="btn-close" onClick={() => setStatusMsg(null)}></button>
+      {/* Search Bar */}
+      <div className="card border-0 shadow-sm rounded-4 p-3 bg-white mb-4">
+        <div className="input-group">
+          <span className="input-group-text bg-light border-end-0">
+            <i className="bi bi-search text-muted"></i>
+          </span>
+          <input
+            type="text"
+            className="form-control border-start-0"
+            placeholder="Search events by title, location or summary..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          {searchQuery && (
+            <button
+              className="btn btn-outline-secondary"
+              onClick={() => setSearchQuery('')}
+            >
+              Clear
+            </button>
+          )}
         </div>
-      )}
+      </div>
 
       {loading ? (
-        <LoadingSpinner message="Loading events..." />
-      ) : events.length === 0 ? (
+        <TableSkeleton rows={4} cols={5} />
+      ) : filteredEvents.length === 0 ? (
         <div className="card border-0 shadow-sm rounded-4 p-5 text-center bg-white">
           <i className="bi bi-calendar-x display-3 text-muted mb-3"></i>
-          <h4>No Events Scheduled</h4>
-          <p className="text-muted">Click the button above to add your first church gathering or service.</p>
+          <h4>No Events Found</h4>
+          <p className="text-muted">
+            {searchQuery ? 'No events matched your search query.' : 'Click the button above to add your first church gathering or service.'}
+          </p>
         </div>
       ) : (
         <div className="card border-0 shadow-sm rounded-4 bg-white overflow-hidden">
@@ -152,11 +193,11 @@ const AdminEventsPage = () => {
                   <th>Title & Summary</th>
                   <th>Time & Location</th>
                   <th>Status</th>
-                  <th className="text-end" style={{ width: '140px' }}>Actions</th>
+                  <th className="text-end" style={{ width: '130px' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {events.map((ev) => (
+                {filteredEvents.map((ev) => (
                   <tr key={ev.id}>
                     <td>
                       <img
@@ -168,36 +209,38 @@ const AdminEventsPage = () => {
                     </td>
                     <td>
                       <strong className="d-block text-dark">{ev.title}</strong>
-                      <span className="text-muted small text-truncate d-inline-block" style={{ maxWidth: '300px' }}>
+                      <span className="text-muted small text-truncate d-inline-block" style={{ maxWidth: '320px' }}>
                         {ev.summary || 'No summary'}
                       </span>
                     </td>
                     <td>
                       <div className="small">
-                        <i className="bi bi-clock me-1 text-muted"></i> {ev.time || 'TBA'}
+                        <i className="bi bi-clock me-1 text-primary"></i> {ev.time || 'TBA'}
                       </div>
                       <div className="small text-muted">
-                        <i className="bi bi-geo-alt me-1 text-muted"></i> {ev.location || 'Church'}
+                        <i className="bi bi-geo-alt me-1 text-danger"></i> {ev.location || 'Church'}
                       </div>
                     </td>
                     <td>
                       {ev.isFeatured ? (
-                        <span className="badge bg-primary">Featured Event</span>
+                        <span className="badge bg-primary rounded-pill px-3 py-1">Featured Event</span>
                       ) : (
-                        <span className="badge bg-light text-secondary border">Standard</span>
+                        <span className="badge bg-light text-secondary border rounded-pill px-3 py-1">Standard</span>
                       )}
                     </td>
                     <td className="text-end">
                       <button
-                        className="btn btn-sm btn-outline-secondary me-2"
+                        className="btn btn-sm btn-outline-secondary me-2 rounded-circle"
+                        style={{ width: '34px', height: '34px', padding: 0 }}
                         onClick={() => openEditModal(ev)}
                         title="Edit event"
                       >
                         <i className="bi bi-pencil"></i>
                       </button>
                       <button
-                        className="btn btn-sm btn-outline-danger"
-                        onClick={() => handleDelete(ev.id)}
+                        className="btn btn-sm btn-outline-danger rounded-circle"
+                        style={{ width: '34px', height: '34px', padding: 0 }}
+                        onClick={() => setDeleteId(ev.id)}
                         title="Delete event"
                       >
                         <i className="bi bi-trash"></i>
@@ -211,23 +254,23 @@ const AdminEventsPage = () => {
         </div>
       )}
 
-      {/* Create / Edit Modal */}
+      {/* Create / Edit Modal with Drag-and-Drop Image Upload */}
       {modalOpen && (
-        <div className="modal fade show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.6)', zIndex: 1055 }}>
+        <div className="modal fade show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(10,25,41,0.65)', zIndex: 1055 }}>
           <div className="modal-dialog modal-dialog-centered modal-lg">
-            <div className="modal-content border-0 rounded-4 shadow">
+            <div className="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
               <form onSubmit={handleSubmit}>
-                <div className="modal-header border-bottom">
-                  <h5 className="modal-title fw-bold heading">
+                <div className="modal-header border-bottom py-3">
+                  <h5 className="modal-title fw-bold heading mb-0">
                     {editingEvent ? 'Edit Event' : 'Create New Event'}
                   </h5>
-                  <button type="button" className="btn-close" onClick={() => setModalOpen(false)}></button>
+                  <button type="button" className="btn-close" onClick={() => setModalOpen(false)} aria-label="Close"></button>
                 </div>
 
                 <div className="modal-body p-4">
                   <div className="row g-3">
                     <div className="col-12">
-                      <label className="form-label fw-medium">Event Title *</label>
+                      <label className="form-label fw-medium text-dark">Event Title *</label>
                       <input
                         type="text"
                         className="form-control"
@@ -239,7 +282,7 @@ const AdminEventsPage = () => {
                     </div>
 
                     <div className="col-md-6">
-                      <label className="form-label fw-medium">Time / Schedule</label>
+                      <label className="form-label fw-medium text-dark">Time / Schedule</label>
                       <input
                         type="text"
                         className="form-control"
@@ -250,7 +293,7 @@ const AdminEventsPage = () => {
                     </div>
 
                     <div className="col-md-6">
-                      <label className="form-label fw-medium">Location</label>
+                      <label className="form-label fw-medium text-dark">Location</label>
                       <input
                         type="text"
                         className="form-control"
@@ -261,7 +304,7 @@ const AdminEventsPage = () => {
                     </div>
 
                     <div className="col-12">
-                      <label className="form-label fw-medium">Short Summary</label>
+                      <label className="form-label fw-medium text-dark">Short Summary</label>
                       <input
                         type="text"
                         className="form-control"
@@ -272,49 +315,57 @@ const AdminEventsPage = () => {
                     </div>
 
                     <div className="col-12">
-                      <label className="form-label fw-medium">Full Details</label>
+                      <label className="form-label fw-medium text-dark">Full Details</label>
                       <textarea
                         className="form-control"
-                        rows="4"
+                        rows="3"
                         value={formData.details}
                         onChange={(e) => setFormData({ ...formData, details: e.target.value })}
                         placeholder="Full program notes, guest ministers, special instructions..."
                       ></textarea>
                     </div>
 
-                    <div className="col-md-8">
-                      <label className="form-label fw-medium">Upload Poster / Flyer Image</label>
-                      <input
-                        type="file"
-                        className="form-control"
-                        accept="image/*"
-                        onChange={(e) => setFormData({ ...formData, image: e.target.files[0] })}
+                    {/* Image Drag and Drop */}
+                    <div className="col-12">
+                      <ImageUploadDropzone
+                        currentImage={editingEvent?.imageUrl}
+                        onImageSelected={(file) => setFormData({ ...formData, image: file })}
+                        onImageCleared={() => setFormData({ ...formData, image: null })}
+                        label="Event Poster / Banner Image"
                       />
                     </div>
 
-                    <div className="col-md-4 d-flex align-items-end pb-2">
-                      <div className="form-check form-switch">
+                    <div className="col-12">
+                      <div className="form-check form-switch p-3 bg-light rounded-3 d-flex align-items-center gap-3">
                         <input
-                          className="form-check-input"
+                          className="form-check-input ms-0 mt-0"
                           type="checkbox"
                           id="isFeaturedSwitch"
                           checked={formData.isFeatured}
                           onChange={(e) => setFormData({ ...formData, isFeatured: e.target.checked })}
+                          style={{ width: '2.5rem', height: '1.4rem' }}
                         />
-                        <label className="form-check-label fw-medium" htmlFor="isFeaturedSwitch">
-                          Feature this event on Home & Events
+                        <label className="form-check-label fw-medium user-select-none text-dark" htmlFor="isFeaturedSwitch">
+                          Feature this event prominently on Home & Events pages
                         </label>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="modal-footer border-top">
-                  <button type="button" className="btn btn-light" onClick={() => setModalOpen(false)}>
+                <div className="modal-footer border-top py-3 bg-light">
+                  <button type="button" className="btn btn-outline-secondary px-3" onClick={() => setModalOpen(false)}>
                     Cancel
                   </button>
-                  <button type="submit" className="btn btn-primary" disabled={saving}>
-                    {saving ? 'Saving...' : editingEvent ? 'Update Event' : 'Create Event'}
+                  <button type="submit" className="btn btn-primary px-4 d-flex align-items-center gap-2" disabled={saving}>
+                    {saving ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm" role="status"></span>
+                        Saving...
+                      </>
+                    ) : (
+                      editingEvent ? 'Update Event' : 'Create Event'
+                    )}
                   </button>
                 </div>
               </form>
@@ -322,6 +373,16 @@ const AdminEventsPage = () => {
           </div>
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmDeleteModal
+        isOpen={!!deleteId}
+        onClose={() => setDeleteId(null)}
+        onConfirm={confirmDelete}
+        loading={deleting}
+        title="Delete Event"
+        message="Are you sure you want to delete this event? Believers will no longer see it on the website."
+      />
     </div>
   );
 };

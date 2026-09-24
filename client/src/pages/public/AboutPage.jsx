@@ -1,5 +1,12 @@
 import React from 'react';
 import { useOutletContext } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import SEO from '../../components/common/SEO';
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 25 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }
+};
 
 const AboutPage = () => {
   const { settings = {} } = useOutletContext() || {};
@@ -10,49 +17,85 @@ const AboutPage = () => {
   const pastorFamilyImg = settings.pastor_family_image || "/images/Pastor's_Family_Pic.jpg";
 
   return (
-    <div className="container py-4">
+    <div className="container py-5">
+      <SEO
+        title="About Us"
+        description="Learn about Friends Garden AG Church, Kollidam — our history, pastor, mission, vision, and core beliefs."
+      />
+
       {/* Bible Verse Header */}
-      <div className="text-center my-4">
+      <motion.div
+        className="text-center my-4"
+        initial={{ opacity: 0, y: -15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <blockquote className="blockquote fst-italic">
-          <p className="fs-4 text-secondary mb-1">“Upon this rock I will build my church...”</p>
-          <footer className="blockquote-footer pb-2">Matthew 16:18</footer>
+          <p className="fs-3 text-secondary mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>
+            “Upon this rock I will build my church...”
+          </p>
+          <footer className="blockquote-footer pb-2 fs-6 text-primary fw-medium">
+            Matthew 16:18
+          </footer>
         </blockquote>
-      </div>
+        <div className="section-divider">
+          <i className="bi bi-diamond-fill section-divider-icon"></i>
+        </div>
+      </motion.div>
 
       {/* Church Name and Image */}
-      <div className="row mb-5 section-bg p-4 p-md-5 rounded-4 shadow-sm align-items-center">
+      <motion.div
+        className="row mb-5 section-bg p-4 p-md-5 rounded-4 shadow-sm align-items-center hover-lift"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-40px' }}
+        variants={fadeInUp}
+      >
         <div className="col-12">
           <h2 className="fw-bold heading_2 border-bottom pb-3 mb-4">
             Friends Garden AG Church
           </h2>
-          <img
-            src="/images/Church_img.jpg"
-            alt="Friends Garden AG Church Building"
-            className="img-fluid rounded-4 float-md-end ms-md-4 mb-3 shadow-sm"
-            style={{ maxWidth: '420px', width: '100%', maxHeight: '280px', objectFit: 'cover' }}
-          />
+          <div className="image-zoom-card float-md-end ms-md-4 mb-4 shadow-sm rounded-4" style={{ maxWidth: '420px', width: '100%' }}>
+            <img
+              src="/images/Church_img.jpg"
+              alt="Friends Garden AG Church Building"
+              className="img-fluid rounded-4"
+              style={{ maxHeight: '290px', objectFit: 'cover', width: '100%' }}
+            />
+          </div>
           <div className="paragraph text-secondary" style={{ whiteSpace: 'pre-line', lineHeight: '1.9' }}>
             {story}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* About Our Senior Pastor */}
-      <section className="my-5">
+      <motion.section
+        className="my-5"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-40px' }}
+        variants={fadeInUp}
+      >
         <div className="text-center mb-4">
           <h2 className="fw-bold display-6 heading text-uppercase">About Our Senior Pastor</h2>
+          <div className="section-divider">
+            <i className="bi bi-diamond-fill section-divider-icon"></i>
+          </div>
           <p className="text-muted">A glimpse into the heart and vision of our spiritual leader</p>
         </div>
 
-        <div className="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+        <div className="card border-0 shadow-sm rounded-4 overflow-hidden bg-white hover-lift">
           <div className="row g-0 align-items-center">
             <div className="col-md-5 d-flex justify-content-center align-items-center bg-light p-4">
-              <img
-                src={pastorFamilyImg}
-                alt="Pastor Amal and Family"
-                className="img-fluid rounded-4 shadow-sm"
-                style={{ maxHeight: '380px', width: 'auto', maxWidth: '100%', objectFit: 'contain' }}
-              />
+              <div className="image-zoom-card rounded-4 shadow-sm">
+                <img
+                  src={pastorFamilyImg}
+                  alt="Pastor Amal and Family"
+                  className="img-fluid rounded-4"
+                  style={{ maxHeight: '390px', width: 'auto', maxWidth: '100%', objectFit: 'contain' }}
+                />
+              </div>
             </div>
             <div className="col-md-7 p-4 p-md-5">
               <h3 className="fw-bold mb-3 heading_2">Pastor Amal M. Augustine</h3>
@@ -70,15 +113,21 @@ const AboutPage = () => {
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Mission & Vision */}
-      <div className="row align-items-center mb-5 section-bg p-4 p-md-5 rounded-4 shadow-sm g-4">
+      <motion.div
+        className="row align-items-center mb-5 section-bg p-4 p-md-5 rounded-4 shadow-sm g-4 hover-lift"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-40px' }}
+        variants={fadeInUp}
+      >
         <div className="col-md-6">
           <h3 className="heading_2 mb-4">
             <i className="bi bi-bullseye text-primary me-2"></i> Our Mission & Vision
           </h3>
-          <ul className="paragraph mb-0 fs-5 ps-4">
+          <ul className="paragraph mb-0 fs-5 ps-4" style={{ lineHeight: '2' }}>
             <li className="mb-2">Go Into All the World and Share the Gospel</li>
             <li className="mb-2">Loving the Least, the Lost, and the Forgotten</li>
             <li className="mb-2">Raising Missionaries From Church</li>
@@ -86,17 +135,25 @@ const AboutPage = () => {
           </ul>
         </div>
         <div className="col-md-6 text-center p-3">
-          <img
-            src="/images/mission_vision.png"
-            alt="Mission and Vision Banner"
-            className="img-fluid rounded-4 shadow-sm"
-            style={{ maxHeight: '320px', width: 'auto', maxWidth: '100%', objectFit: 'contain' }}
-          />
+          <div className="image-zoom-card shadow-sm rounded-4 d-inline-block">
+            <img
+              src="/images/mission_vision.png"
+              alt="Mission and Vision Banner"
+              className="img-fluid rounded-4"
+              style={{ maxHeight: '320px', width: 'auto', maxWidth: '100%', objectFit: 'contain' }}
+            />
+          </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Church History */}
-      <div className="mb-5 section-bg p-4 p-md-5 rounded-4 shadow-sm">
+      <motion.div
+        className="mb-5 section-bg p-4 p-md-5 rounded-4 shadow-sm hover-lift"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-40px' }}
+        variants={fadeInUp}
+      >
         <h3 className="heading_2 mb-3">
           <i className="bi bi-clock-history text-primary me-2"></i> Our Church History
         </h3>
@@ -111,32 +168,44 @@ const AboutPage = () => {
           By God's grace, we are growing steadily — in love, in the Word, in faith, in fellowship, in our knowledge of the Lord, and in number. All praise be to God!
         </p>
         <blockquote className="blockquote fst-italic mt-4 text-center">
-          <p className="mb-1">“Give thanks to the LORD, for He is good; His love endures forever.”</p>
-          <footer className="blockquote-footer">Psalm 107:1</footer>
+          <p className="mb-1 fs-5 text-secondary">“Give thanks to the LORD, for He is good; His love endures forever.”</p>
+          <footer className="blockquote-footer fs-6 text-primary">Psalm 107:1</footer>
         </blockquote>
-      </div>
+      </motion.div>
 
       {/* Our Beliefs */}
-      <div className="mb-5 bg-white p-4 p-md-5 rounded-4 shadow-sm border">
+      <motion.div
+        className="mb-5 bg-white p-4 p-md-5 rounded-4 shadow-sm border hover-lift"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: '-40px' }}
+        variants={fadeInUp}
+      >
         <h3 className="heading_2 pb-3 border-bottom">
           <i className="bi bi-book text-primary me-2"></i> Our Beliefs
         </h3>
-        <ul className="paragraph mt-3 ps-4 fs-5">
+        <ul className="paragraph mt-3 ps-4 fs-5" style={{ lineHeight: '2' }}>
           <li className="mb-2">We believe in the Trinity – Father, Son, and Holy Spirit.</li>
           <li className="mb-2">Salvation through Jesus Christ alone.</li>
           <li className="mb-2">The Bible is the inspired and authoritative Word of God.</li>
           <li className="mb-2">We are called to love God and love people unconditionally.</li>
           <li className="mb-2">Prayer, worship, and fellowship are vital to our daily faith journey.</li>
         </ul>
-      </div>
+      </motion.div>
 
       {/* Final Verse */}
-      <div className="text-center my-5">
+      <motion.div
+        className="text-center my-5"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+      >
         <blockquote className="blockquote fst-italic">
-          <p className="fs-4 heading mb-1">“Let all that you do be done in love.”</p>
-          <footer className="blockquote-footer">1 Corinthians 16:14</footer>
+          <p className="fs-3 heading mb-1">“Let all that you do be done in love.”</p>
+          <footer className="blockquote-footer fs-6 text-primary fw-medium">1 Corinthians 16:14</footer>
         </blockquote>
-      </div>
+      </motion.div>
     </div>
   );
 };
