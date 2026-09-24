@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String   @default("Pastor / Administrator")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SiteSetting {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique
+  value     String   @db.Text
+  group     String   @default("general") // hero, about, contact, social, promise, app
+  updatedAt DateTime @updatedAt
+}
+
+model Event {
+  id          Int       @id @default(autoincrement())
+  title       String
+  summary     String?   @db.Text
+  time        String?
+  location    String?
+  details     String?   @db.Text
+  imageUrl    String?   @db.Text
+  isFeatured  Boolean   @default(false)
+  date        DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Ministry {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?  @db.Text
+  details     String?  @db.Text
+  imageUrl    String?  @db.Text
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Leadership {
+  id        Int      @id @default(autoincrement())
+  name      String
+  role      String
+  bio       String?  @db.Text
+  imageUrl  String?  @db.Text
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GalleryImage {
+  id        Int      @id @default(autoincrement())
+  title     String?
+  category  String   // "sunday service", "kids", "youth", "outreach", "christmas", "special events"
+  imageUrl  String   @db.Text
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PrayerRequest {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  phone     String?
+  message   String   @db.Text
+  status    String   @default("PENDING") // PENDING, PRAYED, ARCHIVED
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VolunteerSubmission {
+  id          Int      @id @default(autoincrement())
+  name        String
+  age         Int
+  gender      String
+  comingFrom  String
+  profession  String
+  phone       String
+  ministries  String   // JSON string of selected ministries e.g. '["Choir Team", "Music Team"]'
+  message     String?  @db.Text
+  status      String   @default("PENDING") // PENDING, REVIEWED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

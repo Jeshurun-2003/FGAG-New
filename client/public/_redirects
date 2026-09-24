@@ -1,0 +1,28 @@
+# ============================================================
+# Cloudflare Pages Redirects & Routing Configuration
+# Friends Garden AG Church
+# ============================================================
+
+# Legacy HTML URLs Redirects (301 Permanent)
+/index.html                 /                               301
+/about.html                 /about                          301
+/about_us.html              /about                          301
+/events.html                /events                         301
+/ministries.html            /ministries                     301
+/gallery.html               /gallery                        301
+/kids_gallery.html          /gallery?category=kids          301
+/youth_gallery.html         /gallery?category=youth         301
+/outreach_gallery.html      /gallery?category=outreach      301
+/sunday_service_gallery.html /gallery?category=sunday%20service 301
+/xmas_gallery.html          /gallery?category=christmas     301
+/special_events.html        /gallery?category=special%20events 301
+/get_involved.html          /get-involved                   301
+/contact.html               /contact                        301
+/contact_us.html            /contact                        301
+/donate.html                /donate                         301
+/admin/index.html           /admin                          301
+/admin.html                 /admin                          301
+/login.html                 /admin/login                    301
+
+# Single Page Application (SPA) Fallback for Cloudflare Pages
+/*                          /index.html                     200

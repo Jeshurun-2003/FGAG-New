@@ -1,0 +1,317 @@
+/* ===================================================
+   FGAG Church - Core Theme & Stylesheet
+   Preserving original visual identity, colors & fonts
+=================================================== */
+
+:root {
+  --primary-navy: #0a3d62;
+  --primary-blue: #38a1db;
+  --hover-blue: #227093;
+  --deep-heading: #3c6382;
+  --section-bg: #e9f1f7;
+  --bg-light: #f8f9fa;
+  --text-dark: #1c1c1c;
+  --text-charcoal: #2f2f2f;
+  --font-serif: 'Lora', serif;
+  --font-heading: 'Playfair Display', serif;
+}
+
+body {
+  font-family: var(--font-serif);
+  color: var(--text-dark);
+  font-size: 16px;
+  background-color: var(--bg-light);
+  line-height: 1.8;
+  margin: 0;
+  padding: 0;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6,
+.heading, .heading_1, .heading_2 {
+  font-family: var(--font-heading);
+  color: var(--deep-heading);
+}
+
+.heading_1 {
+  font-size: 2.6rem;
+  font-weight: 700;
+}
+
+.heading_2 {
+  font-size: 1.9rem;
+  font-weight: 600;
+}
+
+.paragraph {
+  color: var(--text-charcoal);
+  font-family: var(--font-serif);
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+/* Section Backgrounds */
+.section-bg {
+  background-color: var(--section-bg);
+}
+
+.promise-section {
+  background: linear-gradient(to right, #0a3d62, #236ca1);
+}
+
+/* Navbar */
+.navbar-custom {
+  background-color: var(--primary-navy);
+  font-family: var(--font-serif);
+  min-height: 100px;
+  padding: 0.5rem 1rem;
+  transition: all 0.3s ease;
+  z-index: 1030;
+}
+
+.navbar-custom .navbar-brand img {
+  height: 90px;
+  max-width: 220px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.navbar-custom .nav-link {
+  color: #ffffff !important;
+  margin: 0 6px;
+  padding: 8px 14px !important;
+  font-weight: 500;
+  border-radius: 6px;
+  transition: all 0.25s ease;
+}
+
+.navbar-custom .nav-link:hover,
+.navbar-custom .nav-link.active {
+  background-color: var(--hover-blue) !important;
+  color: #ffffff !important;
+}
+
+/* Mobile Slide Menu */
+.mobile-slide-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 75vw;
+  max-width: 320px;
+  background-color: var(--primary-navy);
+  z-index: 1099;
+  padding: 2rem 1.5rem;
+  transform: translateX(100%);
+  opacity: 0;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -5px 0 25px rgba(0, 0, 0, 0.5);
+}
+
+.mobile-slide-menu.active {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.mobile-slide-menu .nav-link {
+  color: #ffffff !important;
+  padding: 14px 8px !important;
+  font-size: 1.15rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: block;
+}
+
+.mobile-slide-menu .nav-link:hover,
+.mobile-slide-menu .nav-link.active {
+  color: #ffc107 !important;
+}
+
+.mobile-menu-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1098;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.mobile-menu-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 2rem;
+  align-self: flex-end;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--primary-blue) !important;
+  color: #ffffff !important;
+  border: none !important;
+  padding: 10px 22px;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background-color 0.25s ease, transform 0.15s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--hover-blue) !important;
+  transform: translateY(-1px);
+}
+
+.btn-outline-primary {
+  color: var(--deep-heading) !important;
+  border-color: var(--deep-heading) !important;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active {
+  background-color: var(--primary-blue) !important;
+  border-color: var(--primary-blue) !important;
+  color: #ffffff !important;
+}
+
+.btn-enhanced {
+  font-size: 1.05rem;
+  padding: 0.75rem 1.6rem;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+}
+
+.btn-enhanced:hover {
+  background-color: #ffffff !important;
+  color: #212529 !important;
+  border-color: #ffffff !important;
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.45);
+}
+
+/* Glass Card */
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* Hover Cards */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Gallery Images */
+.gallery-image-card {
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gallery-image-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.gallery-image-card img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Footer */
+.footer-custom {
+  background-color: var(--primary-navy);
+  color: #f8f9fa;
+  padding: 45px 0 25px;
+}
+
+.footer-custom a {
+  color: #c5dced;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-custom a:hover {
+  color: #ffffff;
+}
+
+/* Admin Dashboard Theme */
+.admin-sidebar {
+  background-color: var(--primary-navy);
+  min-height: 100vh;
+  color: #ffffff;
+  width: 260px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding-top: 1.5rem;
+  z-index: 1040;
+  transition: transform 0.3s ease;
+}
+
+.admin-sidebar .sidebar-heading {
+  color: #c5dced;
+  padding: 0 1.5rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+}
+
+.admin-sidebar .nav-link {
+  color: #aed6f1;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  transition: background-color 0.2s, color 0.2s;
+  border-left: 3px solid transparent;
+}
+
+.admin-sidebar .nav-link:hover,
+.admin-sidebar .nav-link.active {
+  background-color: #1a5276;
+  color: #ffffff;
+  border-left-color: #38a1db;
+}
+
+.admin-main-content {
+  margin-left: 260px;
+  padding: 2rem;
+  min-height: 100vh;
+  background-color: #f0f4f8;
+}
+
+@media (max-width: 991.98px) {
+  .admin-sidebar {
+    transform: translateX(-100%);
+  }
+  .admin-sidebar.open {
+    transform: translateX(0);
+  }
+  .admin-main-content {
+    margin-left: 0;
+    padding: 1rem;
+  }
+}
