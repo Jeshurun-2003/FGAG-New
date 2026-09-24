@@ -10,15 +10,15 @@ const defaultMinistries = [
     title: 'Youth Ministry',
     description: 'Our Youth Ministry is a vibrant and passionate community of young believers growing in faith and purpose.',
     details: 'Our Youth Ministry is a vibrant and passionate community of young believers growing in faith and purpose. We equip and empower the next generation to stand strong in Christ and impact the world. Through worship, Bible study, mentoring, and outreach, youth are nurtured spiritually and socially. Join us as we pursue God’s calling with energy, creativity, and unity.',
-    imageUrl: '/images/Youth_ministry.jpeg',
-    objectPosition: '50% 100%'
+    imageUrl: '/images/ministries/youth-ministry.jpg',
+    objectPosition: 'center'
   },
   {
     id: 2,
     title: 'Children ministry',
     description: 'Our Children’s Ministry is a joyful space where kids discover God’s love in fun and meaningful ways.',
     details: 'Our Children’s Ministry is a joyful space where kids discover God’s love in fun and meaningful ways. We teach biblical values through songs, stories, crafts, and interactive lessons. Each child is nurtured in a safe, loving environment to grow in faith and character. We believe children are a gift from God and a vital part of His Kingdom.',
-    imageUrl: '/images/Children_minstry.jpeg',
+    imageUrl: '/images/ministries/children-ministry.jpg',
     objectPosition: 'center'
   },
   {
@@ -26,15 +26,15 @@ const defaultMinistries = [
     title: 'Outreach Ministry',
     description: 'Our Outreach Ministry is dedicated to sharing God’s love beyond the church walls.',
     details: 'Our Outreach Ministry is dedicated to sharing God’s love beyond the church walls. We serve communities through acts of compassion, prayer, and practical support. By reaching the unreached and uplifting the needy, we reflect the heart of Christ. Join us in being the hands and feet of Jesus to a world in need.',
-    imageUrl: '/images/Outreach_ministry.jpeg',
-    objectPosition: '50% 90%'
+    imageUrl: '/images/ministries/outreach-ministry.jpg',
+    objectPosition: 'center'
   },
   {
     id: 4,
     title: 'Men’s Ministry',
     description: 'Our Men’s Ministry empowers men to grow in faith, character, and leadership.',
     details: 'Our Men’s Ministry empowers men to grow in faith, character, and leadership. We gather for fellowship, prayer, and teaching that strengthens spiritual foundations. Through accountability and brotherhood, men are equipped to lead their families and communities. Together, we pursue God’s purpose and become men after His own heart.',
-    imageUrl: "/images/Men's_ministry.jpeg",
+    imageUrl: '/images/ministries/mens-ministry.jpg',
     objectPosition: 'center'
   },
   {
@@ -42,16 +42,16 @@ const defaultMinistries = [
     title: "Women's Ministry",
     description: 'Our Women’s Ministry is a nurturing community where women grow in faith, strength, and purpose.',
     details: 'Our Women’s Ministry is a nurturing community where women grow in faith, strength, and purpose. We come together for prayer, fellowship, and encouragement rooted in God’s Word. Through discipleship and support, women are empowered to impact their homes and communities. Join us as we walk in grace, wisdom, and the beauty of God\'s calling for women.',
-    imageUrl: "/images/Women's_ministry.jpeg",
-    objectPosition: '50% 60%'
+    imageUrl: '/images/ministries/womens-ministry.jpg',
+    objectPosition: 'center'
   },
   {
     id: 6,
     title: 'Volunteer Ministry',
     description: 'Our Volunteer Ministry is the heartbeat of service within the church and beyond.',
     details: 'Our Volunteer Ministry is the heartbeat of service within the church and beyond. We believe every act of service, big or small, makes a lasting impact for God’s Kingdom. From welcoming guests to organizing events, our volunteers serve with joy and excellence. Join us and discover the blessing of using your time and talents for God’s glory.',
-    imageUrl: '/images/Volunteer_ministry.jpeg',
-    objectPosition: '50% 20%'
+    imageUrl: '/images/ministries/volunteer-ministry.jpg',
+    objectPosition: 'center'
   }
 ];
 

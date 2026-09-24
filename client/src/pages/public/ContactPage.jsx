@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { prayerService } from '../../services/api';
+import { contactService } from '../../services/api';
 import { useToast } from '../../context/ToastContext';
 import SEO from '../../components/common/SEO';
 
@@ -20,6 +20,7 @@ const ContactPage = () => {
     name: '',
     email: '',
     phone: '',
+    subject: '',
     message: ''
   });
   const [submitting, setSubmitting] = useState(false);
@@ -32,19 +33,27 @@ const ContactPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitting(true);
     setResponseMsg(null);
 
+    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
+      const err = 'Please provide your name, email, and message.';
+      setResponseMsg({ type: 'danger', text: err });
+      addToast(err, 'danger');
+      return;
+    }
+
+    setSubmitting(true);
+
     try {
-      const res = await prayerService.submit(formData);
+      const res = await contactService.submit(formData);
       if (res.data.success) {
-        const successMsg = 'Your prayer request has been received. Our prayer team will faithfully lift your request before the Lord.';
+        const successMsg = 'Thank you for contacting Friends Garden AG Church. We have received your message and will respond promptly.';
         setResponseMsg({
           type: 'success',
           text: successMsg
         });
         addToast(successMsg, 'success');
-        setFormData({ name: '', email: '', phone: '', message: '' });
+        setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
       }
     } catch (err) {
       console.error(err);
@@ -71,8 +80,8 @@ const ContactPage = () => {
   return (
     <div className="container my-5 pt-3">
       <SEO
-        title="Contact Us & Prayer Request"
-        description="Get in touch with Friends Garden AG Church, Kollidam. Send your prayer request, view service location and office contact details."
+        title="Contact Us"
+        description="Get in touch with Friends Garden AG Church, Kollidam. View service location, directions, office hours, and contact details."
       />
 
       {/* Map Header */}
@@ -208,9 +217,20 @@ const ContactPage = () => {
               </div>
             </div>
           </div>
+
+          {/* Quick link to prayer request page */}
+          <div className="p-4 rounded-4 bg-light border d-flex align-items-center justify-content-between">
+            <div>
+              <h6 className="fw-bold mb-1 text-dark">Looking for Prayer?</h6>
+              <p className="small text-muted mb-0">Share your burden with our dedicated intercession team.</p>
+            </div>
+            <Link to="/prayer-request" className="btn btn-outline-primary btn-sm rounded-pill px-3 py-2 fw-semibold">
+              Prayer Request &rarr;
+            </Link>
+          </div>
         </motion.div>
 
-        {/* Prayer Request Form */}
+        {/* General Contact Us Form */}
         <motion.div
           className="col-lg-6"
           initial={{ opacity: 0, x: 20 }}
@@ -218,7 +238,10 @@ const ContactPage = () => {
           transition={{ duration: 0.5, delay: 0.15 }}
         >
           <div className="card border-0 shadow rounded-4 p-4 p-md-5 bg-white hover-lift">
-            <h2 className="heading fw-bold display-6 mb-4">Prayer Request Form</h2>
+            <h2 className="heading fw-bold display-6 mb-2">Send Us a Message</h2>
+            <p className="text-muted small mb-4">
+              Have questions, need information, or want to connect with our church staff? Drop us a note below.
+            </p>
 
             {responseMsg && (
               <div className={`alert alert-${responseMsg.type} alert-dismissible fade show mb-4`} role="alert">
@@ -266,7 +289,7 @@ const ContactPage = () => {
 
               <div className="mb-3">
                 <label htmlFor="phone" className="form-label fw-medium text-dark">
-                  Your Phone (Optional)
+                  Phone Number <span className="text-muted small">(Optional)</span>
                 </label>
                 <input
                   type="tel"
@@ -278,15 +301,29 @@ const ContactPage = () => {
                 />
               </div>
 
+              <div className="mb-3">
+                <label htmlFor="subject" className="form-label fw-medium text-dark">
+                  Subject
+                </label>
+                <input
+                  type="text"
+                  id="subject"
+                  className="form-control"
+                  placeholder="e.g. Service timings, Visiting inquiry, General question"
+                  value={formData.subject}
+                  onChange={handleChange}
+                />
+              </div>
+
               <div className="mb-4">
                 <label htmlFor="message" className="form-label fw-medium text-dark">
-                  Prayer Message <span className="text-danger">*</span>
+                  Message <span className="text-danger">*</span>
                 </label>
                 <textarea
                   className="form-control"
                   id="message"
                   rows="5"
-                  placeholder="Share your prayer need, petition, or thanksgiving..."
+                  placeholder="Write your message here..."
                   value={formData.message}
                   onChange={handleChange}
                   required
@@ -304,10 +341,12 @@ const ContactPage = () => {
                   {submitting ? (
                     <>
                       <span className="spinner-border spinner-border-sm me-2" role="status"></span>
-                      Sending...
+                      Sending Message...
                     </>
                   ) : (
-                    'Send Request'
+                    <>
+                      <i className="bi bi-send me-1"></i> Send Message
+                    </>
                   )}
                 </motion.button>
               </div>

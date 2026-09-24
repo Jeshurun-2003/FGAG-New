@@ -55,6 +55,15 @@ const AdminDashboardPage = () => {
           <Link to="/admin/events" className="btn btn-sm btn-outline-primary rounded-pill px-3 py-2 d-flex align-items-center gap-1 shadow-sm">
             <i className="bi bi-calendar-plus"></i> Add Event
           </Link>
+          <Link to="/admin/messages" className="btn btn-sm btn-outline-info rounded-pill px-3 py-2 d-flex align-items-center gap-1 shadow-sm">
+            <i className="bi bi-envelope"></i> Messages
+            {stats.pendingMessages > 0 && (
+              <span className="badge bg-warning text-dark rounded-pill ms-1">{stats.pendingMessages}</span>
+            )}
+          </Link>
+          <Link to="/admin/donations" className="btn btn-sm btn-outline-success rounded-pill px-3 py-2 d-flex align-items-center gap-1 shadow-sm">
+            <i className="bi bi-cash-coin"></i> Donations
+          </Link>
           <Link to="/admin/gallery" className="btn btn-sm btn-outline-secondary rounded-pill px-3 py-2 d-flex align-items-center gap-1 shadow-sm">
             <i className="bi bi-upload"></i> Upload Photo
           </Link>
@@ -63,7 +72,7 @@ const AdminDashboardPage = () => {
 
       {/* Metrics Row with Animated Counters */}
       <div className="row g-3 mb-4">
-        <div className="col-sm-6 col-lg-4 col-xl">
+        <div className="col-sm-6 col-md-4 col-xl">
           <motion.div
             className="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 border-start border-4 border-primary hover-lift"
             initial={{ opacity: 0, y: 15 }}
@@ -87,7 +96,7 @@ const AdminDashboardPage = () => {
           </motion.div>
         </div>
 
-        <div className="col-sm-6 col-lg-4 col-xl">
+        <div className="col-sm-6 col-md-4 col-xl">
           <motion.div
             className="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 border-start border-4 border-danger hover-lift"
             initial={{ opacity: 0, y: 15 }}
@@ -111,7 +120,7 @@ const AdminDashboardPage = () => {
           </motion.div>
         </div>
 
-        <div className="col-sm-6 col-lg-4 col-xl">
+        <div className="col-sm-6 col-md-4 col-xl">
           <motion.div
             className="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 border-start border-4 border-info hover-lift"
             initial={{ opacity: 0, y: 15 }}
@@ -135,7 +144,7 @@ const AdminDashboardPage = () => {
           </motion.div>
         </div>
 
-        <div className="col-sm-6 col-lg-6 col-xl">
+        <div className="col-sm-6 col-md-6 col-xl">
           <motion.div
             className="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 border-start border-4 border-success hover-lift"
             initial={{ opacity: 0, y: 15 }}
@@ -144,22 +153,29 @@ const AdminDashboardPage = () => {
           >
             <div className="d-flex justify-content-between align-items-center">
               <div>
-                <span className="text-muted small text-uppercase fw-semibold">Gallery Photos</span>
+                <span className="text-muted small text-uppercase fw-semibold">Contact Messages</span>
                 <h3 className="fw-bold mb-0 mt-1 text-dark display-6 fs-2">
-                  <AnimatedCounter to={stats.totalPhotos ?? 0} />
+                  <AnimatedCounter to={stats.totalMessages ?? 0} />
                 </h3>
               </div>
               <div className="bg-success-subtle text-success p-3 rounded-circle">
-                <i className="bi bi-images fs-4"></i>
+                <i className="bi bi-envelope fs-4"></i>
               </div>
             </div>
-            <Link to="/admin/gallery" className="stretched-link small text-decoration-none mt-3 d-inline-flex align-items-center gap-1 text-success fw-medium">
-              Manage photos <i className="bi bi-arrow-right"></i>
-            </Link>
+            <div className="d-flex justify-content-between align-items-center small mt-3">
+              <Link to="/admin/messages" className="text-decoration-none text-success fw-medium">
+                Manage messages <i className="bi bi-arrow-right"></i>
+              </Link>
+              {stats.pendingMessages > 0 && (
+                <span className="badge bg-warning-subtle text-warning-emphasis rounded-pill">
+                  {stats.pendingMessages} pending
+                </span>
+              )}
+            </div>
           </motion.div>
         </div>
 
-        <div className="col-sm-6 col-lg-6 col-xl">
+        <div className="col-sm-6 col-md-6 col-xl">
           <motion.div
             className="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 border-start border-4 border-warning hover-lift"
             initial={{ opacity: 0, y: 15 }}
@@ -168,13 +184,13 @@ const AdminDashboardPage = () => {
           >
             <div className="d-flex justify-content-between align-items-center">
               <div>
-                <span className="text-muted small text-uppercase fw-semibold">Pending Requests</span>
+                <span className="text-muted small text-uppercase fw-semibold">Pending Prayers</span>
                 <h3 className="fw-bold mb-0 mt-1 text-dark display-6 fs-2">
-                  <AnimatedCounter to={(stats.pendingPrayers ?? 0) + (stats.pendingVolunteers ?? 0)} />
+                  <AnimatedCounter to={stats.pendingPrayers ?? 0} />
                 </h3>
               </div>
               <div className="bg-warning-subtle text-warning p-3 rounded-circle">
-                <i className="bi bi-envelope-open fs-4"></i>
+                <i className="bi bi-chat-heart fs-4"></i>
               </div>
             </div>
             <div className="d-flex gap-2 small mt-3">

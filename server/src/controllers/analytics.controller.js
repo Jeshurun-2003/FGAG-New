@@ -9,10 +9,13 @@ const getDashboardStats = async (req, res, next) => {
         totalPhotos,
         totalPrayers,
         pendingPrayers,
+        totalMessages,
+        pendingMessages,
         totalVolunteers,
         pendingVolunteers,
         totalSermons,
         recentPrayers,
+        recentMessages,
         recentVolunteers
       ] = await Promise.all([
         prisma.event.count(),
@@ -20,10 +23,16 @@ const getDashboardStats = async (req, res, next) => {
         prisma.galleryImage.count(),
         prisma.prayerRequest.count(),
         prisma.prayerRequest.count({ where: { status: 'PENDING' } }),
+        prisma.contactMessage.count(),
+        prisma.contactMessage.count({ where: { status: 'PENDING' } }),
         prisma.volunteerSubmission.count(),
         prisma.volunteerSubmission.count({ where: { status: 'PENDING' } }),
         prisma.sermon.count(),
         prisma.prayerRequest.findMany({
+          take: 5,
+          orderBy: { createdAt: 'desc' }
+        }),
+        prisma.contactMessage.findMany({
           take: 5,
           orderBy: { createdAt: 'desc' }
         }),
@@ -51,11 +60,14 @@ const getDashboardStats = async (req, res, next) => {
           totalPhotos: totalPhotos || 31,
           totalPrayers,
           pendingPrayers,
+          totalMessages,
+          pendingMessages,
           totalVolunteers,
           pendingVolunteers,
           totalSermons: totalSermons || 0
         },
         recentPrayers,
+        recentMessages,
         recentVolunteers: formattedVolunteers
       });
     } catch (dbErr) {
@@ -70,11 +82,14 @@ const getDashboardStats = async (req, res, next) => {
         totalPhotos: 31,
         totalPrayers: 0,
         pendingPrayers: 0,
+        totalMessages: 0,
+        pendingMessages: 0,
         totalVolunteers: 0,
         pendingVolunteers: 0,
         totalSermons: 0
       },
       recentPrayers: [],
+      recentMessages: [],
       recentVolunteers: []
     });
   } catch (err) {

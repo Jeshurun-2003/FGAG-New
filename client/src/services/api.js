@@ -139,5 +139,38 @@ export const verseService = {
   deleteMonthly: (id) => api.delete(`/verses/monthly/${id}`)
 };
 
+// Contact Messages Service
+export const contactService = {
+  submit: (data) => api.post('/contact', data),
+  getAll: (params = {}) => {
+    const query = new URLSearchParams();
+    if (params.status && params.status !== 'ALL') query.append('status', params.status);
+    if (params.search) query.append('search', params.search);
+    const queryString = query.toString();
+    return api.get(`/contact${queryString ? `?${queryString}` : ''}`);
+  },
+  updateStatus: (id, status) => api.put(`/contact/${id}/status`, { status }),
+  delete: (id) => api.delete(`/contact/${id}`)
+};
+
+// Donations Service
+export const donationsService = {
+  getPurposes: (isAdmin = false) => api.get(`/donations/purposes${isAdmin ? '?admin=true' : ''}`),
+  createPurpose: (data) => api.post('/donations/purposes', data),
+  updatePurpose: (id, data) => api.put(`/donations/purposes/${id}`, data),
+  deletePurpose: (id) => api.delete(`/donations/purposes/${id}`),
+
+  getRecords: (params = {}) => {
+    const query = new URLSearchParams();
+    if (params.search) query.append('search', params.search);
+    const queryString = query.toString();
+    return api.get(`/donations/records${queryString ? `?${queryString}` : ''}`);
+  },
+  createRecord: (data) => api.post('/donations/records', data),
+  updateRecord: (id, data) => api.put(`/donations/records/${id}`, data),
+  deleteRecord: (id) => api.delete(`/donations/records/${id}`)
+};
+
 export default api;
+
 

@@ -49,6 +49,7 @@ const Navbar = () => {
     { to: '/ministries', label: 'Ministries' },
     { to: '/sermons', label: 'Sermons' },
     { to: '/gallery', label: 'Gallery' },
+    { to: '/prayer-request', label: 'Prayer Request' },
     { to: '/get-involved', label: 'Get Involved' },
     { to: '/contact', label: 'Contact Us' },
     { to: '/donate', label: 'Donate' }
@@ -58,14 +59,14 @@ const Navbar = () => {
     <>
       <header>
         <nav
-          className={`navbar navbar-expand-lg navbar-dark navbar-custom ${scrolled ? 'navbar-scrolled' : ''}`}
+          className={`navbar navbar-expand-custom navbar-dark navbar-custom ${scrolled ? 'navbar-scrolled' : ''}`}
           role="navigation"
           aria-label="Main navigation"
         >
           <div className="container">
-            <Link className="navbar-brand py-0 d-flex align-items-center gap-2" to="/" onClick={closeMenu}>
+            <Link className="navbar-brand py-0 d-flex align-items-center gap-2 text-nowrap" to="/" onClick={closeMenu}>
               <div className="d-flex align-items-center">
-                <Logo variant="light" size={scrolled ? 48 : 56} className="navbar-logo-img" />
+                <Logo variant="light" size={scrolled ? 54 : 66} className="navbar-logo-img" />
               </div>
               <div className="d-flex flex-column text-start">
                 <span className="navbar-brand-name">Friends Garden AG</span>
@@ -86,12 +87,12 @@ const Navbar = () => {
 
             {/* Desktop Navigation */}
             <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
-              <ul className="navbar-nav ms-lg-auto me-2 align-items-center">
+              <ul className="navbar-nav ms-auto align-items-center">
                 {navLinks.map((link) => (
                   <li className="nav-item" key={link.to}>
                     <NavLink
                       to={link.to}
-                      className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                      className={({ isActive }) => `nav-link text-nowrap ${isActive ? 'active' : ''}`}
                     >
                       {link.label}
                     </NavLink>

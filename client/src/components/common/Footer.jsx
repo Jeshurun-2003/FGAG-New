@@ -51,6 +51,7 @@ const Footer = ({ settings = {} }) => {
               <li><Link to="/about" className="footer-link">About Us</Link></li>
               <li><Link to="/events" className="footer-link">Events</Link></li>
               <li><Link to="/gallery" className="footer-link">Gallery</Link></li>
+              <li><Link to="/prayer-request" className="footer-link text-info fw-semibold"><i className="bi bi-chat-heart me-1"></i>Prayer Request</Link></li>
               <li><Link to="/get-involved" className="footer-link">Get Involved</Link></li>
               <li><Link to="/donate" className="footer-link">Donate / Giving</Link></li>
               <li><Link to="/contact" className="footer-link">Contact Us</Link></li>

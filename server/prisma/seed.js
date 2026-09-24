@@ -100,7 +100,7 @@ async function main() {
       title: 'Youth Ministry',
       description: 'Equipping and empowering the next generation to stand strong in Christ and impact the world with creativity and passion.',
       details: 'Our Youth Ministry is a vibrant and passionate community of young believers growing in faith and purpose. We equip and empower the next generation to stand strong in Christ and impact the world. Through worship, Bible study, mentoring, and outreach, youth are nurtured spiritually and socially. Join us as we pursue God’s calling with energy, creativity, and unity.',
-      imageUrl: '/images/Youth_ministry.jpeg',
+      imageUrl: '/images/ministries/youth-ministry.jpg',
       order: 1,
       isActive: true
     },
@@ -108,7 +108,7 @@ async function main() {
       title: 'Children Ministry',
       description: 'A joyful space where kids discover God’s love in fun and meaningful ways through songs, stories, and crafts.',
       details: 'Our Children’s Ministry is a joyful space where kids discover God’s love in fun and meaningful ways. We teach biblical values through songs, stories, crafts, and interactive lessons. Each child is nurtured in a safe, loving environment to grow in faith and character. We believe children are a gift from God and a vital part of His Kingdom.',
-      imageUrl: '/images/Children_minstry.jpeg',
+      imageUrl: '/images/ministries/children-ministry.jpg',
       order: 2,
       isActive: true
     },
@@ -116,7 +116,7 @@ async function main() {
       title: 'Outreach Ministry',
       description: 'Sharing God’s love beyond church walls by serving communities through acts of compassion and practical support.',
       details: 'Our Outreach Ministry is dedicated to sharing God’s love beyond the church walls. We serve communities through acts of compassion, prayer, and practical support. By reaching the unreached and uplifting the needy, we reflect the heart of Christ. Join us in being the hands and feet of Jesus to a world in need.',
-      imageUrl: '/images/Outreach_ministry.jpeg',
+      imageUrl: '/images/ministries/outreach-ministry.jpg',
       order: 3,
       isActive: true
     },
@@ -124,7 +124,7 @@ async function main() {
       title: 'Men’s Ministry',
       description: 'Empowering men to grow in faith, godly character, brotherhood, and leadership in their families and community.',
       details: 'Our Men’s Ministry empowers men to grow in faith, character, and leadership. We gather for fellowship, prayer, and teaching that strengthens spiritual foundations. Through accountability and brotherhood, men are equipped to lead their families and communities. Together, we pursue God’s purpose and become men after His own heart.',
-      imageUrl: "/images/Men's_ministry.jpeg",
+      imageUrl: '/images/ministries/mens-ministry.jpg',
       order: 4,
       isActive: true
     },
@@ -132,7 +132,7 @@ async function main() {
       title: 'Women’s Ministry',
       description: 'A nurturing community where women walk in grace, wisdom, discipleship, and spiritual sisterhood.',
       details: 'Our Women’s Ministry is a nurturing community where women grow in faith, strength, and purpose. We come together for prayer, fellowship, and encouragement rooted in God’s Word. Through discipleship and support, women are empowered to impact their homes and communities. Join us as we walk in grace, wisdom, and the beauty of God\'s calling for women.',
-      imageUrl: "/images/Women's_ministry.jpeg",
+      imageUrl: '/images/ministries/womens-ministry.jpg',
       order: 5,
       isActive: true
     },
@@ -140,7 +140,7 @@ async function main() {
       title: 'Volunteer Ministry',
       description: 'The heartbeat of church service, serving joyfully in choir, media, hospitality, and church maintenance.',
       details: 'Our Volunteer Ministry is the heartbeat of service within the church and beyond. We believe every act of service, big or small, makes a lasting impact for God’s Kingdom. Whether greeting newcomers, operating audiovisual tech, or serving during special gatherings, our volunteers shine the love of Christ.',
-      imageUrl: '/images/Volunteer_ministry.jpeg',
+      imageUrl: '/images/ministries/volunteer-ministry.jpg',
       order: 6,
       isActive: true
     }

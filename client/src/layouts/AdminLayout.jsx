@@ -28,7 +28,9 @@ const AdminLayout = () => {
     { to: '/admin/ministries', label: 'Ministries CRUD', icon: 'bi-people' },
     { to: '/admin/gallery', label: 'Gallery Upload & CMS', icon: 'bi-images' },
     { to: '/admin/prayers', label: 'Prayer Requests', icon: 'bi-chat-heart' },
+    { to: '/admin/messages', label: 'Messages', icon: 'bi-envelope' },
     { to: '/admin/volunteers', label: 'Volunteer Submissions', icon: 'bi-person-check' },
+    { to: '/admin/donations', label: 'Donations', icon: 'bi-cash-coin' },
     { to: '/admin/settings', label: 'Website Settings', icon: 'bi-gear' },
     { to: '/admin/profile', label: 'Profile & Password', icon: 'bi-shield-lock' }
   ];

@@ -30,16 +30,10 @@ const getEvents = async (req, res, next) => {
 // Get featured event
 const getFeaturedEvent = async (req, res, next) => {
   try {
-    let event = await prisma.event.findFirst({
+    const event = await prisma.event.findFirst({
       where: { isFeatured: true },
       orderBy: { createdAt: 'desc' }
     });
-
-    if (!event) {
-      event = await prisma.event.findFirst({
-        orderBy: { createdAt: 'desc' }
-      });
-    }
 
     res.json({
       success: true,

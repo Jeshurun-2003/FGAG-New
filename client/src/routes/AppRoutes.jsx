@@ -19,6 +19,7 @@ const SermonDetailPage = lazy(() => import('../pages/public/SermonDetailPage'));
 const GalleryPage = lazy(() => import('../pages/public/GalleryPage'));
 const GetInvolvedPage = lazy(() => import('../pages/public/GetInvolvedPage'));
 const ContactPage = lazy(() => import('../pages/public/ContactPage'));
+const PrayerRequestPage = lazy(() => import('../pages/public/PrayerRequestPage'));
 const DonatePage = lazy(() => import('../pages/public/DonatePage'));
 
 // Lazy-loaded Admin Pages
@@ -30,7 +31,9 @@ const AdminSermonsPage = lazy(() => import('../pages/admin/AdminSermonsPage'));
 const AdminMinistriesPage = lazy(() => import('../pages/admin/AdminMinistriesPage'));
 const AdminGalleryPage = lazy(() => import('../pages/admin/AdminGalleryPage'));
 const AdminPrayerPage = lazy(() => import('../pages/admin/AdminPrayerPage'));
+const AdminMessagesPage = lazy(() => import('../pages/admin/AdminMessagesPage'));
 const AdminVolunteersPage = lazy(() => import('../pages/admin/AdminVolunteersPage'));
+const AdminDonationsPage = lazy(() => import('../pages/admin/AdminDonationsPage'));
 const AdminPromiseVersesPage = lazy(() => import('../pages/admin/AdminPromiseVersesPage'));
 const AdminSettingsPage = lazy(() => import('../pages/admin/AdminSettingsPage'));
 const AdminProfilePage = lazy(() => import('../pages/admin/AdminProfilePage'));
@@ -52,6 +55,7 @@ const AppRoutes = () => {
             <Route path="/sermons/:id" element={<PageTransition><SermonDetailPage /></PageTransition>} />
             <Route path="/gallery" element={<PageTransition><GalleryPage /></PageTransition>} />
             <Route path="/get-involved" element={<PageTransition><GetInvolvedPage /></PageTransition>} />
+            <Route path="/prayer-request" element={<PageTransition><PrayerRequestPage /></PageTransition>} />
             <Route path="/contact" element={<PageTransition><ContactPage /></PageTransition>} />
             <Route path="/donate" element={<PageTransition><DonatePage /></PageTransition>} />
           </Route>
@@ -69,7 +73,9 @@ const AppRoutes = () => {
               <Route path="/admin/ministries" element={<PageTransition><AdminMinistriesPage /></PageTransition>} />
               <Route path="/admin/gallery" element={<PageTransition><AdminGalleryPage /></PageTransition>} />
               <Route path="/admin/prayers" element={<PageTransition><AdminPrayerPage /></PageTransition>} />
+              <Route path="/admin/messages" element={<PageTransition><AdminMessagesPage /></PageTransition>} />
               <Route path="/admin/volunteers" element={<PageTransition><AdminVolunteersPage /></PageTransition>} />
+              <Route path="/admin/donations" element={<PageTransition><AdminDonationsPage /></PageTransition>} />
               <Route path="/admin/promises" element={<PageTransition><AdminPromiseVersesPage /></PageTransition>} />
               <Route path="/admin/settings" element={<PageTransition><AdminSettingsPage /></PageTransition>} />
               <Route path="/admin/profile" element={<PageTransition><AdminProfilePage /></PageTransition>} />

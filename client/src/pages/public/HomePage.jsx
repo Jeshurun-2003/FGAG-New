@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import SEO from '../../components/common/SEO';
-import { sermonService, verseService } from '../../services/api';
+import { sermonService, verseService, eventsService } from '../../services/api';
 import Logo from '../../components/common/Logo';
 import WeeklySchedule from '../../components/common/WeeklySchedule';
+
+const PASTOR_SONG_URL = 'https://www.youtube.com/watch?v=RuFPYAPTdbQ';
 
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -68,12 +70,20 @@ const exploreLinks = [
     desc: 'Watch and listen to inspiring Sunday sermons and uplifting biblical teachings.'
   },
   {
+    to: '/prayer-request',
+    icon: 'bi-chat-heart-fill',
+    iconBg: 'rgba(235, 47, 150, 0.12)',
+    iconColor: '#eb2f96',
+    title: 'Prayer Request',
+    desc: 'Share your prayer needs with our pastoral intercession team for faithful prayer.'
+  },
+  {
     to: '/get-involved',
     icon: 'bi-heart-fill',
     iconBg: 'rgba(111, 66, 193, 0.1)',
     iconColor: '#6f42c1',
     title: 'Get Involved',
-    desc: 'Submit your prayer requests or volunteer your gifts to serve in God’s house.'
+    desc: 'Submit your volunteer interests to serve joyfully in various church ministries.'
   },
   {
     to: '/donate',
@@ -97,9 +107,29 @@ const HomePage = () => {
   const { settings = {} } = useOutletContext() || {};
   const [latestSermons, setLatestSermons] = useState([]);
   const [monthlyVerse, setMonthlyVerse] = useState(null);
+  const [featuredEvent, setFeaturedEvent] = useState(null);
+  const [loadingFeatured, setLoadingFeatured] = useState(true);
   const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
+    const fetchFeaturedEvent = async () => {
+      try {
+        setLoadingFeatured(true);
+        const res = await eventsService.getFeatured();
+        if (res.data && res.data.success && res.data.event && res.data.event.isFeatured) {
+          setFeaturedEvent(res.data.event);
+        } else {
+          setFeaturedEvent(null);
+        }
+      } catch (e) {
+        setFeaturedEvent(null);
+      } finally {
+        setLoadingFeatured(false);
+      }
+    };
+
+    fetchFeaturedEvent();
+
     const fetchLatestSermons = async () => {
       try {
         const res = await sermonService.getAll({ limit: 3 });
@@ -157,6 +187,29 @@ const HomePage = () => {
   const appPlaystore = settings.app_playstore_url || 'https://play.google.com/store/apps/details?id=com.gnanadurai.uvamaigal';
   const appImg = settings.app_image || '/images/uvamaigal.jpg';
 
+  const pastorSongUrl = PASTOR_SONG_URL;
+
+  const handleShareWhatsApp = (event) => {
+    if (!event) return;
+    const shareUrl = window.location.origin + '/events';
+    const text = encodeURIComponent(
+      `⛪ *${event.title}*\n📍 ${event.location || 'Friends Garden AG Church, Kollidam'}\n🕒 ${event.time || ''}\n\nJoin us! More info: ${shareUrl}`
+    );
+    window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+  };
+
+  const formatEventDate = (dateStr) => {
+    if (!dateStr) return null;
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    return d.toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
+
   return (
     <div>
       <SEO
@@ -168,8 +221,8 @@ const HomePage = () => {
       <section
         className="position-relative d-flex align-items-center justify-content-center text-center text-white overflow-hidden"
         style={{
-          minHeight: '92vh',
-          padding: '130px 20px 90px'
+          minHeight: '88vh',
+          padding: 'clamp(36px, 5vw, 64px) 20px 70px'
         }}
         aria-label="Welcome banner"
       >
@@ -338,6 +391,164 @@ const HomePage = () => {
           <i className="bi bi-chevron-down fs-5 text-info" style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.8))' }}></i>
         </motion.div>
       </section>
+
+      {/* Featured Event Spotlight Section (TASK 1) */}
+      {loadingFeatured ? (
+        <section className="py-4" style={{ backgroundColor: '#07253D' }} aria-label="Loading featured event">
+          <div className="container py-2">
+            <div className="card border-0 rounded-4 overflow-hidden p-4 shadow-lg" style={{ background: '#0A3D62' }}>
+              <div className="row g-4 align-items-center">
+                <div className="col-12 col-lg-5">
+                  <div className="skeleton-box rounded-4" style={{ height: '260px', backgroundColor: 'rgba(56, 161, 219, 0.15)' }} />
+                </div>
+                <div className="col-12 col-lg-7">
+                  <div className="skeleton-box rounded-pill w-25 mb-3" style={{ height: '24px', backgroundColor: 'rgba(56, 161, 219, 0.25)' }} />
+                  <div className="skeleton-box rounded-3 w-75 mb-3" style={{ height: '36px', backgroundColor: 'rgba(255, 255, 255, 0.2)' }} />
+                  <div className="skeleton-box rounded-2 w-100 mb-2" style={{ height: '16px', backgroundColor: 'rgba(255, 255, 255, 0.15)' }} />
+                  <div className="skeleton-box rounded-2 w-50 mb-4" style={{ height: '16px', backgroundColor: 'rgba(255, 255, 255, 0.15)' }} />
+                  <div className="skeleton-box rounded-pill w-25" style={{ height: '40px', backgroundColor: 'rgba(56, 161, 219, 0.3)' }} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      ) : featuredEvent && featuredEvent.isFeatured ? (
+        <section className="py-5" style={{ background: 'linear-gradient(180deg, #07253D 0%, #0A3D62 100%)' }} aria-label="Featured church event">
+          <div className="container">
+            <motion.div
+              className="card border-0 shadow-lg rounded-4 overflow-hidden hover-lift"
+              style={{
+                background: 'linear-gradient(135deg, #0A3D62 0%, #062238 100%)',
+                border: '1.5px solid rgba(56, 161, 219, 0.35)',
+                color: '#FFFFFF'
+              }}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-40px' }}
+              variants={fadeInUp}
+            >
+              <div className="row g-0 align-items-stretch">
+                {/* Event Poster Column */}
+                <div className="col-12 col-lg-5 position-relative overflow-hidden" style={{ minHeight: '320px', backgroundColor: '#07253D' }}>
+                  <img
+                    src={featuredEvent.imageUrl || '/images/Sunday_service.png'}
+                    alt={featuredEvent.title}
+                    className="w-100 h-100 position-absolute top-0 start-0"
+                    style={{ objectFit: 'cover', objectPosition: 'center' }}
+                    loading="lazy"
+                    onError={(e) => {
+                      e.currentTarget.src = '/images/Sunday_service.png';
+                    }}
+                  />
+                  <div
+                    className="position-absolute top-0 start-0 w-100 h-100"
+                    style={{ background: 'linear-gradient(to right, rgba(10, 61, 98, 0.3) 0%, rgba(6, 34, 56, 0.72) 100%)' }}
+                  />
+                  <div className="position-absolute top-0 start-0 m-3 m-md-4">
+                    <span
+                      className="badge px-3 py-2 rounded-pill text-uppercase fw-bold shadow-sm d-inline-flex align-items-center gap-1"
+                      style={{ backgroundColor: '#F39C12', color: '#FFFFFF', letterSpacing: '0.06em', fontSize: '0.78rem' }}
+                    >
+                      <i className="bi bi-star-fill text-white"></i> Spotlight Event
+                    </span>
+                  </div>
+                </div>
+
+                {/* Event Details Content Column */}
+                <div className="col-12 col-lg-7 p-4 p-md-5 d-flex flex-column justify-content-between">
+                  <div>
+                    {featuredEvent.date && (
+                      <div className="mb-3">
+                        <span
+                          className="badge px-3 py-2 rounded-pill d-inline-flex align-items-center gap-2 fw-semibold"
+                          style={{
+                            backgroundColor: 'rgba(56, 161, 219, 0.18)',
+                            color: '#38A1DB',
+                            border: '1px solid rgba(56, 161, 219, 0.45)',
+                            fontSize: '0.88rem'
+                          }}
+                        >
+                          <i className="bi bi-calendar3"></i>
+                          <span>{formatEventDate(featuredEvent.date)}</span>
+                        </span>
+                      </div>
+                    )}
+
+                    <h2
+                      className="fw-bold mb-3 text-white"
+                      style={{
+                        fontFamily: "'Playfair Display', serif",
+                        fontSize: 'clamp(1.5rem, 2.6vw, 2.25rem)',
+                        lineHeight: '1.25'
+                      }}
+                    >
+                      {featuredEvent.title}
+                    </h2>
+
+                    {featuredEvent.summary && (
+                      <p
+                        className="text-light opacity-90 mb-4"
+                        style={{ fontSize: '1.05rem', lineHeight: '1.75', fontFamily: "'Lora', serif" }}
+                      >
+                        {featuredEvent.summary}
+                      </p>
+                    )}
+
+                    <div className="row g-2 mb-4">
+                      {featuredEvent.time && (
+                        <div className="col-12 col-sm-6">
+                          <div className="p-2 px-3 rounded-3 d-flex align-items-center gap-2" style={{ backgroundColor: 'rgba(255, 255, 255, 0.08)' }}>
+                            <i className="bi bi-clock-fill text-info fs-5"></i>
+                            <div>
+                              <div className="text-light opacity-75 small text-uppercase" style={{ fontSize: '0.68rem', letterSpacing: '0.05em' }}>Time</div>
+                              <div className="fw-semibold text-white small">{featuredEvent.time}</div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {featuredEvent.location && (
+                        <div className="col-12 col-sm-6">
+                          <div className="p-2 px-3 rounded-3 d-flex align-items-center gap-2" style={{ backgroundColor: 'rgba(255, 255, 255, 0.08)' }}>
+                            <i className="bi bi-geo-alt-fill text-danger fs-5"></i>
+                            <div>
+                              <div className="text-light opacity-75 small text-uppercase" style={{ fontSize: '0.68rem', letterSpacing: '0.05em' }}>Location</div>
+                              <div className="fw-semibold text-white small text-truncate">{featuredEvent.location}</div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="d-flex flex-wrap align-items-center gap-3 pt-3 border-top border-white border-opacity-15">
+                    <Link
+                      to="/events"
+                      className="btn rounded-pill px-4 py-2 fw-semibold d-inline-flex align-items-center gap-2 shadow-sm text-white"
+                      style={{ backgroundColor: '#38A1DB', border: '1px solid #38A1DB' }}
+                    >
+                      <i className="bi bi-calendar-event"></i>
+                      <span>View All Events</span>
+                    </Link>
+
+                    <button
+                      type="button"
+                      onClick={() => handleShareWhatsApp(featuredEvent)}
+                      className="btn btn-outline-light rounded-pill px-3 py-2 fw-semibold d-inline-flex align-items-center gap-2"
+                      style={{ borderColor: 'rgba(255, 255, 255, 0.45)' }}
+                      title="Share event on WhatsApp"
+                    >
+                      <i className="bi bi-whatsapp text-success fs-5"></i>
+                      <span>Share on WhatsApp</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      ) : null}
 
       {/* Welcome Section */}
       <section className="py-5 bg-light">
@@ -701,6 +912,120 @@ const HomePage = () => {
           </div>
         </section>
       )}
+
+      {/* Pastor's YouTube Song Section (TASK 3) */}
+      <section className="py-5" style={{ backgroundColor: 'var(--fgag-surface, #F8F9FA)' }} aria-label="Pastor's Gospel Song">
+        <div className="container py-3">
+          <motion.div
+            className="text-center mb-4"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-40px' }}
+            variants={fadeInUp}
+          >
+            <span className="section-eyebrow">Worship & Melody</span>
+            <h2 className="heading_1 display-6 fw-bold mb-2">
+              Listen to Our Pastor's Song
+            </h2>
+            <div className="section-divider">
+              <i className="bi bi-music-note-beamed section-divider-icon text-primary"></i>
+            </div>
+            <p className="text-muted mx-auto mb-0" style={{ maxWidth: '640px' }}>
+              Experience the divine presence through this heartfelt Gospel song written, composed, and rendered by Pastor Amal M. Augustine.
+            </p>
+          </motion.div>
+
+          <motion.div
+            className="row justify-content-center"
+            initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <div className="col-12 col-md-10 col-lg-8">
+              <motion.a
+                href={pastorSongUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="d-block text-decoration-none card border-0 shadow-lg rounded-4 overflow-hidden position-relative"
+                style={{
+                  transition: 'box-shadow 0.35s ease',
+                  cursor: 'pointer',
+                  border: '1.5px solid rgba(56, 161, 219, 0.25)'
+                }}
+                whileHover={shouldReduceMotion ? {} : { y: -4, boxShadow: '0 20px 40px rgba(10, 61, 98, 0.22)' }}
+              >
+                <div
+                  className="position-relative w-100 overflow-hidden"
+                  style={{ aspectRatio: '16 / 9', backgroundColor: '#07253D' }}
+                >
+                  <motion.img
+                    src="https://img.youtube.com/vi/RuFPYAPTdbQ/maxresdefault.jpg"
+                    alt="Listen to Our Pastor's Song - YouTube"
+                    className="w-100 h-100"
+                    style={{ objectFit: 'cover' }}
+                    loading="lazy"
+                    whileHover={shouldReduceMotion ? {} : { scale: 1.04 }}
+                    transition={{ duration: 0.4 }}
+                    onError={(e) => {
+                      e.currentTarget.src = 'https://img.youtube.com/vi/RuFPYAPTdbQ/hqdefault.jpg';
+                    }}
+                  />
+
+                  {/* Gradient Shadow Overlay */}
+                  <div
+                    className="position-absolute top-0 start-0 w-100 h-100"
+                    style={{
+                      background: 'radial-gradient(circle at center, rgba(0, 0, 0, 0.1) 0%, rgba(7, 37, 61, 0.55) 100%)',
+                      pointerEvents: 'none'
+                    }}
+                  />
+
+                  {/* Centered Red YouTube-style Play Button Overlay */}
+                  <div
+                    className="position-absolute top-50 start-50 translate-middle d-flex align-items-center justify-content-center"
+                    style={{ pointerEvents: 'none' }}
+                  >
+                    <motion.div
+                      className="d-flex align-items-center justify-content-center rounded-4 shadow-lg"
+                      style={{
+                        width: '84px',
+                        height: '58px',
+                        backgroundColor: '#FF0000',
+                        color: '#FFFFFF'
+                      }}
+                      whileHover={shouldReduceMotion ? {} : { scale: 1.12 }}
+                      transition={{ duration: 0.2 }}
+                      aria-label="Play on YouTube"
+                    >
+                      <i className="bi bi-play-fill" style={{ fontSize: '2.5rem', marginLeft: '4px' }}></i>
+                    </motion.div>
+                  </div>
+
+                  {/* Bottom Video Info Ribbon */}
+                  <div
+                    className="position-absolute bottom-0 start-0 w-100 p-3 p-md-4 d-flex justify-content-between align-items-end"
+                    style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.82) 0%, transparent 100%)' }}
+                  >
+                    <div className="text-white text-start">
+                      <span className="badge bg-danger px-3 py-1 rounded-pill small fw-semibold text-uppercase mb-2 d-inline-flex align-items-center gap-1">
+                        <i className="bi bi-youtube"></i> Watch on YouTube
+                      </span>
+                      <h4 className="fw-bold mb-0 text-white" style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(1.1rem, 2vw, 1.45rem)' }}>
+                        Pastor Amal M. Augustine Song
+                      </h4>
+                    </div>
+                    <span className="btn btn-sm btn-outline-light rounded-pill px-3 py-1 d-none d-sm-inline-flex align-items-center gap-1">
+                      <span>Watch</span>
+                      <i className="bi bi-box-arrow-up-right small"></i>
+                    </span>
+                  </div>
+                </div>
+              </motion.a>
+            </div>
+          </motion.div>
+        </div>
+      </section>
 
       {/* Uvamaigal App Section */}
       <section className="py-5 bg-white">

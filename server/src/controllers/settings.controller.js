@@ -47,6 +47,10 @@ const defaultSettings = {
   donate_account_name: 'ASSEMBLY OF GOD KOLLIDAM',
   donate_account_number: '0796053000004801',
   donate_ifsc: 'SIBL0000796',
+  donate_bank_name: 'South Indian Bank',
+  donate_branch: 'Kollidam Branch',
+  donate_upi_id: 'kollidamag@upi',
+  donate_qr_code: '',
   donate_micr: '609059002',
   donate_swift: 'SOININ55XXX'
 };
