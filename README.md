@@ -9,7 +9,7 @@ A production-ready, full-stack website and content management system for **Frien
 ```text
 FGAG-Church/
 ├── client/                     # React 18 + Vite + Bootstrap 5 Frontend (Cloudflare Pages)
-│   ├── public/                 # Static branding assets, images & _redirects routing
+│   ├── public/                 # Static branding assets, images/, Gallery_images/ & _redirects
 │   ├── src/
 │   │   ├── components/
 │   │   │   ├── common/         # Navbar, Footer, LoadingSpinner, LightboxModal, SEO,
@@ -45,9 +45,6 @@ FGAG-Church/
 │   │   └── server.js           # HTTP server entry point
 │   ├── .env.example
 │   └── package.json
-│
-├── images/                     # Static high-res church photography served by server
-├── Gallery_images/             # Categorized gallery photos
 └── README.md
 ```
 

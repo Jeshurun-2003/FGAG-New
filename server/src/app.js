@@ -55,9 +55,9 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-// Serve legacy image assets if requested directly through backend
-app.use('/images', express.static(path.join(__dirname, '../../images')));
-app.use('/Gallery_images', express.static(path.join(__dirname, '../../Gallery_images')));
+// Serve image assets if requested directly through backend
+app.use('/images', express.static(path.join(__dirname, '../../client/public/images')));
+app.use('/Gallery_images', express.static(path.join(__dirname, '../../client/public/Gallery_images')));
 
 // Health Check Endpoint
 app.get('/api/health', (req, res) => {
