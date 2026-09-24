@@ -22,6 +22,7 @@ const AdminLayout = () => {
     { to: '/admin', end: true, label: 'Dashboard', icon: 'bi-speedometer2' },
     { to: '/admin/hero-about', label: 'Hero & About CMS', icon: 'bi-pencil-square' },
     { to: '/admin/events', label: 'Events CRUD', icon: 'bi-calendar-event' },
+    { to: '/admin/sermons', label: 'Sermons / Media', icon: 'bi-play-btn' },
     { to: '/admin/ministries', label: 'Ministries CRUD', icon: 'bi-people' },
     { to: '/admin/gallery', label: 'Gallery Upload & CMS', icon: 'bi-images' },
     { to: '/admin/prayers', label: 'Prayer Requests', icon: 'bi-chat-heart' },
@@ -69,7 +70,7 @@ const AdminLayout = () => {
       <aside className={`admin-sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-heading d-flex align-items-center justify-content-between px-3 py-3">
           <div className="d-flex align-items-center gap-2">
-            <img src="/images/Church_logo.png" alt="FGAG Logo" height="42" />
+            <img src="/images/Church_logo.png" alt="FGAG Logo" height="40" style={{ objectFit: 'contain' }} />
             <div>
               <span className="fw-bold d-block text-white" style={{ fontSize: '1.05rem' }}>FGAG Church</span>
               <span className="text-info small" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>ADMIN PORTAL</span>

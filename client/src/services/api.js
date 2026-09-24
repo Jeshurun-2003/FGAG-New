@@ -106,4 +106,29 @@ export const analyticsService = {
   getDashboardStats: () => api.get('/analytics/dashboard')
 };
 
+// Sermon / Media Service
+export const sermonService = {
+  getAll: (params = {}) => {
+    const query = new URLSearchParams();
+    if (params.category && params.category !== 'All') query.append('category', params.category);
+    if (params.search) query.append('search', params.search);
+    if (params.page) query.append('page', params.page);
+    if (params.limit) query.append('limit', params.limit);
+    if (params.all) query.append('all', 'true');
+    const queryString = query.toString();
+    return api.get(`/sermons${queryString ? `?${queryString}` : ''}`);
+  },
+  getById: (id) => api.get(`/sermons/${id}`),
+  create: (formData) => {
+    const isFormData = formData instanceof FormData;
+    return api.post('/sermons', formData, isFormData ? { headers: { 'Content-Type': 'multipart/form-data' } } : undefined);
+  },
+  update: (id, formData) => {
+    const isFormData = formData instanceof FormData;
+    return api.put(`/sermons/${id}`, formData, isFormData ? { headers: { 'Content-Type': 'multipart/form-data' } } : undefined);
+  },
+  delete: (id) => api.delete(`/sermons/${id}`)
+};
+
 export default api;
+

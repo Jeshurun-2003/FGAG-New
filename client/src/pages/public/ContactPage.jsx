@@ -59,6 +59,15 @@ const ContactPage = () => {
     }
   };
 
+  const [copiedField, setCopiedField] = useState(null);
+
+  const copyContact = (text, field) => {
+    navigator.clipboard.writeText(text);
+    setCopiedField(field);
+    addToast(`${field} copied to clipboard!`, 'info');
+    setTimeout(() => setCopiedField(null), 2000);
+  };
+
   return (
     <div className="container my-5 pt-3">
       <SEO
@@ -74,6 +83,7 @@ const ContactPage = () => {
         transition={{ duration: 0.5 }}
       >
         <div className="text-center mb-4">
+          <span className="section-eyebrow">Visit & Connect</span>
           <h1 className="heading_2 display-6 fw-bold mb-2">Find Us on the Map</h1>
           <div className="section-divider">
             <i className="bi bi-diamond-fill section-divider-icon"></i>
@@ -114,27 +124,48 @@ const ContactPage = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
+          <span className="section-eyebrow mb-2">Reach Out</span>
           <h2 className="heading fw-bold display-6 mb-4">Get in Touch</h2>
 
           <div className="card border-0 shadow-sm rounded-4 p-4 mb-3 bg-white border-start border-4 border-primary hover-lift">
             <div className="d-flex align-items-start gap-3">
-              <div className="p-3 rounded-circle bg-primary-subtle text-primary">
+              <div className="p-3 rounded-circle bg-primary-subtle text-primary flex-shrink-0">
                 <i className="bi bi-geo-alt-fill fs-4"></i>
               </div>
-              <div>
-                <strong className="heading d-block mb-1 fs-5">Address:</strong>
-                <span className="paragraph text-secondary">{address}</span>
+              <div className="flex-grow-1">
+                <div className="d-flex justify-content-between align-items-center mb-1">
+                  <strong className="heading fs-5">Address:</strong>
+                  <button
+                    className="btn btn-sm btn-outline-secondary rounded-pill py-0 px-2"
+                    onClick={() => copyContact(address, 'Address')}
+                    title="Copy address"
+                  >
+                    <i className={`bi ${copiedField === 'Address' ? 'bi-check2 text-success' : 'bi-clipboard'} me-1`}></i>
+                    <span className="small">{copiedField === 'Address' ? 'Copied' : 'Copy'}</span>
+                  </button>
+                </div>
+                <span className="paragraph text-secondary small">{address}</span>
               </div>
             </div>
           </div>
 
           <div className="card border-0 shadow-sm rounded-4 p-4 mb-3 bg-white border-start border-4 border-primary hover-lift">
             <div className="d-flex align-items-center gap-3">
-              <div className="p-3 rounded-circle bg-primary-subtle text-primary">
+              <div className="p-3 rounded-circle bg-primary-subtle text-primary flex-shrink-0">
                 <i className="bi bi-envelope-fill fs-4"></i>
               </div>
-              <div>
-                <strong className="heading d-block mb-1 fs-5">Email:</strong>
+              <div className="flex-grow-1">
+                <div className="d-flex justify-content-between align-items-center mb-1">
+                  <strong className="heading fs-5">Email:</strong>
+                  <button
+                    className="btn btn-sm btn-outline-secondary rounded-pill py-0 px-2"
+                    onClick={() => copyContact(email, 'Email')}
+                    title="Copy email"
+                  >
+                    <i className={`bi ${copiedField === 'Email' ? 'bi-check2 text-success' : 'bi-clipboard'} me-1`}></i>
+                    <span className="small">{copiedField === 'Email' ? 'Copied' : 'Copy'}</span>
+                  </button>
+                </div>
                 <a href={`mailto:${email}`} className="text-secondary text-decoration-none paragraph">
                   {email}
                 </a>
@@ -144,11 +175,21 @@ const ContactPage = () => {
 
           <div className="card border-0 shadow-sm rounded-4 p-4 mb-3 bg-white border-start border-4 border-primary hover-lift">
             <div className="d-flex align-items-center gap-3">
-              <div className="p-3 rounded-circle bg-primary-subtle text-primary">
+              <div className="p-3 rounded-circle bg-primary-subtle text-primary flex-shrink-0">
                 <i className="bi bi-telephone-fill fs-4"></i>
               </div>
-              <div>
-                <strong className="heading d-block mb-1 fs-5">Phone:</strong>
+              <div className="flex-grow-1">
+                <div className="d-flex justify-content-between align-items-center mb-1">
+                  <strong className="heading fs-5">Phone:</strong>
+                  <button
+                    className="btn btn-sm btn-outline-secondary rounded-pill py-0 px-2"
+                    onClick={() => copyContact(phone, 'Phone')}
+                    title="Copy phone"
+                  >
+                    <i className={`bi ${copiedField === 'Phone' ? 'bi-check2 text-success' : 'bi-clipboard'} me-1`}></i>
+                    <span className="small">{copiedField === 'Phone' ? 'Copied' : 'Copy'}</span>
+                  </button>
+                </div>
                 <a href={`tel:${phone.replace(/\s+/g, '')}`} className="text-secondary text-decoration-none paragraph">
                   {phone}
                 </a>
@@ -158,7 +199,7 @@ const ContactPage = () => {
 
           <div className="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white border-start border-4 border-primary hover-lift">
             <div className="d-flex align-items-center gap-3">
-              <div className="p-3 rounded-circle bg-primary-subtle text-primary">
+              <div className="p-3 rounded-circle bg-primary-subtle text-primary flex-shrink-0">
                 <i className="bi bi-clock-fill fs-4"></i>
               </div>
               <div>

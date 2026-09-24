@@ -48,11 +48,14 @@ const AdminDashboardPage = () => {
           <h2 className="heading fw-bold mb-1">Church CMS Overview</h2>
           <p className="text-muted small mb-0">Real-time metrics and website management shortcuts</p>
         </div>
-        <div className="d-flex gap-2">
-          <Link to="/admin/events" className="btn btn-sm btn-primary rounded-pill px-3 py-2 d-flex align-items-center gap-1 shadow-sm">
-            <i className="bi bi-plus-circle"></i> Add Event
+        <div className="d-flex gap-2 flex-wrap">
+          <Link to="/admin/sermons" className="btn btn-sm btn-primary rounded-pill px-3 py-2 d-flex align-items-center gap-1 shadow-sm">
+            <i className="bi bi-play-circle"></i> Add Sermon
           </Link>
-          <Link to="/admin/gallery" className="btn btn-sm btn-outline-primary rounded-pill px-3 py-2 d-flex align-items-center gap-1 shadow-sm">
+          <Link to="/admin/events" className="btn btn-sm btn-outline-primary rounded-pill px-3 py-2 d-flex align-items-center gap-1 shadow-sm">
+            <i className="bi bi-calendar-plus"></i> Add Event
+          </Link>
+          <Link to="/admin/gallery" className="btn btn-sm btn-outline-secondary rounded-pill px-3 py-2 d-flex align-items-center gap-1 shadow-sm">
             <i className="bi bi-upload"></i> Upload Photo
           </Link>
         </div>
@@ -60,7 +63,7 @@ const AdminDashboardPage = () => {
 
       {/* Metrics Row with Animated Counters */}
       <div className="row g-3 mb-4">
-        <div className="col-sm-6 col-xl-3">
+        <div className="col-sm-6 col-lg-4 col-xl">
           <motion.div
             className="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 border-start border-4 border-primary hover-lift"
             initial={{ opacity: 0, y: 15 }}
@@ -84,12 +87,36 @@ const AdminDashboardPage = () => {
           </motion.div>
         </div>
 
-        <div className="col-sm-6 col-xl-3">
+        <div className="col-sm-6 col-lg-4 col-xl">
+          <motion.div
+            className="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 border-start border-4 border-danger hover-lift"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.05 }}
+          >
+            <div className="d-flex justify-content-between align-items-center">
+              <div>
+                <span className="text-muted small text-uppercase fw-semibold">Sermons & Media</span>
+                <h3 className="fw-bold mb-0 mt-1 text-dark display-6 fs-2">
+                  <AnimatedCounter to={stats.totalSermons ?? 0} />
+                </h3>
+              </div>
+              <div className="bg-danger-subtle text-danger p-3 rounded-circle">
+                <i className="bi bi-play-btn fs-4"></i>
+              </div>
+            </div>
+            <Link to="/admin/sermons" className="stretched-link small text-decoration-none mt-3 d-inline-flex align-items-center gap-1 text-danger fw-medium">
+              Manage sermons <i className="bi bi-arrow-right"></i>
+            </Link>
+          </motion.div>
+        </div>
+
+        <div className="col-sm-6 col-lg-4 col-xl">
           <motion.div
             className="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 border-start border-4 border-info hover-lift"
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.05 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
           >
             <div className="d-flex justify-content-between align-items-center">
               <div>
@@ -108,12 +135,12 @@ const AdminDashboardPage = () => {
           </motion.div>
         </div>
 
-        <div className="col-sm-6 col-xl-3">
+        <div className="col-sm-6 col-lg-6 col-xl">
           <motion.div
             className="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 border-start border-4 border-success hover-lift"
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.1 }}
+            transition={{ duration: 0.3, delay: 0.15 }}
           >
             <div className="d-flex justify-content-between align-items-center">
               <div>
@@ -132,12 +159,12 @@ const AdminDashboardPage = () => {
           </motion.div>
         </div>
 
-        <div className="col-sm-6 col-xl-3">
+        <div className="col-sm-6 col-lg-6 col-xl">
           <motion.div
             className="card border-0 shadow-sm rounded-4 p-3 bg-white h-100 border-start border-4 border-warning hover-lift"
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.15 }}
+            transition={{ duration: 0.3, delay: 0.2 }}
           >
             <div className="d-flex justify-content-between align-items-center">
               <div>

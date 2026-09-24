@@ -139,19 +139,72 @@ h1, h2, h3, h4, h5, h6,
   border-bottom: 1px solid rgba(56, 161, 219, 0.2);
 }
 
-.navbar-custom .navbar-brand img {
-  height: 76px;
-  max-width: 220px;
+}
+
+/* Navbar Logo Badge & Brand */
+.navbar-logo-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 12px;
+  padding: 4px 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  transition: all var(--transition-base);
+}
+
+.navbar-logo-badge:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(56, 161, 219, 0.4);
+}
+
+.navbar-logo-img {
+  height: 60px; /* Desktop: 56-64px */
+  max-width: 130px;
   object-fit: contain;
-  transition: transform var(--transition-base), filter var(--transition-base);
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+  transition: height var(--transition-base), transform var(--transition-base);
 }
 
-.navbar-custom.navbar-scrolled .navbar-brand img {
-  height: 64px;
+.navbar-custom.navbar-scrolled .navbar-logo-img {
+  height: 48px; /* Scrolled: ~48px */
 }
 
-.navbar-custom .navbar-brand:hover img {
-  transform: scale(1.03);
+.navbar-brand-name {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  display: block;
+  line-height: 1.15;
+}
+
+.navbar-brand-sub {
+  font-family: var(--font-serif);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--primary-blue);
+  font-weight: 600;
+  display: block;
+}
+
+@media (max-width: 767.98px) {
+  .navbar-logo-img {
+    height: 46px; /* Mobile: 44-48px */
+  }
+  .navbar-brand-name {
+    font-size: 0.96rem;
+  }
+  .navbar-brand-sub {
+    font-size: 0.65rem;
+  }
+}
+
+.navbar-custom .navbar-brand:hover .navbar-logo-img {
+  transform: scale(1.04);
 }
 
 /* Nav Links with Animated Active Indicator */
@@ -491,19 +544,26 @@ h1, h2, h3, h4, h5, h6,
 .footer-custom {
   background: linear-gradient(180deg, var(--primary-navy) 0%, var(--primary-navy-dark) 100%);
   color: #f8f9fa;
-  padding: 60px 0 30px;
+  padding: 70px 0 30px;
   border-top: 3px solid var(--primary-blue);
 }
 
-.footer-custom a {
-  color: #c5dced;
-  text-decoration: none;
-  transition: color var(--transition-fast), transform var(--transition-fast);
+.footer-heading {
+  font-family: var(--font-heading);
+  letter-spacing: 0.02em;
+  font-size: 1.15rem;
 }
 
-.footer-custom a:hover {
-  color: #ffffff;
-  transform: translateY(-1px);
+.footer-link {
+  color: #c5dced !important;
+  text-decoration: none;
+  transition: color var(--transition-fast), transform var(--transition-fast);
+  display: inline-block;
+}
+
+.footer-link:hover {
+  color: #ffffff !important;
+  transform: translateX(3px);
 }
 
 .social-pill-btn {
@@ -514,10 +574,11 @@ h1, h2, h3, h4, h5, h6,
   border: 1px solid rgba(255, 255, 255, 0.14);
   padding: 8px 18px;
   border-radius: 50px;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   font-weight: 500;
   color: #e9f1f7 !important;
   transition: all var(--transition-fast);
+  text-decoration: none;
 }
 
 .social-pill-btn:hover {
@@ -527,6 +588,243 @@ h1, h2, h3, h4, h5, h6,
   transform: translateY(-2px);
   box-shadow: 0 4px 14px rgba(56, 161, 219, 0.4);
 }
+
+/* ===================================================
+   Section Alternates & Eyebrows (Task 2)
+=================================================== */
+.section-padding {
+  padding: 85px 0;
+}
+
+@media (max-width: 767.98px) {
+  .section-padding {
+    padding: 52px 0;
+  }
+}
+
+.section-ice {
+  background-color: var(--section-bg);
+}
+
+.section-light {
+  background-color: #ffffff;
+}
+
+.section-eyebrow {
+  display: inline-block;
+  font-family: var(--font-serif);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--primary-navy);
+  background: rgba(56, 161, 219, 0.14);
+  padding: 5px 16px;
+  border-radius: 50px;
+  margin-bottom: 0.85rem;
+  border: 1px solid rgba(56, 161, 219, 0.25);
+}
+
+/* Aspect ratio helpers for cards */
+.card-img-16-10 {
+  aspect-ratio: 16 / 10;
+  width: 100%;
+  object-fit: cover;
+}
+
+.card-img-4-3 {
+  aspect-ratio: 4 / 3;
+  width: 100%;
+  object-fit: cover;
+}
+
+/* Event cards */
+.event-card {
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(10, 61, 98, 0.08);
+  overflow: hidden;
+  background-color: #ffffff;
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+}
+
+.event-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-hover);
+  border-color: rgba(56, 161, 219, 0.3);
+}
+
+.event-date-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: rgba(10, 61, 98, 0.92);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  border-radius: 12px;
+  padding: 8px 12px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 2;
+  min-width: 58px;
+}
+
+.event-date-badge .badge-month {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--primary-blue);
+  display: block;
+  line-height: 1;
+}
+
+.event-date-badge .badge-day {
+  font-size: 1.35rem;
+  font-weight: 800;
+  font-family: var(--font-heading);
+  line-height: 1.1;
+  display: block;
+}
+
+.featured-ribbon {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 50px;
+  box-shadow: 0 3px 10px rgba(217, 119, 6, 0.35);
+  z-index: 2;
+}
+
+/* ===================================================
+   Sermons & Media Module Styles (Task 4)
+=================================================== */
+.sermon-card {
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(10, 61, 98, 0.08);
+  background-color: #ffffff;
+  overflow: hidden;
+  transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+}
+
+.sermon-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-hover);
+  border-color: rgba(56, 161, 219, 0.3);
+}
+
+.sermon-thumbnail-wrap {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background-color: #072a44;
+}
+
+.sermon-thumbnail-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-smooth);
+}
+
+.sermon-card:hover .sermon-thumbnail-wrap img {
+  transform: scale(1.06);
+}
+
+.play-button-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(7, 42, 68, 0.35);
+  transition: background var(--transition-base);
+}
+
+.sermon-card:hover .play-button-overlay {
+  background: rgba(7, 42, 68, 0.55);
+}
+
+.play-icon-circle {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--primary-navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  transition: transform var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
+}
+
+.sermon-card:hover .play-icon-circle {
+  transform: scale(1.12);
+  background: var(--primary-blue);
+  color: #ffffff;
+}
+
+.sermon-category-pill {
+  font-size: 0.74rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 10px;
+  border-radius: 50px;
+  background: rgba(56, 161, 219, 0.12);
+  color: var(--primary-navy);
+  border: 1px solid rgba(56, 161, 219, 0.2);
+}
+
+.filter-pill {
+  border: 1px solid #cbd5e1;
+  background-color: #ffffff;
+  color: var(--text-charcoal);
+  padding: 7px 18px;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.filter-pill:hover,
+.filter-pill.active {
+  background-color: var(--primary-blue);
+  border-color: var(--primary-blue);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(56, 161, 219, 0.3);
+}
+
+/* 16:9 Responsive Video Container */
+.video-responsive-16-9 {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  height: 0;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background-color: #000000;
+  box-shadow: var(--shadow-lg);
+}
+
+.video-responsive-16-9 iframe,
+.video-responsive-16-9 video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
 
 /* ===================================================
    Admin Panel Styles

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import SEO from '../../components/common/SEO';
+import { sermonService } from '../../services/api';
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 28 },
@@ -20,6 +21,21 @@ const staggerContainer = {
 
 const HomePage = () => {
   const { settings = {} } = useOutletContext() || {};
+  const [latestSermons, setLatestSermons] = useState([]);
+
+  useEffect(() => {
+    const fetchLatestSermons = async () => {
+      try {
+        const res = await sermonService.getAll({ limit: 3 });
+        if (res.data && res.data.success) {
+          setLatestSermons(res.data.sermons || []);
+        }
+      } catch (e) {
+        // Fallback gracefully if database or network is not available
+      }
+    };
+    fetchLatestSermons();
+  }, []);
 
   const heroTitle = settings.hero_title || 'Friends Garden AG Church';
   const heroSubtitle = settings.hero_subtitle || 'A Place to Belong, Believe, and Become.';
@@ -82,6 +98,23 @@ const HomePage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
             >
+              <div className="mb-3">
+                <div
+                  className="d-inline-flex align-items-center justify-content-center p-2 rounded-4"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+                  }}
+                >
+                  <img
+                    src="/images/Church_logo.png"
+                    alt="Friends Garden AG Church"
+                    style={{ height: '76px', maxWidth: '240px', objectFit: 'contain' }}
+                  />
+                </div>
+              </div>
               <span className="badge px-3 py-2 mb-3 rounded-pill text-uppercase tracking-wide" style={{ backgroundColor: 'rgba(56, 161, 219, 0.25)', border: '1px solid rgba(56, 161, 219, 0.5)', color: '#ffffff', letterSpacing: '0.08em' }}>
                 Assemblies of God • Kollidam
               </span>
@@ -279,6 +312,94 @@ const HomePage = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Latest Sermons Section (Hidden if 0 sermons) */}
+      {latestSermons.length > 0 && (
+        <section className="section-padding section-ice">
+          <div className="container">
+            <div className="text-center mb-5">
+              <span className="section-eyebrow">Biblical Truth</span>
+              <h2 className="heading_1 mb-2">Latest Sermons & Messages</h2>
+              <div className="section-divider">
+                <i className="bi bi-cross section-divider-icon"></i>
+              </div>
+              <p className="text-muted mx-auto" style={{ maxWidth: '600px' }}>
+                Listen to life-transforming messages from God's Word preached at Friends Garden AG Church.
+              </p>
+            </div>
+
+            <div className="row g-4 justify-content-center">
+              {latestSermons.map((sermon) => (
+                <div key={sermon.id} className="col-12 col-md-6 col-lg-4">
+                  <div className="card sermon-card h-100 shadow-sm">
+                    <Link to={`/sermons/${sermon.id}`} className="text-decoration-none">
+                      <div className="sermon-thumbnail-wrap">
+                        <img
+                          src={sermon.thumbnailUrl || '/images/church_inside_2.jpg'}
+                          alt={sermon.title}
+                          loading="lazy"
+                        />
+                        <div className="play-button-overlay">
+                          <div className="play-icon-circle">
+                            <i className="bi bi-play-fill ms-1"></i>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                    <div className="card-body p-4 d-flex flex-column">
+                      <div className="d-flex align-items-center justify-content-between mb-2">
+                        <span className="sermon-category-pill">{sermon.category}</span>
+                        <span className="text-muted small">
+                          <i className="bi bi-calendar3 me-1"></i>
+                          {new Date(sermon.date).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric'
+                          })}
+                        </span>
+                      </div>
+                      <h5 className="card-title fw-bold mb-2" style={{ fontFamily: "'Playfair Display', serif" }}>
+                        <Link to={`/sermons/${sermon.id}`} className="text-decoration-none text-dark hover-blue">
+                          {sermon.title}
+                        </Link>
+                      </h5>
+                      {sermon.speaker && (
+                        <p className="text-muted small mb-2">
+                          <i className="bi bi-mic me-1 text-primary"></i>{sermon.speaker}
+                        </p>
+                      )}
+                      {sermon.description && (
+                        <p
+                          className="text-muted small mb-3 flex-grow-1"
+                          style={{
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden'
+                          }}
+                        >
+                          {sermon.description}
+                        </p>
+                      )}
+                      <div className="mt-auto pt-3 border-top border-light-subtle d-flex justify-content-between align-items-center">
+                        <Link to={`/sermons/${sermon.id}`} className="btn btn-outline-primary btn-sm rounded-pill">
+                          Watch Message &rarr;
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="text-center mt-5">
+              <Link to="/sermons" className="btn btn-primary rounded-pill px-4 py-2 shadow-sm">
+                View All Sermons <i className="bi bi-arrow-right ms-1"></i>
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Uvamaigal App Section */}
       <section className="py-5 bg-white">

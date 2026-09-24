@@ -228,6 +228,54 @@ async function main() {
     console.log(`✅ Seeded ${galleryItems.length} gallery images.`);
   }
 
+  // 6. Seed Sermons
+  const existingSermons = await prisma.sermon.count();
+  if (existingSermons === 0) {
+    const sermonsData = [
+      {
+        title: 'Walking in the Anointing of the Holy Spirit',
+        description: 'Discover how the presence and power of the Holy Spirit empowers believers to overcome obstacles and live with boldness in their daily walk with Christ.',
+        speaker: 'Pastor Amal M. Augustine',
+        date: new Date('2025-01-12T09:30:00Z'),
+        category: 'Sunday Service',
+        type: 'YOUTUBE',
+        mediaUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        thumbnailUrl: 'https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg',
+        isFeatured: true,
+        isPublished: true
+      },
+      {
+        title: 'Unshakable Faith in Troubled Times',
+        description: 'A powerful message on anchoring our hope in God’s unchanging promises based on Psalm 91:14. Discover how to trust God through every storm.',
+        speaker: 'Pastor Amal M. Augustine',
+        date: new Date('2025-01-19T09:30:00Z'),
+        category: 'Faith & Prayer',
+        type: 'YOUTUBE',
+        mediaUrl: 'https://www.youtube.com/watch?v=7wtfhZwyrcc',
+        thumbnailUrl: 'https://img.youtube.com/vi/7wtfhZwyrcc/hqdefault.jpg',
+        isFeatured: false,
+        isPublished: true
+      },
+      {
+        title: 'The Grace that Transforms Lives',
+        description: 'Exploring Ephesians 2:8-10 and understanding how God’s unmerited favor gives us a brand new beginning, purpose, and eternal security.',
+        speaker: 'Pastor Amal M. Augustine',
+        date: new Date('2025-01-26T09:30:00Z'),
+        category: 'Grace & Salvation',
+        type: 'YOUTUBE',
+        mediaUrl: 'https://www.youtube.com/watch?v=2Vv-BfVoq4g',
+        thumbnailUrl: 'https://img.youtube.com/vi/2Vv-BfVoq4g/hqdefault.jpg',
+        isFeatured: false,
+        isPublished: true
+      }
+    ];
+
+    for (const sermon of sermonsData) {
+      await prisma.sermon.create({ data: sermon });
+    }
+    console.log(`✅ Seeded ${sermonsData.length} sermons.`);
+  }
+
   console.log('🎉 Database seeding complete!');
 }
 

@@ -96,3 +96,25 @@ model VolunteerSubmission {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+enum SermonType {
+  YOUTUBE
+  VIDEO_URL
+  AUDIO_URL
+}
+
+model Sermon {
+  id           Int         @id @default(autoincrement())
+  title        String
+  description  String?     @db.Text
+  speaker      String?
+  date         DateTime    @default(now())
+  category     String      @default("Sunday Service")
+  type         SermonType  @default(YOUTUBE)
+  mediaUrl     String      @db.Text
+  thumbnailUrl String?     @db.Text
+  isFeatured   Boolean     @default(false)
+  isPublished  Boolean     @default(true)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}

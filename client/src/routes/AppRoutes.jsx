@@ -14,6 +14,8 @@ const HomePage = lazy(() => import('../pages/public/HomePage'));
 const AboutPage = lazy(() => import('../pages/public/AboutPage'));
 const EventsPage = lazy(() => import('../pages/public/EventsPage'));
 const MinistriesPage = lazy(() => import('../pages/public/MinistriesPage'));
+const SermonsPage = lazy(() => import('../pages/public/SermonsPage'));
+const SermonDetailPage = lazy(() => import('../pages/public/SermonDetailPage'));
 const GalleryPage = lazy(() => import('../pages/public/GalleryPage'));
 const GetInvolvedPage = lazy(() => import('../pages/public/GetInvolvedPage'));
 const ContactPage = lazy(() => import('../pages/public/ContactPage'));
@@ -24,6 +26,7 @@ const AdminLoginPage = lazy(() => import('../pages/admin/AdminLoginPage'));
 const AdminDashboardPage = lazy(() => import('../pages/admin/AdminDashboardPage'));
 const AdminHeroAboutPage = lazy(() => import('../pages/admin/AdminHeroAboutPage'));
 const AdminEventsPage = lazy(() => import('../pages/admin/AdminEventsPage'));
+const AdminSermonsPage = lazy(() => import('../pages/admin/AdminSermonsPage'));
 const AdminMinistriesPage = lazy(() => import('../pages/admin/AdminMinistriesPage'));
 const AdminGalleryPage = lazy(() => import('../pages/admin/AdminGalleryPage'));
 const AdminPrayerPage = lazy(() => import('../pages/admin/AdminPrayerPage'));
@@ -44,6 +47,8 @@ const AppRoutes = () => {
             <Route path="/about" element={<PageTransition><AboutPage /></PageTransition>} />
             <Route path="/events" element={<PageTransition><EventsPage /></PageTransition>} />
             <Route path="/ministries" element={<PageTransition><MinistriesPage /></PageTransition>} />
+            <Route path="/sermons" element={<PageTransition><SermonsPage /></PageTransition>} />
+            <Route path="/sermons/:id" element={<PageTransition><SermonDetailPage /></PageTransition>} />
             <Route path="/gallery" element={<PageTransition><GalleryPage /></PageTransition>} />
             <Route path="/get-involved" element={<PageTransition><GetInvolvedPage /></PageTransition>} />
             <Route path="/contact" element={<PageTransition><ContactPage /></PageTransition>} />
@@ -59,6 +64,7 @@ const AppRoutes = () => {
               <Route path="/admin" element={<PageTransition><AdminDashboardPage /></PageTransition>} />
               <Route path="/admin/hero-about" element={<PageTransition><AdminHeroAboutPage /></PageTransition>} />
               <Route path="/admin/events" element={<PageTransition><AdminEventsPage /></PageTransition>} />
+              <Route path="/admin/sermons" element={<PageTransition><AdminSermonsPage /></PageTransition>} />
               <Route path="/admin/ministries" element={<PageTransition><AdminMinistriesPage /></PageTransition>} />
               <Route path="/admin/gallery" element={<PageTransition><AdminGalleryPage /></PageTransition>} />
               <Route path="/admin/prayers" element={<PageTransition><AdminPrayerPage /></PageTransition>} />

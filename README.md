@@ -193,7 +193,13 @@ Use this checklist to test each module in the admin portal:
    - [ ] Update church phone helpline, email, or Google Maps embed
    - [ ] Update bank account details (account number, IFSC code)
    - [ ] Verify updated bank details reflect on the public Donate page (`/donate`)
-10. **Profile & Security (`/admin/profile`):**
+10. **Sermons & Media CMS (`/admin/sermons`):**
+    - [ ] Navigate to `/admin/sermons`
+    - [ ] Create a new sermon with YouTube URL (e.g. `https://www.youtube.com/watch?v=...`)
+    - [ ] Verify live YouTube player preview appears instantly
+    - [ ] Save sermon and verify automatic thumbnail generation from YouTube
+    - [ ] Check public `/sermons` and `/sermons/:id` pages for video playback, sharing, and related sermons
+11. **Profile & Security (`/admin/profile`):**
     - [ ] Update admin display name or email
     - [ ] Test password change form with validation and visibility toggle
 
@@ -203,8 +209,19 @@ Use this checklist to test each module in the admin portal:
 
 The public site has been enhanced with modern styling and micro-interactions while preserving 100% of the church's brand identity:
 
+- **Logo Visibility & Sizing**:
+  - Restored high visibility for the church logo across the entire site.
+  - Navbar: responsive 56–64px desktop / 44–48px mobile / 48px scrolled with a glass badge and Playfair Display title.
+  - Footer: prominent 96px logo in a dedicated brand column.
+  - Admin Portal: 96px centered badge on login screen and 40px in the sidebar.
+  - Hero Section: regal logo emblem badge with frosted glass backdrop.
 - **Color Palette**: Deep Navy (`#0A3D62`), Accent Blue (`#38A1DB`), Deep Heading (`#3C6382`), Ice Blue (`#E9F1F7`), and Soft Light (`#F8F9FA`).
 - **Typography**: Google Fonts `Playfair Display` for headings and `Lora` for body copy.
+- **Sermons & Media Module**:
+  - Public sermon library (`/sermons`) with category filter pills, keyword search, and pagination.
+  - Dynamic sermon detail page (`/sermons/:id`) with 16:9 responsive player (`youtube-nocookie.com`), metadata, WhatsApp/Facebook/Twitter sharing, and related sermons.
+  - Homepage "Latest Sermons" section displaying top 3 published messages.
+  - Admin CMS (`/admin/sermons`) with full CRUD, automatic YouTube thumbnail derivation (`img.youtube.com/vi/<id>/hqdefault.jpg`), live video preview, and custom upload dropzone.
 - **Hero Section**: Full-height hero with soft dual-gradient overlay on the sanctuary background, animated headline (fade + slide up with Framer Motion), and enhanced call-to-action buttons.
 - **Navigation**:
   - Sticky navbar that transitions from transparent to solid navy with backdrop blur upon scroll.
@@ -227,7 +244,7 @@ The public site has been enhanced with modern styling and micro-interactions whi
 - **Interactive Forms**:
   - Multi-select ministry chips on Get Involved page.
   - Toast notifications system with smooth enter/exit animations for form submissions.
-  - One-click copy buttons for bank account number and IFSC code on the Donate page.
+  - One-click copy buttons for bank account details (Donate) and contact details (Contact).
 
 ---
 
@@ -245,6 +262,8 @@ The public site has been enhanced with modern styling and micro-interactions whi
 | `/api/events` | GET / POST | Public / Protected | List or create events |
 | `/api/events/:id` | PUT / DELETE | Protected | Update or delete an event |
 | `/api/ministries` | GET / POST | Public / Protected | List or create ministries |
+| `/api/sermons` | GET / POST | Public / Protected | List published sermons or create new |
+| `/api/sermons/:id` | GET / PUT / DELETE | Public / Protected | Get sermon details, update or delete |
 | `/api/gallery` | GET / POST | Public / Protected | List or upload gallery photos |
 | `/api/gallery/:id` | DELETE | Protected | Delete gallery photo |
 | `/api/prayer` | POST / GET | Public / Protected | Submit prayer or view requests |

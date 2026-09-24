@@ -11,6 +11,7 @@ const getDashboardStats = async (req, res, next) => {
         pendingPrayers,
         totalVolunteers,
         pendingVolunteers,
+        totalSermons,
         recentPrayers,
         recentVolunteers
       ] = await Promise.all([
@@ -21,6 +22,7 @@ const getDashboardStats = async (req, res, next) => {
         prisma.prayerRequest.count({ where: { status: 'PENDING' } }),
         prisma.volunteerSubmission.count(),
         prisma.volunteerSubmission.count({ where: { status: 'PENDING' } }),
+        prisma.sermon.count(),
         prisma.prayerRequest.findMany({
           take: 5,
           orderBy: { createdAt: 'desc' }
@@ -50,7 +52,8 @@ const getDashboardStats = async (req, res, next) => {
           totalPrayers,
           pendingPrayers,
           totalVolunteers,
-          pendingVolunteers
+          pendingVolunteers,
+          totalSermons: totalSermons || 0
         },
         recentPrayers,
         recentVolunteers: formattedVolunteers
@@ -68,7 +71,8 @@ const getDashboardStats = async (req, res, next) => {
         totalPrayers: 0,
         pendingPrayers: 0,
         totalVolunteers: 0,
-        pendingVolunteers: 0
+        pendingVolunteers: 0,
+        totalSermons: 0
       },
       recentPrayers: [],
       recentVolunteers: []

@@ -58,12 +58,13 @@ const AdminLoginPage = () => {
         transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
       >
         <div className="text-center mb-4">
-          <img
-            src="/images/Church_logo.png"
-            alt="FGAG Church Logo"
-            className="mb-3"
-            style={{ maxHeight: '85px', objectFit: 'contain' }}
-          />
+          <div className="d-inline-flex align-items-center justify-content-center p-2 mb-3 rounded-4 shadow-sm" style={{ background: 'linear-gradient(135deg, #072a44 0%, #0a3d62 100%)', border: '1px solid rgba(56, 161, 219, 0.25)' }}>
+            <img
+              src="/images/Church_logo.png"
+              alt="FGAG Church Logo"
+              style={{ height: '96px', maxWidth: '240px', objectFit: 'contain' }}
+            />
+          </div>
           <h3 className="fw-bold heading mb-1">⛪ FGAG Admin</h3>
           <p className="text-muted small mb-0">Sign in to manage the church website</p>
         </div>

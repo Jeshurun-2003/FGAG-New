@@ -46,6 +46,7 @@ const Navbar = () => {
     { to: '/about', label: 'About Us' },
     { to: '/events', label: 'Events' },
     { to: '/ministries', label: 'Ministries' },
+    { to: '/sermons', label: 'Sermons' },
     { to: '/gallery', label: 'Gallery' },
     { to: '/get-involved', label: 'Get Involved' },
     { to: '/contact', label: 'Contact Us' },
@@ -61,13 +62,18 @@ const Navbar = () => {
           aria-label="Main navigation"
         >
           <div className="container">
-            <Link className="navbar-brand py-0 d-flex align-items-center" to="/" onClick={closeMenu}>
-              <img
-                src="/images/Church_logo.png"
-                alt="Friends Garden AG Church Logo"
-                width="220"
-                height="76"
-              />
+            <Link className="navbar-brand py-0 d-flex align-items-center gap-2" to="/" onClick={closeMenu}>
+              <div className="navbar-logo-badge">
+                <img
+                  src="/images/Church_logo.png"
+                  alt="Friends Garden AG Church Logo"
+                  className="navbar-logo-img"
+                />
+              </div>
+              <div className="d-flex flex-column text-start">
+                <span className="navbar-brand-name">Friends Garden AG</span>
+                <span className="navbar-brand-sub">Kollidam</span>
+              </div>
             </Link>
 
             {/* Hamburger Button */}
