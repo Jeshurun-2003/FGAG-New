@@ -5,7 +5,13 @@ const extractImageUrl = (req, fallback = null) => {
   if (req.file && req.file.buffer) {
     return `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
   }
-  if (req.body.imageUrl !== undefined && req.body.imageUrl !== null && req.body.imageUrl !== '') {
+  if (req.body.removeImage === 'true' || req.body.removeImage === true) {
+    return null;
+  }
+  if (req.body.imageUrl !== undefined) {
+    if (req.body.imageUrl === '' || req.body.imageUrl === null || req.body.imageUrl === 'null') {
+      return null;
+    }
     return req.body.imageUrl;
   }
   return fallback;
