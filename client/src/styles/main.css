@@ -36,7 +36,7 @@
   --transition-base: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-smooth: 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 
-  --navbar-height: 100px;
+  --navbar-height: 108px;
 }
 
 html {
@@ -121,8 +121,10 @@ h1, h2, h3, h4, h5, h6,
   top: 0;
   left: 0;
   right: 0;
-  min-height: 100px;
-  padding: 0.75rem 1.5rem;
+  min-height: 108px;
+  padding: 0;
+  display: flex;
+  align-items: center;
   z-index: 1030;
   transition: background-color var(--transition-base),
               box-shadow var(--transition-base),
@@ -138,8 +140,8 @@ h1, h2, h3, h4, h5, h6,
 .navbar-custom.navbar-scrolled {
   background-color: rgba(7, 42, 68, 0.98);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
-  min-height: 84px;
-  padding: 0.5rem 1.5rem;
+  min-height: 90px;
+  padding: 0;
   border-bottom: 1px solid rgba(56, 161, 219, 0.25);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -157,18 +159,27 @@ h1, h2, h3, h4, h5, h6,
 }
 
 /* Navbar Container & Brand Space-sharing */
+.navbar-custom .container-fluid,
+.navbar-custom .navbar-container,
 .navbar-custom .container {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: nowrap;
+  width: 100%;
+  max-width: 100%;
+  min-height: inherit;
   min-width: 0;
+  padding-left: clamp(48px, 4vw, 64px);
+  padding-right: clamp(48px, 4vw, 64px);
 }
 
 .navbar-custom .navbar-brand {
   white-space: nowrap;
   flex-shrink: 0;
   min-width: 0;
+  display: flex;
+  align-items: center;
 }
 
 /* Navbar Logo Badge & Brand */
@@ -190,7 +201,7 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .navbar-logo-img {
-  height: 68px; /* Desktop: 66-70px */
+  height: 72px; /* Desktop: 70-74px */
   max-width: 140px;
   object-fit: contain;
   filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
@@ -198,7 +209,7 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .navbar-custom.navbar-scrolled .navbar-logo-img {
-  height: 54px; /* Scrolled: ~54px */
+  height: 58px; /* Scrolled: ~58px */
 }
 
 .navbar-brand-name {
@@ -210,6 +221,7 @@ h1, h2, h3, h4, h5, h6,
   display: block;
   line-height: 1.15;
   white-space: nowrap;
+  margin: 0;
 }
 
 .navbar-brand-sub {
@@ -221,6 +233,8 @@ h1, h2, h3, h4, h5, h6,
   font-weight: 600;
   display: block;
   white-space: nowrap;
+  line-height: 1.15;
+  margin-top: 1px;
 }
 
 .navbar-custom .navbar-brand:hover .navbar-logo-img {
@@ -230,25 +244,34 @@ h1, h2, h3, h4, h5, h6,
 /* Nav Collapse & Item Flexibility */
 .navbar-custom .navbar-collapse {
   min-width: 0;
+  display: flex;
+  align-items: center;
 }
 
 .navbar-custom .navbar-nav {
+  display: flex;
+  align-items: center;
   flex-wrap: nowrap;
   min-width: 0;
 }
 
 .navbar-custom .nav-item {
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
 }
 
 /* Nav Links with Animated Active Indicator */
 .navbar-custom .nav-link {
   color: rgba(255, 255, 255, 0.9) !important;
-  margin: 0 4px;
+  margin: 0 3px;
   padding: 8px 12px !important;
   font-weight: 500;
   font-size: 1.02rem;
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   transition: color var(--transition-fast), background-color var(--transition-fast);
   border-radius: 8px;
   white-space: nowrap;
@@ -267,7 +290,7 @@ h1, h2, h3, h4, h5, h6,
 .navbar-custom .nav-link.active::after {
   content: '';
   position: absolute;
-  bottom: 2px;
+  bottom: 0px;
   left: 12px;
   right: 12px;
   height: 2.5px;
@@ -388,17 +411,29 @@ h1, h2, h3, h4, h5, h6,
 }
 
 /* Responsive Navbar Breakpoints */
-/* 992px to 1279px (and down to 768px tablet): reuse existing mobile/tablet sizes & hamburger */
-@media (max-width: 1279.98px) {
+
+/* 992px to 1279px (Large tablet / small desktop) */
+@media (min-width: 992px) and (max-width: 1279.98px) {
   .navbar-custom {
-    min-height: 78px;
-    padding: 0.55rem 1.25rem;
+    min-height: 86px; /* Current 78px + 8px */
+    padding: 0;
   }
   .navbar-custom.navbar-scrolled {
-    min-height: 72px;
+    min-height: 78px; /* Current 72px + 6px */
+    padding: 0;
+  }
+  .navbar-custom .container-fluid,
+  .navbar-custom .navbar-container,
+  .navbar-custom .container {
+    padding-left: 1.75rem;
+    padding-right: 1.75rem;
   }
   .navbar-logo-img {
-    height: 52px;
+    height: 56px !important;
+    max-width: 120px;
+  }
+  .navbar-custom.navbar-scrolled .navbar-logo-img {
+    height: 48px !important;
   }
   .navbar-brand-name {
     font-size: 1.18rem;
@@ -408,47 +443,98 @@ h1, h2, h3, h4, h5, h6,
   }
 }
 
-/* Below 768px: Mobile sizes unchanged */
-@media (max-width: 767.98px) {
+/* 768px to 991.98px: Tablet below 992px */
+@media (min-width: 768px) and (max-width: 991.98px) {
   .navbar-custom {
-    min-height: 70px; /* Mobile navbar height: 68-72px */
-    padding: 0.5rem 1rem;
+    min-height: 84px; /* Current 78px + 6px */
+    padding: 0;
   }
   .navbar-custom.navbar-scrolled {
-    min-height: 68px;
-    padding: 0.4rem 1rem;
+    min-height: 76px; /* Current 72px + 4px */
+    padding: 0;
+  }
+  .navbar-custom .container-fluid,
+  .navbar-custom .navbar-container,
+  .navbar-custom .container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
   }
   .navbar-logo-img {
-    height: 46px; /* Mobile logo: 44-48px */
-    max-width: 110px;
+    height: 52px !important;
+    max-width: 115px;
+  }
+  .navbar-custom.navbar-scrolled .navbar-logo-img {
+    height: 46px !important;
   }
   .navbar-brand-name {
-    font-size: 1.05rem;
+    font-size: 1.15rem;
   }
   .navbar-brand-sub {
-    font-size: 0.68rem;
+    font-size: 0.72rem;
+  }
+}
+
+/* Below 768px: Mobile */
+@media (max-width: 767.98px) {
+  .navbar-custom {
+    min-height: 86px; /* Mobile navbar height: 86px unscrolled */
+    padding: 0;
+  }
+  .navbar-custom.navbar-scrolled {
+    min-height: 72px; /* Proportional scrolled height: 72px */
+    padding: 0;
+  }
+  .navbar-custom .container-fluid,
+  .navbar-custom .navbar-container,
+  .navbar-custom .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .navbar-logo-img {
+    height: 54px !important; /* Mobile logo: 54px (was 44-48px) */
+    width: auto !important;
+    max-width: 120px;
+  }
+  .navbar-custom.navbar-scrolled .navbar-logo-img {
+    height: 46px !important;
+  }
+  .navbar-brand-name {
+    font-size: 1.18rem; /* Church name: 1.18rem */
+  }
+  .navbar-brand-sub {
+    font-size: 0.75rem; /* "KOLLIDAM" subtext: 0.75rem */
+    letter-spacing: 0.1em;
+  }
+  .navbar-toggler {
+    min-width: 48px;
+    min-height: 48px;
+    padding: 0.5rem !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
   }
   .navbar-toggler i {
-    font-size: 28px !important; /* Hamburger icon: 28-30px */
+    font-size: 32px !important; /* Hamburger icon: 32px */
+    line-height: 1;
   }
 }
 
 /* 1280px to 1439px: Compact desktop menu with all 10 links on one line */
 @media (min-width: 1280px) and (max-width: 1439.98px) {
   .navbar-custom {
-    min-height: 88px;
-    padding: 0.5rem 1.25rem;
+    min-height: 96px; /* Current 88px + 8px */
+    padding: 0;
   }
   .navbar-custom.navbar-scrolled {
-    min-height: 76px;
-    padding: 0.4rem 1.25rem;
+    min-height: 82px; /* Current 76px + 6px */
+    padding: 0;
   }
   .navbar-logo-img {
-    height: 56px;
-    max-width: 120px;
+    height: 60px !important;
+    max-width: 125px;
   }
   .navbar-custom.navbar-scrolled .navbar-logo-img {
-    height: 48px;
+    height: 52px !important;
   }
   .navbar-brand-name {
     font-size: 1.16rem;
@@ -457,19 +543,21 @@ h1, h2, h3, h4, h5, h6,
     font-size: 0.74rem;
     letter-spacing: 0.1em;
   }
+  .navbar-custom .container-fluid,
+  .navbar-custom .navbar-container,
   .navbar-custom .container {
     max-width: 100%;
-    padding-left: 1.25rem;
-    padding-right: 1.25rem;
+    padding-left: 40px;
+    padding-right: 40px;
   }
   .navbar-custom .nav-link {
-    font-size: 0.88rem !important;
-    padding: 6px 7px !important;
-    margin: 0 1px !important;
+    font-size: 0.94rem !important; /* Increased from 0.88rem */
+    padding: 7px 11px !important; /* Increased from 6px 7px */
+    margin: 0 2px !important;
   }
   .navbar-custom .nav-link.active::after {
-    left: 7px;
-    right: 7px;
+    left: 11px;
+    right: 11px;
     bottom: 0px;
   }
 }
@@ -477,19 +565,26 @@ h1, h2, h3, h4, h5, h6,
 /* 1440px and above: Full larger desktop sizes with all 10 links on one line */
 @media (min-width: 1440px) {
   .navbar-custom {
-    min-height: 100px;
-    padding: 0.75rem 1.5rem;
+    min-height: 108px; /* Current 100px + 8px */
+    padding: 0;
   }
   .navbar-custom.navbar-scrolled {
-    min-height: 84px;
-    padding: 0.5rem 1.5rem;
+    min-height: 90px; /* Current 84px + 6px */
+    padding: 0;
+  }
+  .navbar-custom .container-fluid,
+  .navbar-custom .navbar-container,
+  .navbar-custom .container {
+    max-width: 100%;
+    padding-left: 56px;
+    padding-right: 56px;
   }
   .navbar-logo-img {
-    height: 68px;
+    height: 72px !important;
     max-width: 140px;
   }
   .navbar-custom.navbar-scrolled .navbar-logo-img {
-    height: 54px;
+    height: 58px !important;
   }
   .navbar-brand-name {
     font-size: 1.32rem;
@@ -505,6 +600,17 @@ h1, h2, h3, h4, h5, h6,
   .navbar-custom .nav-link.active::after {
     left: 12px;
     right: 12px;
+    bottom: 0px;
+  }
+}
+
+/* 1920px and above: Wide desktop padding */
+@media (min-width: 1920px) {
+  .navbar-custom .container-fluid,
+  .navbar-custom .navbar-container,
+  .navbar-custom .container {
+    padding-left: 64px;
+    padding-right: 64px;
   }
 }
 
@@ -513,21 +619,33 @@ h1, h2, h3, h4, h5, h6,
   height: var(--navbar-height);
 }
 
-@media (min-width: 1280px) and (max-width: 1439.98px) {
+@media (min-width: 1440px) {
   :root {
-    --navbar-height: 88px;
+    --navbar-height: 108px;
   }
 }
 
-@media (max-width: 1279.98px) {
+@media (min-width: 1280px) and (max-width: 1439.98px) {
   :root {
-    --navbar-height: 78px;
+    --navbar-height: 96px;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1279.98px) {
+  :root {
+    --navbar-height: 86px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+  :root {
+    --navbar-height: 84px;
   }
 }
 
 @media (max-width: 767.98px) {
   :root {
-    --navbar-height: 70px;
+    --navbar-height: 86px;
   }
 }
 

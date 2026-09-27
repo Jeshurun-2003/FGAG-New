@@ -63,12 +63,12 @@ const Navbar = () => {
           role="navigation"
           aria-label="Main navigation"
         >
-          <div className="container">
+          <div className="container-fluid navbar-container">
             <Link className="navbar-brand py-0 d-flex align-items-center gap-2 text-nowrap" to="/" onClick={closeMenu}>
-              <div className="d-flex align-items-center">
-                <Logo variant="light" size={scrolled ? 54 : 66} className="navbar-logo-img" />
+              <div className="d-flex align-items-center justify-content-center">
+                <Logo variant="light" size={scrolled ? 58 : 72} className="navbar-logo-img" />
               </div>
-              <div className="d-flex flex-column text-start">
+              <div className="d-flex flex-column text-start justify-content-center">
                 <span className="navbar-brand-name">Friends Garden AG</span>
                 <span className="navbar-brand-sub">Kollidam</span>
               </div>
@@ -76,7 +76,7 @@ const Navbar = () => {
 
             {/* Hamburger Button */}
             <button
-              className="navbar-toggler border-0 p-2 shadow-none"
+              className="navbar-toggler border-0 p-2 shadow-none d-flex align-items-center justify-content-center"
               type="button"
               aria-label="Toggle navigation"
               aria-expanded={mobileMenuOpen}
@@ -86,13 +86,13 @@ const Navbar = () => {
             </button>
 
             {/* Desktop Navigation */}
-            <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <div className="collapse navbar-collapse justify-content-end align-items-center" id="navbarNav">
               <ul className="navbar-nav ms-auto align-items-center">
                 {navLinks.map((link) => (
-                  <li className="nav-item" key={link.to}>
+                  <li className="nav-item d-flex align-items-center" key={link.to}>
                     <NavLink
                       to={link.to}
-                      className={({ isActive }) => `nav-link text-nowrap ${isActive ? 'active' : ''}`}
+                      className={({ isActive }) => `nav-link text-nowrap d-inline-flex align-items-center ${isActive ? 'active' : ''}`}
                     >
                       {link.label}
                     </NavLink>
