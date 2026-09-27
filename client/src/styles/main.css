@@ -477,12 +477,12 @@ h1, h2, h3, h4, h5, h6,
 /* Below 768px: Mobile */
 @media (max-width: 767.98px) {
   .navbar-custom {
-    min-height: 86px; /* Mobile navbar height: 86px unscrolled */
-    padding: 0;
+    min-height: 100px; /* Mobile navbar height: 100px unscrolled */
+    padding: 12px 0;   /* Vertical breathing room */
   }
   .navbar-custom.navbar-scrolled {
-    min-height: 72px; /* Proportional scrolled height: 72px */
-    padding: 0;
+    min-height: 78px;  /* Scrolled height: 78px */
+    padding: 8px 0;
   }
   .navbar-custom .container-fluid,
   .navbar-custom .navbar-container,
@@ -491,30 +491,34 @@ h1, h2, h3, h4, h5, h6,
     padding-right: 1rem;
   }
   .navbar-logo-img {
-    height: 54px !important; /* Mobile logo: 54px (was 44-48px) */
+    height: 62px !important; /* Mobile logo: 62px */
     width: auto !important;
-    max-width: 120px;
+    max-width: 130px;
   }
   .navbar-custom.navbar-scrolled .navbar-logo-img {
-    height: 46px !important;
+    height: 52px !important;
   }
   .navbar-brand-name {
-    font-size: 1.18rem; /* Church name: 1.18rem */
+    font-size: 1.28rem; /* Church name: 1.28rem */
   }
   .navbar-brand-sub {
-    font-size: 0.75rem; /* "KOLLIDAM" subtext: 0.75rem */
+    font-size: 0.8rem; /* "KOLLIDAM" subtext: 0.8rem */
     letter-spacing: 0.1em;
   }
+  .navbar-custom .navbar-toggler,
   .navbar-toggler {
-    min-width: 48px;
-    min-height: 48px;
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    min-height: 52px;
+    font-size: 1.75rem;
     padding: 0.5rem !important;
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
   }
   .navbar-toggler i {
-    font-size: 32px !important; /* Hamburger icon: 32px */
+    font-size: 1.75rem !important;
     line-height: 1;
   }
 }
@@ -645,7 +649,7 @@ h1, h2, h3, h4, h5, h6,
 
 @media (max-width: 767.98px) {
   :root {
-    --navbar-height: 86px;
+    --navbar-height: 100px;
   }
 }
 
