@@ -17,31 +17,33 @@ const AboutPage = () => {
   const pastorFamilyImg = settings.pastor_family_image || "/images/Pastor's_Family_Pic.jpg";
 
   return (
-    <div className="container py-5">
+    <div>
       <SEO
         title="About Us"
         description="Learn about Friends Garden AG Church, Kollidam — our history, pastor, mission, vision, and core beliefs."
       />
 
-      {/* Bible Verse Header */}
-      <motion.div
-        className="text-center my-4"
-        initial={{ opacity: 0, y: -15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <blockquote className="blockquote fst-italic">
-          <p className="fs-3 text-secondary mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>
-            “Upon this rock I will build my church...”
-          </p>
-          <footer className="blockquote-footer pb-2 fs-6 text-primary fw-medium">
-            Matthew 16:18
-          </footer>
-        </blockquote>
-        <div className="section-divider">
-          <i className="bi bi-diamond-fill section-divider-icon"></i>
+      {/* Header Banner */}
+      <section className="page-header-banner mb-5">
+        <div className="container">
+          <span className="section-eyebrow text-white border-white border-opacity-25" style={{ backgroundColor: 'rgba(56, 161, 219, 0.25)' }}>
+            Faith, Fellowship & Foundation
+          </span>
+          <h1 className="display-4 fw-bold page-banner-title">
+            About Our Church
+          </h1>
+          <blockquote className="blockquote text-light fst-italic mb-0 mx-auto" style={{ maxWidth: '640px' }}>
+            <p className="fs-4 mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>
+              “Upon this rock I will build my church...”
+            </p>
+            <footer className="blockquote-footer text-info fs-6 fw-medium pt-1">
+              Matthew 16:18
+            </footer>
+          </blockquote>
         </div>
-      </motion.div>
+      </section>
+
+      <div className="container pb-5">
 
       {/* Church Name and Image */}
       <motion.div
@@ -205,19 +207,20 @@ const AboutPage = () => {
         </ul>
       </motion.div>
 
-      {/* Final Verse */}
-      <motion.div
-        className="text-center my-5"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-      >
-        <blockquote className="blockquote fst-italic">
-          <p className="fs-3 heading mb-1">“Let all that you do be done in love.”</p>
-          <footer className="blockquote-footer fs-6 text-primary fw-medium">1 Corinthians 16:14</footer>
-        </blockquote>
-      </motion.div>
+        {/* Final Verse */}
+        <motion.div
+          className="text-center my-5"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <blockquote className="blockquote fst-italic">
+            <p className="fs-3 heading mb-1">“Let all that you do be done in love.”</p>
+            <footer className="blockquote-footer fs-6 text-primary fw-medium">1 Corinthians 16:14</footer>
+          </blockquote>
+        </motion.div>
+      </div>
     </div>
   );
 };

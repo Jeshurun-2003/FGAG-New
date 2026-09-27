@@ -84,33 +84,36 @@ const GetInvolvedPage = () => {
   };
 
   return (
-    <div className="container my-5 pt-3">
+    <div>
       <SEO
         title="Get Involved"
         description="Volunteer your talents and gifts in choir, media, cleaning, children, and hospitality ministries at Friends Garden AG Church."
       />
 
-      <motion.div
-        className="card border-0 shadow rounded-4 p-4 p-md-5 bg-white mx-auto hover-lift"
-        style={{ maxWidth: '860px' }}
-        initial={{ opacity: 0, y: 25 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <div className="text-center mb-5">
-          <span className="badge px-3 py-2 rounded-pill text-uppercase mb-3" style={{ backgroundColor: 'rgba(56, 161, 219, 0.15)', color: '#0a3d62', fontWeight: 600 }}>
-            Join the Ministry Team
+      {/* Header Banner */}
+      <section className="page-header-banner mb-5">
+        <div className="container">
+          <span className="section-eyebrow text-white border-white border-opacity-25" style={{ backgroundColor: 'rgba(56, 161, 219, 0.25)' }}>
+            <i className="bi bi-heart-fill me-1"></i> Join the Ministry Team
           </span>
-          <h1 className="heading_1 display-5 fw-bold mb-2">Serve With Us</h1>
-          <div className="section-divider">
-            <i className="bi bi-diamond-fill section-divider-icon"></i>
-          </div>
-          <p className="lead text-muted paragraph mb-0 fs-5">
+          <h1 className="display-4 fw-bold page-banner-title">
+            Serve With Us
+          </h1>
+          <p className="page-banner-desc">
             Be the hands and feet of Christ. Use your gifts for His glory.
           </p>
         </div>
+      </section>
 
-        <h3 className="heading fw-bold mb-4 pb-2 border-bottom">Get Involved in Our Church</h3>
+      <div className="container pb-5">
+        <motion.div
+          className="card border-0 shadow rounded-4 p-4 p-md-5 bg-white mx-auto hover-lift"
+          style={{ maxWidth: '860px' }}
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <h3 className="heading fw-bold mb-4 pb-2 border-bottom">Get Involved in Our Church</h3>
 
         {statusMsg && (
           <div className={`alert alert-${statusMsg.type} alert-dismissible fade show mb-4`} role="alert">
@@ -293,6 +296,7 @@ const GetInvolvedPage = () => {
           </div>
         </form>
       </motion.div>
+      </div>
     </div>
   );
 };

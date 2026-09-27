@@ -1,15 +1,23 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 const ImageUploadDropzone = ({
   currentImage,
   onImageSelected,
   onImageCleared,
+  onRemoveCurrentImage,
   label = 'Upload Image (Max 10MB: JPG, PNG, WEBP)'
 }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [preview, setPreview] = useState(currentImage || null);
+  const [hasNewSelection, setHasNewSelection] = useState(false);
   const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    if (!hasNewSelection) {
+      setPreview(currentImage || null);
+    }
+  }, [currentImage, hasNewSelection]);
 
   const validateAndProcessFile = (file) => {
     setError(null);
@@ -29,6 +37,7 @@ const ImageUploadDropzone = ({
 
     const previewUrl = URL.createObjectURL(file);
     setPreview(previewUrl);
+    setHasNewSelection(true);
     if (onImageSelected) {
       onImageSelected(file);
     }
@@ -59,13 +68,24 @@ const ImageUploadDropzone = ({
 
   const handleClear = (e) => {
     e.stopPropagation();
-    setPreview(null);
-    setError(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
-    if (onImageCleared) {
-      onImageCleared();
+    setError(null);
+
+    if (hasNewSelection) {
+      setHasNewSelection(false);
+      setPreview(currentImage || null);
+      if (onImageCleared) {
+        onImageCleared();
+      }
+    } else if (onRemoveCurrentImage) {
+      onRemoveCurrentImage();
+    } else {
+      setPreview(null);
+      if (onImageCleared) {
+        onImageCleared();
+      }
     }
   };
 
@@ -118,8 +138,9 @@ const ImageUploadDropzone = ({
                 type="button"
                 className="btn btn-sm btn-outline-danger"
                 onClick={handleClear}
+                title="Remove image"
               >
-                <i className="bi bi-trash me-1"></i> Remove
+                <i className="bi bi-trash me-1"></i> Remove Image
               </button>
             </div>
           </div>

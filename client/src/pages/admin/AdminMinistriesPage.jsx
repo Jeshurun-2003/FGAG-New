@@ -5,6 +5,7 @@ import ImageUploadDropzone from '../../components/admin/ImageUploadDropzone';
 import ConfirmDeleteModal from '../../components/admin/ConfirmDeleteModal';
 import { useToast } from '../../context/ToastContext';
 import SEO from '../../components/common/SEO';
+import { getMinistryImageUrl } from '../../utils/imageUtils';
 
 const AdminMinistriesPage = () => {
   const { addToast } = useToast();
@@ -17,6 +18,8 @@ const AdminMinistriesPage = () => {
   const [editingMinistry, setEditingMinistry] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [confirmDeleteImage, setConfirmDeleteImage] = useState(false);
+  const [deletingImage, setDeletingImage] = useState(false);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -79,6 +82,7 @@ const AdminMinistriesPage = () => {
       const res = await ministriesService.delete(deleteId);
       if (res.data.success) {
         addToast('Ministry deleted successfully.', 'success');
+        setMinistries((prev) => prev.filter((m) => m.id !== deleteId));
         setDeleteId(null);
         fetchMinistries();
       }
@@ -87,6 +91,38 @@ const AdminMinistriesPage = () => {
       addToast('Failed to delete ministry.', 'danger');
     } finally {
       setDeleting(false);
+    }
+  };
+
+  const handleRemoveImage = async () => {
+    if (!editingMinistry) return;
+    setDeletingImage(true);
+    try {
+      const payload = new FormData();
+      payload.append('title', formData.title || editingMinistry.title);
+      payload.append('description', formData.description || '');
+      payload.append('details', formData.details || '');
+      payload.append('order', formData.order);
+      payload.append('isActive', formData.isActive);
+      payload.append('removeImage', 'true');
+      payload.append('imageUrl', '');
+
+      const res = await ministriesService.update(editingMinistry.id, payload);
+      if (res.data.success) {
+        addToast('Ministry image removed successfully.', 'success');
+        const updated = res.data.ministry;
+        setEditingMinistry((prev) => (prev ? { ...prev, imageUrl: null, updatedAt: updated?.updatedAt || new Date().toISOString() } : null));
+        setFormData((prev) => ({ ...prev, image: null }));
+        setMinistries((prev) =>
+          prev.map((m) => (m.id === editingMinistry.id ? { ...m, imageUrl: null, updatedAt: updated?.updatedAt || new Date().toISOString() } : m))
+        );
+        setConfirmDeleteImage(false);
+      }
+    } catch (err) {
+      console.error(err);
+      addToast(err.response?.data?.message || 'Failed to remove ministry image.', 'danger');
+    } finally {
+      setDeletingImage(false);
     }
   };
 
@@ -102,14 +138,24 @@ const AdminMinistriesPage = () => {
     payload.append('isActive', formData.isActive);
     if (formData.image) {
       payload.append('image', formData.image);
+    } else if (editingMinistry && !editingMinistry.imageUrl) {
+      payload.append('imageUrl', '');
     }
 
     try {
       if (editingMinistry) {
-        await ministriesService.update(editingMinistry.id, payload);
+        const res = await ministriesService.update(editingMinistry.id, payload);
+        if (res.data?.ministry) {
+          setMinistries((prev) =>
+            prev.map((m) => (m.id === editingMinistry.id ? res.data.ministry : m))
+          );
+        }
         addToast('Ministry updated successfully.', 'success');
       } else {
-        await ministriesService.create(payload);
+        const res = await ministriesService.create(payload);
+        if (res.data?.ministry) {
+          setMinistries((prev) => [res.data.ministry, ...prev]);
+        }
         addToast('Ministry created successfully.', 'success');
       }
       setModalOpen(false);
@@ -196,10 +242,13 @@ const AdminMinistriesPage = () => {
                   <tr key={m.id}>
                     <td>
                       <img
-                        src={m.imageUrl || '/images/coming_soon.png'}
+                        src={getMinistryImageUrl(m.imageUrl, m.updatedAt) || '/images/coming_soon.png'}
                         alt={m.title}
                         className="rounded-3 shadow-sm"
                         style={{ width: '60px', height: '60px', objectFit: 'cover' }}
+                        onError={(e) => {
+                          e.target.src = '/images/coming_soon.png';
+                        }}
                       />
                     </td>
                     <td>
@@ -309,11 +358,25 @@ const AdminMinistriesPage = () => {
 
                     {/* Drag and Drop Image Box */}
                     <div className="col-12">
+                      <div className="d-flex justify-content-between align-items-center mb-1">
+                        <label className="form-label fw-medium text-dark mb-0">Ministry Photo</label>
+                        {editingMinistry?.imageUrl && !formData.image && (
+                          <button
+                            type="button"
+                            className="btn btn-sm btn-outline-danger py-1 px-2 d-inline-flex align-items-center gap-1"
+                            onClick={() => setConfirmDeleteImage(true)}
+                            title="Remove current image"
+                          >
+                            <i className="bi bi-trash"></i> Remove Image
+                          </button>
+                        )}
+                      </div>
                       <ImageUploadDropzone
-                        currentImage={editingMinistry?.imageUrl}
+                        currentImage={getMinistryImageUrl(editingMinistry?.imageUrl, editingMinistry?.updatedAt)}
                         onImageSelected={(file) => setFormData({ ...formData, image: file })}
                         onImageCleared={() => setFormData({ ...formData, image: null })}
-                        label="Ministry Photo"
+                        onRemoveCurrentImage={editingMinistry?.imageUrl ? () => setConfirmDeleteImage(true) : undefined}
+                        label=""
                       />
                     </div>
 
@@ -364,6 +427,16 @@ const AdminMinistriesPage = () => {
         loading={deleting}
         title="Delete Ministry"
         message="Are you sure you want to delete this ministry from the database?"
+      />
+
+      {/* Remove Image Confirmation Modal */}
+      <ConfirmDeleteModal
+        isOpen={confirmDeleteImage}
+        onClose={() => setConfirmDeleteImage(false)}
+        onConfirm={handleRemoveImage}
+        loading={deletingImage}
+        title="Remove Ministry Image"
+        message="Are you sure you want to remove the image for this ministry? The ministry will immediately show the default placeholder."
       />
     </div>
   );

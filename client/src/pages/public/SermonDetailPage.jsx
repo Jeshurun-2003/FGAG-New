@@ -87,14 +87,16 @@ const SermonDetailPage = () => {
         description={sermon.description || 'Watch message from Friends Garden AG Church.'}
       />
 
-      {/* Breadcrumb / Top bar */}
-      <section className="bg-light py-3 border-bottom">
+      {/* Breadcrumb / Top bar Banner */}
+      <section className="page-header-banner py-4 mb-4">
         <div className="container d-flex align-items-center justify-content-between">
-          <Link to="/sermons" className="text-decoration-none text-muted d-inline-flex align-items-center gap-1 small hover-blue">
+          <Link to="/sermons" className="text-decoration-none text-white-50 d-inline-flex align-items-center gap-1 small hover-white">
             <i className="bi bi-arrow-left"></i>
-            <span>Back to All Sermons</span>
+            <span className="text-white">Back to All Sermons</span>
           </Link>
-          <span className="sermon-category-pill">{sermon.category}</span>
+          <span className="sermon-category-pill" style={{ backgroundColor: 'rgba(56, 161, 219, 0.25)', color: '#ffffff', borderColor: 'rgba(255, 255, 255, 0.3)' }}>
+            {sermon.category}
+          </span>
         </div>
       </section>
 

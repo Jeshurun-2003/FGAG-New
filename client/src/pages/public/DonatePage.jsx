@@ -77,36 +77,31 @@ const DonatePage = () => {
   };
 
   return (
-    <div className="container py-5">
+    <div>
       <SEO
         title="Donate & Tithes"
         description="Support the Kingdom work through your faithful giving, tithes, and offerings at Friends Garden AG Church, Kollidam."
       />
 
       {/* Header Banner */}
-      <motion.div
-        className="text-center mb-5"
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <span
-          className="badge px-3 py-2 rounded-pill text-uppercase mb-3"
-          style={{ backgroundColor: 'rgba(56, 161, 219, 0.15)', color: '#0a3d62', fontWeight: 600 }}
-        >
-          Kingdom Stewardship
-        </span>
-        <h1 className="display-5 heading_2 mb-3 fw-bold">Sow Into the Kingdom Work</h1>
-        <div className="section-divider">
-          <i className="bi bi-diamond-fill section-divider-icon"></i>
+      <section className="page-header-banner mb-5">
+        <div className="container">
+          <span className="section-eyebrow text-white border-white border-opacity-25" style={{ backgroundColor: 'rgba(56, 161, 219, 0.25)' }}>
+            <i className="bi bi-gift-fill me-1"></i> Kingdom Stewardship
+          </span>
+          <h1 className="display-4 fw-bold page-banner-title">
+            Sow Into the Kingdom Work
+          </h1>
+          <p className="page-banner-desc mb-3">
+            Join us in building God's Kingdom through your generous giving.
+          </p>
+          <p className="fst-italic mx-auto text-light opacity-75 small mb-0" style={{ maxWidth: '780px' }}>
+            “So let each one give as he purposes in his heart, not grudgingly or of necessity; for God loves a cheerful giver.” — 2 Corinthians 9:7
+          </p>
         </div>
-        <p className="lead paragraph fs-4 mb-2">Join us in building God's Kingdom through your generous giving.</p>
-        <p className="paragraph fs-5 fst-italic mx-auto text-secondary mt-3" style={{ maxWidth: '780px' }}>
-          “So let each one give as he purposes in his heart, not grudgingly or of necessity; for God loves a cheerful giver.”
-          <br />
-          <span className="fw-normal text-primary">— 2 Corinthians 9:7</span>
-        </p>
-      </motion.div>
+      </section>
+
+      <div className="container pb-5">
 
       {/* Giving Causes / Purposes Section */}
       <div className="mb-5">
@@ -295,6 +290,7 @@ const DonatePage = () => {
             Contact our church office &rarr;
           </Link>
         </p>
+      </div>
       </div>
     </div>
   );

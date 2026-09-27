@@ -72,26 +72,28 @@ const GalleryPage = () => {
   };
 
   return (
-    <div className="container py-5">
+    <div>
       <SEO
         title="Gallery"
         description="View photo moments of worship, Sunday school, youth gatherings, outreach, and church celebrations at Friends Garden AG Church."
       />
 
-      <motion.div
-        className="text-center mb-4"
-        initial={{ opacity: 0, y: -15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <h1 className="heading display-5 fw-bold mb-2">Church Gallery</h1>
-        <div className="section-divider">
-          <i className="bi bi-diamond-fill section-divider-icon"></i>
+      {/* Header Banner */}
+      <section className="page-header-banner mb-5">
+        <div className="container">
+          <span className="section-eyebrow text-white border-white border-opacity-25" style={{ backgroundColor: 'rgba(56, 161, 219, 0.25)' }}>
+            <i className="bi bi-images me-1"></i> Memories & Fellowship
+          </span>
+          <h1 className="display-4 fw-bold page-banner-title">
+            Church Gallery
+          </h1>
+          <p className="page-banner-desc">
+            Capturing joyous moments of worship, fellowship, and ministry in God's presence.
+          </p>
         </div>
-        <p className="paragraph lead text-muted mx-auto" style={{ maxWidth: '680px' }}>
-          Capturing joyous moments of worship, fellowship, and ministry in God's presence.
-        </p>
-      </motion.div>
+      </section>
+
+      <div className="container pb-5">
 
       {/* Category Tabs with Animated Pill Buttons */}
       <div className="d-flex flex-wrap justify-content-center gap-2 mb-5">
@@ -192,6 +194,7 @@ const GalleryPage = () => {
         hasPrev={activePhotoIndex !== null && activePhotoIndex > 0}
         hasNext={activePhotoIndex !== null && activePhotoIndex < images.length - 1}
       />
+      </div>
     </div>
   );
 };

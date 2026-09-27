@@ -80,24 +80,15 @@ const SermonsPage = () => {
       />
 
       {/* Header Banner */}
-      <section
-        className="position-relative text-white py-5 text-center"
-        style={{
-          background: 'linear-gradient(135deg, #072a44 0%, #0a3d62 50%, #175480 100%)',
-          paddingTop: '110px'
-        }}
-      >
-        <div className="container py-4">
-          <span className="section-eyebrow" style={{ backgroundColor: 'rgba(56, 161, 219, 0.25)', color: '#ffffff', borderColor: 'rgba(255, 255, 255, 0.2)' }}>
+      <section className="page-header-banner">
+        <div className="container">
+          <span className="section-eyebrow text-white border-white border-opacity-25" style={{ backgroundColor: 'rgba(56, 161, 219, 0.25)' }}>
             Biblical Teaching & Worship
           </span>
-          <h1
-            className="display-4 fw-bold text-white mb-3"
-            style={{ fontFamily: "'Playfair Display', serif" }}
-          >
+          <h1 className="display-4 fw-bold page-banner-title">
             Sermons & Media
           </h1>
-          <p className="lead mx-auto text-light opacity-90 mb-0" style={{ maxWidth: '640px' }}>
+          <p className="page-banner-desc">
             Be encouraged and strengthened in your faith through the inspiring messages and worship services of Friends Garden AG Church.
           </p>
         </div>

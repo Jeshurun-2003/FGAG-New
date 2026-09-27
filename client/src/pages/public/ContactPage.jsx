@@ -78,26 +78,41 @@ const ContactPage = () => {
   };
 
   return (
-    <div className="container my-5 pt-3">
+    <div>
       <SEO
         title="Contact Us"
         description="Get in touch with Friends Garden AG Church, Kollidam. View service location, directions, office hours, and contact details."
       />
 
-      {/* Map Header */}
-      <motion.div
-        className="mb-5"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="text-center mb-4">
-          <span className="section-eyebrow">Visit & Connect</span>
-          <h1 className="heading_2 display-6 fw-bold mb-2">Find Us on the Map</h1>
-          <div className="section-divider">
-            <i className="bi bi-diamond-fill section-divider-icon"></i>
-          </div>
+      {/* Header Banner */}
+      <section className="page-header-banner mb-5">
+        <div className="container">
+          <span className="section-eyebrow text-white border-white border-opacity-25" style={{ backgroundColor: 'rgba(56, 161, 219, 0.25)' }}>
+            <i className="bi bi-geo-alt-fill me-1"></i> Visit & Connect
+          </span>
+          <h1 className="display-4 fw-bold page-banner-title">
+            Contact & Location
+          </h1>
+          <p className="page-banner-desc">
+            We'd love to hear from you. Reach out with questions, prayer needs, or join us for worship at Kollidam.
+          </p>
         </div>
+      </section>
+
+      <div className="container pb-5">
+        {/* Map Header */}
+        <motion.div
+          className="mb-5"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="text-center mb-4">
+            <h2 className="heading_2 display-6 fw-bold mb-2">Find Us on the Map</h2>
+            <div className="section-divider">
+              <i className="bi bi-diamond-fill section-divider-icon"></i>
+            </div>
+          </div>
 
         <div className="rounded-4 overflow-hidden shadow border" style={{ maxHeight: '420px' }}>
           <iframe
@@ -353,6 +368,7 @@ const ContactPage = () => {
             </form>
           </div>
         </motion.div>
+      </div>
       </div>
     </div>
   );

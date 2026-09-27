@@ -35,6 +35,8 @@
   --transition-fast: 0.18s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-base: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-smooth: 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+
+  --navbar-height: 100px;
 }
 
 html {
@@ -125,12 +127,12 @@ h1, h2, h3, h4, h5, h6,
   transition: background-color var(--transition-base),
               box-shadow var(--transition-base),
               backdrop-filter var(--transition-base),
+              border-color var(--transition-base),
               min-height var(--transition-base),
               padding var(--transition-base);
-  background-color: rgba(10, 61, 98, 0.88);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: transparent;
+  box-shadow: none;
+  border-bottom: 1px solid transparent;
 }
 
 .navbar-custom.navbar-scrolled {
@@ -139,6 +141,19 @@ h1, h2, h3, h4, h5, h6,
   min-height: 84px;
   padding: 0.5rem 1.5rem;
   border-bottom: 1px solid rgba(56, 161, 219, 0.25);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Ensure navbar text & brand remain crisp and readable over transparent hero/banner backgrounds */
+.navbar-custom:not(.navbar-scrolled) .nav-link,
+.navbar-custom:not(.navbar-scrolled) .navbar-brand-name,
+.navbar-custom:not(.navbar-scrolled) .navbar-brand-sub {
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7), 0 1px 2px rgba(0, 0, 0, 0.9);
+}
+
+.navbar-custom:not(.navbar-scrolled) .navbar-toggler i {
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.7));
 }
 
 /* Navbar Container & Brand Space-sharing */
@@ -495,25 +510,61 @@ h1, h2, h3, h4, h5, h6,
 
 /* Navbar Spacer so content doesn't get covered at every breakpoint */
 .navbar-spacer {
-  height: 100px; /* Matches desktop min-height (1440px+) */
+  height: var(--navbar-height);
 }
 
 @media (min-width: 1280px) and (max-width: 1439.98px) {
-  .navbar-spacer {
-    height: 88px; /* Matches compact desktop min-height */
+  :root {
+    --navbar-height: 88px;
   }
 }
 
 @media (max-width: 1279.98px) {
-  .navbar-spacer {
-    height: 78px; /* Matches hamburger/tablet min-height */
+  :root {
+    --navbar-height: 78px;
   }
 }
 
 @media (max-width: 767.98px) {
-  .navbar-spacer {
-    height: 70px; /* Matches mobile min-height */
+  :root {
+    --navbar-height: 70px;
   }
+}
+
+/* ===================================================
+   Merged Hero & Page Header Banners (Navbar blending)
+=================================================== */
+.hero-merged {
+  margin-top: calc(-1 * var(--navbar-height));
+  padding-top: calc(var(--navbar-height) + 2rem);
+}
+
+.page-header-banner {
+  margin-top: calc(-1 * var(--navbar-height));
+  padding-top: calc(var(--navbar-height) + 2.5rem);
+  padding-bottom: 2.75rem;
+  background: linear-gradient(135deg, #072a44 0%, #0a3d62 50%, #175480 100%);
+  color: #ffffff;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.page-header-banner .page-banner-title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.75rem;
+}
+
+.page-header-banner .page-banner-desc {
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.15rem;
+  line-height: 1.6;
+  margin-bottom: 0;
 }
 
 /* ===================================================

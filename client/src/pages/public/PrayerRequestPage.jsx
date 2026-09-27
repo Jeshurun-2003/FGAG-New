@@ -68,35 +68,29 @@ const PrayerRequestPage = () => {
   };
 
   return (
-    <div className="container my-5 pt-3">
+    <div>
       <SEO
         title="Prayer Request"
         description="Share your prayer requests with Friends Garden AG Church, Kollidam. Our pastoral and intercession team faithfully prays for every petition."
       />
 
-      {/* Header Section */}
-      <motion.div
-        className="text-center mb-5"
-        initial={{ opacity: 0, y: -15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-primary-subtle text-primary fw-semibold small mb-2">
-          <i className="bi bi-chat-heart-fill"></i>
-          <span>We Believe in the Power of Prayer</span>
+      {/* Header Banner */}
+      <section className="page-header-banner mb-5">
+        <div className="container">
+          <span className="section-eyebrow text-white border-white border-opacity-25" style={{ backgroundColor: 'rgba(56, 161, 219, 0.25)' }}>
+            <i className="bi bi-chat-heart-fill me-1"></i> Power of Prayer
+          </span>
+          <h1 className="display-4 fw-bold page-banner-title">
+            Submit Your Prayer Request
+          </h1>
+          <p className="page-banner-desc mb-2">
+            “Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God.”
+          </p>
+          <span className="text-info fw-medium small">— Philippians 4:6</span>
         </div>
-        <h1 className="heading display-5 fw-bold mb-2" style={{ color: 'var(--fgag-primary, #0A3D62)' }}>
-          Submit Your Prayer Request
-        </h1>
-        <div className="section-divider">
-          <i className="bi bi-diamond-fill section-divider-icon"></i>
-        </div>
-        <p className="paragraph lead text-muted mx-auto" style={{ maxWidth: '720px' }}>
-          “Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God.”
-          <br />
-          <span className="text-primary fw-medium small">— Philippians 4:6</span>
-        </p>
-      </motion.div>
+      </section>
+
+      <div className="container pb-5">
 
       <div className="row g-5 justify-content-center align-items-start">
         {/* Left Column: Encouragement & Pastoral Assurance */}
@@ -276,6 +270,7 @@ const PrayerRequestPage = () => {
             </form>
           </div>
         </motion.div>
+      </div>
       </div>
     </div>
   );

@@ -3,57 +3,8 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ministriesService } from '../../services/api';
 import SEO from '../../components/common/SEO';
-
-const defaultMinistries = [
-  {
-    id: 1,
-    title: 'Youth Ministry',
-    description: 'Our Youth Ministry is a vibrant and passionate community of young believers growing in faith and purpose.',
-    details: 'Our Youth Ministry is a vibrant and passionate community of young believers growing in faith and purpose. We equip and empower the next generation to stand strong in Christ and impact the world. Through worship, Bible study, mentoring, and outreach, youth are nurtured spiritually and socially. Join us as we pursue God’s calling with energy, creativity, and unity.',
-    imageUrl: '/images/ministries/youth-ministry.jpg',
-    objectPosition: 'center'
-  },
-  {
-    id: 2,
-    title: 'Children ministry',
-    description: 'Our Children’s Ministry is a joyful space where kids discover God’s love in fun and meaningful ways.',
-    details: 'Our Children’s Ministry is a joyful space where kids discover God’s love in fun and meaningful ways. We teach biblical values through songs, stories, crafts, and interactive lessons. Each child is nurtured in a safe, loving environment to grow in faith and character. We believe children are a gift from God and a vital part of His Kingdom.',
-    imageUrl: '/images/ministries/children-ministry.jpg',
-    objectPosition: 'center'
-  },
-  {
-    id: 3,
-    title: 'Outreach Ministry',
-    description: 'Our Outreach Ministry is dedicated to sharing God’s love beyond the church walls.',
-    details: 'Our Outreach Ministry is dedicated to sharing God’s love beyond the church walls. We serve communities through acts of compassion, prayer, and practical support. By reaching the unreached and uplifting the needy, we reflect the heart of Christ. Join us in being the hands and feet of Jesus to a world in need.',
-    imageUrl: '/images/ministries/outreach-ministry.jpg',
-    objectPosition: 'center'
-  },
-  {
-    id: 4,
-    title: 'Men’s Ministry',
-    description: 'Our Men’s Ministry empowers men to grow in faith, character, and leadership.',
-    details: 'Our Men’s Ministry empowers men to grow in faith, character, and leadership. We gather for fellowship, prayer, and teaching that strengthens spiritual foundations. Through accountability and brotherhood, men are equipped to lead their families and communities. Together, we pursue God’s purpose and become men after His own heart.',
-    imageUrl: '/images/ministries/mens-ministry.jpg',
-    objectPosition: 'center'
-  },
-  {
-    id: 5,
-    title: "Women's Ministry",
-    description: 'Our Women’s Ministry is a nurturing community where women grow in faith, strength, and purpose.',
-    details: 'Our Women’s Ministry is a nurturing community where women grow in faith, strength, and purpose. We come together for prayer, fellowship, and encouragement rooted in God’s Word. Through discipleship and support, women are empowered to impact their homes and communities. Join us as we walk in grace, wisdom, and the beauty of God\'s calling for women.',
-    imageUrl: '/images/ministries/womens-ministry.jpg',
-    objectPosition: 'center'
-  },
-  {
-    id: 6,
-    title: 'Volunteer Ministry',
-    description: 'Our Volunteer Ministry is the heartbeat of service within the church and beyond.',
-    details: 'Our Volunteer Ministry is the heartbeat of service within the church and beyond. We believe every act of service, big or small, makes a lasting impact for God’s Kingdom. From welcoming guests to organizing events, our volunteers serve with joy and excellence. Join us and discover the blessing of using your time and talents for God’s glory.',
-    imageUrl: '/images/ministries/volunteer-ministry.jpg',
-    objectPosition: 'center'
-  }
-];
+import { getMinistryImageUrl } from '../../utils/imageUtils';
+import { CardSkeleton } from '../../components/common/SkeletonLoader';
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 24 },
@@ -69,18 +20,25 @@ const staggerContainer = {
 };
 
 const MinistriesPage = () => {
-  const [ministries, setMinistries] = useState(defaultMinistries);
+  const [ministries, setMinistries] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [openIds, setOpenIds] = useState({});
 
   useEffect(() => {
     const fetchMinistries = async () => {
       try {
+        setLoading(true);
         const res = await ministriesService.getPublic();
-        if (res.data.success && res.data.ministries && res.data.ministries.length > 0) {
+        if (res.data && res.data.success && Array.isArray(res.data.ministries)) {
           setMinistries(res.data.ministries);
+        } else {
+          setMinistries([]);
         }
       } catch (err) {
-        console.warn('Using default ministries list.', err);
+        console.error('Failed to load ministries:', err);
+        setMinistries([]);
+      } finally {
+        setLoading(false);
       }
     };
     fetchMinistries();
@@ -99,13 +57,13 @@ const MinistriesPage = () => {
 
       {/* Hero Banner */}
       <section
-        className="position-relative d-flex align-items-center justify-content-center text-center text-white overflow-hidden"
+        className="hero-merged position-relative d-flex align-items-center justify-content-center text-center text-white overflow-hidden"
         style={{
           background: "linear-gradient(rgba(7, 42, 68, 0.75), rgba(10, 61, 98, 0.85)), url('/images/Church_img.jpg')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           minHeight: '65vh',
-          padding: '80px 20px'
+          padding: 'calc(var(--navbar-height) + 50px) 20px 80px'
         }}
       >
         <motion.div
@@ -150,74 +108,92 @@ const MinistriesPage = () => {
             </div>
           </motion.div>
 
-          <motion.div
-            className="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-40px' }}
-            variants={staggerContainer}
-          >
-            {ministries.map((m) => {
-              const defaultMatch = defaultMinistries.find((dm) => dm.title.toLowerCase() === m.title.toLowerCase());
-              const objPos = m.objectPosition || defaultMatch?.objectPosition || 'center';
+          {loading ? (
+            <div className="py-4">
+              <CardSkeleton count={3} />
+            </div>
+          ) : ministries.length === 0 ? (
+            <div className="card border-0 shadow-sm rounded-4 p-5 text-center bg-white my-4">
+              <div
+                className="rounded-circle bg-light d-inline-flex align-items-center justify-content-center mx-auto mb-3"
+                style={{ width: '64px', height: '64px' }}
+              >
+                <i className="bi bi-people fs-2 text-muted"></i>
+              </div>
+              <h4 className="heading fw-bold mb-2">No Ministries Found</h4>
+              <p className="text-muted mx-auto mb-0" style={{ maxWidth: '480px' }}>
+                We are currently updating our ministry listings. Please check back soon or contact us to learn more!
+              </p>
+            </div>
+          ) : (
+            <motion.div
+              className="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-40px' }}
+              variants={staggerContainer}
+            >
+              {ministries.map((m) => {
+                const objPos = m.objectPosition || 'center';
 
-              return (
-                <motion.div className="col" key={m.id} variants={fadeInUp}>
-                  <div className="card h-100 rounded-4 shadow-sm border-0 bg-white hover-lift overflow-hidden d-flex flex-column">
-                    <div className="image-zoom-card" style={{ aspectRatio: '16 / 10', overflow: 'hidden', backgroundColor: '#e2e8f0' }}>
-                      <img
-                        src={m.imageUrl || '/images/coming_soon.png'}
-                        className="card-img-top w-100 h-100"
-                        style={{
-                          objectFit: 'cover',
-                          objectPosition: objPos
-                        }}
-                        alt={m.title}
-                        loading="lazy"
-                        onError={(e) => {
-                          e.target.src = '/images/coming_soon.png';
-                        }}
-                      />
-                    </div>
-                    <div className="card-body p-4 d-flex flex-column flex-grow-1">
-                      <h4 className="heading fw-bold mb-2">{m.title}</h4>
-                      <p className="paragraph text-muted small mb-3">
-                        {m.description}
-                      </p>
+                return (
+                  <motion.div className="col" key={m.id} variants={fadeInUp}>
+                    <div className="card h-100 rounded-4 shadow-sm border-0 bg-white hover-lift overflow-hidden d-flex flex-column">
+                      <div className="image-zoom-card" style={{ aspectRatio: '16 / 10', overflow: 'hidden', backgroundColor: '#e2e8f0' }}>
+                        <img
+                          src={getMinistryImageUrl(m.imageUrl, m.updatedAt) || '/images/coming_soon.png'}
+                          className="card-img-top w-100 h-100"
+                          style={{
+                            objectFit: 'cover',
+                            objectPosition: objPos
+                          }}
+                          alt={m.title}
+                          loading="lazy"
+                          onError={(e) => {
+                            e.target.src = '/images/coming_soon.png';
+                          }}
+                        />
+                      </div>
+                      <div className="card-body p-4 d-flex flex-column flex-grow-1">
+                        <h4 className="heading fw-bold mb-2">{m.title}</h4>
+                        <p className="paragraph text-muted small mb-3">
+                          {m.description}
+                        </p>
 
-                      <div className="mt-auto">
-                        <motion.button
-                          className="btn btn-sm btn-outline-primary"
-                          type="button"
-                          onClick={() => toggleCollapse(m.id)}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                        >
-                          {openIds[m.id] ? 'Hide Info' : 'More Info'}
-                        </motion.button>
+                        <div className="mt-auto">
+                          <motion.button
+                            className="btn btn-sm btn-outline-primary"
+                            type="button"
+                            onClick={() => toggleCollapse(m.id)}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            {openIds[m.id] ? 'Hide Info' : 'More Info'}
+                          </motion.button>
 
-                        <AnimatePresence>
-                          {openIds[m.id] && (
-                            <motion.div
-                              initial={{ opacity: 0, height: 0 }}
-                              animate={{ opacity: 1, height: 'auto' }}
-                              exit={{ opacity: 0, height: 0 }}
-                              transition={{ duration: 0.3, ease: 'easeInOut' }}
-                              className="overflow-hidden"
-                            >
-                              <div className="card card-body p-3 small bg-light border-0 rounded-3 mt-3 text-secondary lh-base">
-                                {m.details || m.description}
-                              </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
+                          <AnimatePresence>
+                            {openIds[m.id] && (
+                              <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                                className="overflow-hidden"
+                              >
+                                <div className="card card-body p-3 small bg-light border-0 rounded-3 mt-3 text-secondary lh-base">
+                                  {m.details || m.description}
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </motion.div>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          )}
         </div>
       </section>
 

@@ -219,10 +219,10 @@ const HomePage = () => {
 
       {/* Redesigned Modern Hero Section */}
       <section
-        className="position-relative d-flex align-items-center justify-content-center text-center text-white overflow-hidden"
+        className="hero-merged position-relative d-flex align-items-center justify-content-center text-center text-white overflow-hidden"
         style={{
           minHeight: '88vh',
-          padding: 'clamp(36px, 5vw, 64px) 20px 70px'
+          padding: 'calc(var(--navbar-height) + clamp(20px, 3vw, 40px)) 20px 70px'
         }}
         aria-label="Welcome banner"
       >

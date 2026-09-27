@@ -93,33 +93,28 @@ const EventsPage = () => {
   };
 
   return (
-    <div className="container my-5 pt-3">
+    <div>
       <SEO
         title="Events & Gatherings"
         description="Join us for Sunday worship, revival conventions, youth summits, and special church gatherings at Friends Garden AG Church, Kollidam."
       />
 
-      {/* Header Section */}
-      <motion.div
-        className="text-center mb-5"
-        initial={{ opacity: 0, y: -15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-primary-subtle text-primary fw-semibold small mb-2">
-          <i className="bi bi-calendar-event"></i>
-          <span>Church Calendar & Conventions</span>
+      {/* Header Banner */}
+      <section className="page-header-banner mb-5">
+        <div className="container">
+          <span className="section-eyebrow text-white border-white border-opacity-25" style={{ backgroundColor: 'rgba(56, 161, 219, 0.25)' }}>
+            <i className="bi bi-calendar-event me-1"></i> Church Calendar & Conventions
+          </span>
+          <h1 className="display-4 fw-bold page-banner-title">
+            Church Events & Gatherings
+          </h1>
+          <p className="page-banner-desc">
+            Experience transformative revival, fellowship, and worship at our upcoming conventions, special meetings, and conferences.
+          </p>
         </div>
-        <h1 className="heading display-5 fw-bold mb-2" style={{ color: 'var(--fgag-primary, #0A3D62)' }}>
-          Church Events & Gatherings
-        </h1>
-        <div className="section-divider">
-          <i className="bi bi-diamond-fill section-divider-icon"></i>
-        </div>
-        <p className="paragraph lead text-muted mx-auto" style={{ maxWidth: '680px' }}>
-          Experience transformative revival, fellowship, and worship at our upcoming conventions, special meetings, and conferences.
-        </p>
-      </motion.div>
+      </section>
+
+      <div className="container pb-5">
 
       {/* Loading Skeleton */}
       {loading ? (
@@ -647,6 +642,7 @@ const EventsPage = () => {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 };
