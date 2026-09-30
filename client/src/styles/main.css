@@ -825,6 +825,29 @@ h1, h2, h3, h4, h5, h6,
   transform: scale(1.07);
 }
 
+/* Pastor & Family Photo Card (About Page) */
+.pastor-photo-card {
+  max-width: 380px;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  background-color: #e2e8f0;
+}
+
+.pastor-photo-card img,
+.pastor-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+@media (max-width: 575.98px) {
+  .pastor-photo-card {
+    max-width: 340px;
+    aspect-ratio: 4 / 5;
+  }
+}
+
 /* Gallery image cards */
 .gallery-image-card {
   border-radius: var(--radius-md);

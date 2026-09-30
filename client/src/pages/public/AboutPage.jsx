@@ -94,11 +94,11 @@ const AboutPage = () => {
         <div className="card border-0 shadow-sm rounded-4 overflow-hidden bg-white hover-lift">
           <div className="row g-0 align-items-center">
             <div className="col-md-5 d-flex justify-content-center align-items-center bg-light p-4">
-              <div className="image-zoom-card rounded-4 shadow-sm overflow-hidden w-100" style={{ maxWidth: '380px', aspectRatio: '4 / 3', backgroundColor: '#e2e8f0' }}>
+              <div className="image-zoom-card pastor-photo-card rounded-4 shadow-sm overflow-hidden w-100" style={{ maxWidth: '380px', aspectRatio: '4 / 5', backgroundColor: '#e2e8f0' }}>
                 <img
                   src={pastorFamilyImg}
                   alt="Pastor Amal and Family"
-                  className="w-100 h-100 rounded-4"
+                  className="w-100 h-100 rounded-4 pastor-photo-img"
                   style={{ objectFit: 'cover', objectPosition: 'center top' }}
                   loading="lazy"
                   onError={(e) => {
